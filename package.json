@@ -1,0 +1,12 @@
+{
+  "name": "Dominion",
+  "version": "0.0.1",
+  "private": true,
+   "scripts": {
+    "test": "./node_modules/.bin/mocha"
+    },
+  "dependencies": {
+    "should": "~4.0.4",
+    "mocha": "~1.21.0"
+  }
+}
