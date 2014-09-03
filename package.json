@@ -2,11 +2,18 @@
   "name": "Dominion",
   "version": "0.0.1",
   "private": true,
-   "scripts": {
+  "scripts": {
     "test": "./node_modules/.bin/mocha"
-    },
-  "dependencies": {
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.5",
     "should": "~4.0.4",
-    "mocha": "~1.21.0"
+    "grunt-contrib-requirejs": "~0.4.4",
+    "grunt-contrib-jshint": "~0.10.0",
+    "rjs-build-analysis": "0.0.3",
+    "mocha-jshint": "0.0.9",
+    "grunt-simple-mocha": "~0.4.0",
+    "grunt-mocha-test": "~0.11.0"
   }
 }
