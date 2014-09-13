@@ -1,8 +1,6 @@
-define([],
-       function() {
+define(["src/card"], function(c) {
     return {
-    	start: function() {
-
-    	},
+        start: function() {
+        },
     };
 });

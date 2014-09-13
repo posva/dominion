@@ -44,8 +44,29 @@ module.exports = function(grunt) {
             },
         },
         sys: ['Gruntfile.js', 'package.json'],
-        tests: ['test/**/*.js'],
+        //tests: ['test/**/*.js'],
         src: ['src/**/*.js'],
+    },
+    'http-server': {
+
+        'dev': {
+
+            // the server root directory
+            root: ".",
+
+            port: 8000,
+            // port: function() { return 8282; }
+
+            host: "127.0.0.1",
+
+            cache: 60,
+            showDir : true,
+            autoIndex: true,
+            defaultExt: "html",
+
+            // run in parallel with other tasks
+            runInBackground: false
+        }
     }
   });
 
@@ -53,10 +74,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-http-server');
 
   // Default task(s).
   grunt.registerTask('default', ['test', 'jshint', 'deploy']);
   grunt.registerTask('deploy', ['requirejs']);
   grunt.registerTask('test', ['mochaTest']);
+  grunt.registerTask('serve', ['http-server:dev']);
 
 };
