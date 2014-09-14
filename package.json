@@ -5,7 +5,9 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jsonfile": "^2.0.0"
+  },
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "~0.10.0",
