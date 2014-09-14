@@ -5,5 +5,4 @@ requirejs.config({
         ready: '../node_modules/domready/ready.min',
         selfish: '../node_modules/selfish/selfish',
     },
-    //deps: ['main'],
 });

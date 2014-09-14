@@ -1,6 +1,5 @@
 module.exports = function(grunt) {
 
-  // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     requirejs: {
@@ -69,13 +68,11 @@ module.exports = function(grunt) {
     }
   });
 
-  // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-http-server');
 
-  // Default task(s).
   grunt.registerTask('default', ['test', 'jshint', 'deploy']);
   grunt.registerTask('deploy', ['requirejs']);
   grunt.registerTask('test', ['mochaTest']);
