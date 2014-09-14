@@ -6,8 +6,7 @@ module.exports = function(grunt) {
     requirejs: {
         compile: {
             options: {
-                baseUrl: ".",
-                //mainConfigFile: "deploy/build.js",
+                //mainConfigFile: "require-config.js",
                 name: "main", // assumes a production build using almond
                 out: "built.min.js",
                 done: function(done, output) {
@@ -45,7 +44,7 @@ module.exports = function(grunt) {
         },
         sys: ['Gruntfile.js', 'package.json'],
         //tests: ['test/**/*.js'],
-        src: ['src/**/*.js'],
+        src: ['js/**/*.js'],
     },
     'http-server': {
 

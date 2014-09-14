@@ -6,7 +6,10 @@
     "test": "./node_modules/.bin/mocha"
   },
   "dependencies": {
-    "jsonfile": "^2.0.0"
+    "domready": "^1.0.6",
+    "jsonfile": "^2.0.0",
+    "requirejs": "^2.1.15",
+    "selfish": "^0.3.2"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
@@ -14,7 +17,6 @@
     "grunt-contrib-requirejs": "~0.4.4",
     "grunt-http-server": "0.0.5",
     "grunt-mocha-test": "~0.11.0",
-    "requirejs": "^2.1.15",
     "rjs-build-analysis": "0.0.3",
     "should": "~4.0.4"
   }
