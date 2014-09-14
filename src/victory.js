@@ -1,8 +1,8 @@
 define(["lib/selfish"], function(selfish) {
     var Base = selfish.Base;
     var Victory = Base.extend({
-        initialize: function(value) {
-            this.value = value;
+        initialize: function(points) {
+            this.points = points;
             this.type.push('victory');
         },
     });

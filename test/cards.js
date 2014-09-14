@@ -35,8 +35,7 @@ describe('Card Testing', function() {
             var Estate = Card.extend(Victory, {
                 initialize: function() {
                     Card.initialize.call(this, 2);
-                    Victory.initialize.call(this);
-                    this.value = 1;
+                    Victory.initialize.call(this, 1);
                 },
             });
 
@@ -44,7 +43,7 @@ describe('Card Testing', function() {
 
             var e = Estate.new();
             e.should.have.property('cost', 2);
-            e.should.have.property('value', 1);
+            e.should.have.property('points', 1);
             e.type.should.have.length(1);
             e.type.should.containEql('victory');
         });
