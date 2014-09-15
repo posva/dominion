@@ -30,6 +30,23 @@ module.exports = function(grunt) {
             src: ['test/**/*.js']
         }
     },
+    mochacov: {
+        test: {
+            options: {
+                reporter: 'spec'
+            }
+        },
+        coverage: {
+            options: {
+                coveralls: true
+            }
+        },
+        options: {
+            reporter: 'spec',
+            require: ['should'],
+            files: ['test/**/*.js']
+        }
+    },
     jshint: {
         options: {
             curly: true,
@@ -65,16 +82,18 @@ module.exports = function(grunt) {
             // run in parallel with other tasks
             runInBackground: false
         }
-    }
+    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-mocha-cov');
   grunt.loadNpmTasks('grunt-http-server');
 
   grunt.registerTask('default', ['test', 'jshint', 'deploy']);
   grunt.registerTask('deploy', ['requirejs']);
+  //grunt.registerTask('test', ['mochaTest', 'mochacov']);
   grunt.registerTask('test', ['mochaTest']);
   grunt.registerTask('serve', ['http-server:dev']);
 
