@@ -22,14 +22,6 @@ module.exports = function(grunt) {
             }
         }
     },
-    mochaTest: {
-        test: {
-            options: {
-                reporter: 'spec'
-            },
-            src: ['test/**/*.js']
-        }
-    },
     mochacov: {
         test: {
             options: {
@@ -87,14 +79,12 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-mocha-cov');
   grunt.loadNpmTasks('grunt-http-server');
 
   grunt.registerTask('default', ['test', 'jshint', 'deploy']);
   grunt.registerTask('deploy', ['requirejs']);
-  //grunt.registerTask('test', ['mochaTest', 'mochacov']);
-  grunt.registerTask('test', ['mochaTest']);
+  grunt.registerTask('test', ['mochacov']);
   grunt.registerTask('serve', ['http-server:dev']);
 
 };

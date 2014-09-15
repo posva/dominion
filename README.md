@@ -1,5 +1,6 @@
 DOMINION
 ===
+[![Build Status](https://travis-ci.org/posva/dominion.svg?branch=master)](https://travis-ci.org/posva/dominion)
 [![Dependency Status](https://david-dm.org/posva/dominion.png)](https://david-dm.org/posva/dominion)
 [![devDependency Status](https://david-dm.org/posva/dominion/dev-status.png)](https://david-dm.org/posva/dominion#info=devDependencies)
 
