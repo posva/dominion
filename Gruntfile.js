@@ -22,21 +22,12 @@ module.exports = function(grunt) {
             }
         }
     },
-    mochacov: {
+    mochaTest: {
         test: {
             options: {
                 reporter: 'spec'
-            }
-        },
-        coverage: {
-            options: {
-                coveralls: true
-            }
-        },
-        options: {
-            reporter: 'spec',
-            require: ['should'],
-            files: ['test/**/*.js']
+            },
+            src: ['test/**/*.js']
         }
     },
     jshint: {
@@ -75,16 +66,37 @@ module.exports = function(grunt) {
             runInBackground: false
         }
     },
+    mocha_istanbul: {
+        coverage: {
+            src: 'test', // a folder works nicely
+            options: {
+                istanbulOptions: [ '--hook-run-in-context' ],
+                coverage: true
+            }
+        },
+    }
+  });
+
+  grunt.event.on('coverage', function(lcov, done){
+      require('coveralls').handleInput(lcov, function(err){
+          if (err) {
+              console.log(err);
+              return done(err);
+          }
+          done();
+      });
   });
 
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-mocha-cov');
   grunt.loadNpmTasks('grunt-http-server');
+  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-mocha-istanbul');
 
-  grunt.registerTask('default', ['test', 'jshint', 'deploy']);
+  grunt.registerTask('default', ['jshint', 'coverage', 'deploy']);
   grunt.registerTask('deploy', ['requirejs']);
-  grunt.registerTask('test', ['mochacov']);
   grunt.registerTask('serve', ['http-server:dev']);
+  grunt.registerTask('test', ['mochaTest']);
+  grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
 
 };
