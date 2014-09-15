@@ -1,9 +1,9 @@
 DOMINION
 ===
 [![Build Status](https://travis-ci.org/posva/dominion.svg?branch=master)](https://travis-ci.org/posva/dominion)
-[![Coverage Status](https://coveralls.io/repos/posva/dominion/badge.png)](https://coveralls.io/r/posva/dominion)
-[![Dependency Status](https://david-dm.org/posva/dominion.png)](https://david-dm.org/posva/dominion)
-[![devDependency Status](https://david-dm.org/posva/dominion/dev-status.png)](https://david-dm.org/posva/dominion#info=devDependencies)
+[![Coverage Status](https://img.shields.io/coveralls/posva/dominion.svg)](https://coveralls.io/r/posva/dominion)
+[![Dependency Status](https://david-dm.org/posva/dominion.svg)](https://david-dm.org/posva/dominion)
+[![devDependency Status](https://david-dm.org/posva/dominion/dev-status.svg)](https://david-dm.org/posva/dominion#info=devDependencies)
 
 Dominion is a board card game based on building a deck and getting victory points.
 You can play it online at [playdominion.com](http://playdominion.com).
