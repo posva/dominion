@@ -33,10 +33,10 @@ grunt
 
 * Indentation: 2 spaces
 * Braces: at the end of the line like
-    ```
-    if (test) {
-      do();
-    }
-    ```
+```
+if (test) {
+  do();
+}
+```
 * Protoypes: start with Upper Case. ex: `var cafe = Cafe.new()`
 * Globals: add them to the `globals.js` file
