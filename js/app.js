@@ -1,6 +1,6 @@
 define(["card"], function(c) {
-    return {
-        start: function() {
-        },
-    };
+  return {
+    start: function() {
+    },
+  };
 });
