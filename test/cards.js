@@ -9,11 +9,12 @@ requirejs.config({
 describe('Card Testing', function() {
     // module loading
     // Load modules with requirejs before tests
-    var Card, Victory;
+    var Card, Victory, Treasure;
     before(function(done) {
-        requirejs(['card', 'victory'], function(card, victory) {
+        requirejs(['card', 'victory', 'treasure'], function(card, victory, treasure) {
             Card = card;
             Victory = victory;
+            Treasure = treasure;
             done();
         });
     });
@@ -44,8 +45,50 @@ describe('Card Testing', function() {
             var e = Estate.new();
             e.should.have.property('cost', 2);
             e.should.have.property('points', 1);
+            e.should.not.have.property('money');
             e.type.should.have.length(1);
             e.type.should.containEql('victory');
+        });
+    });
+
+    describe('#Treasure+Card', function() {
+        it('should be able to create some treasure cards', function() {
+            var Copper = Card.extend(Treasure, {
+                initialize: function() {
+                    Card.initialize.call(this, 0);
+                    Treasure.initialize.call(this, 1);
+                }
+            });
+
+            Card.isPrototypeOf(Copper).should.be.true;
+
+            var c = Copper.new();
+            c.should.have.property('money', 1);
+            c.should.not.have.property('points');
+            c.should.have.property('cost', 0);
+            c.type.should.have.length(1);
+            c.type.should.containEql('treasure');
+        });
+    });
+
+    describe('#Treasure+Victory+Card', function() {
+        it('should be able to create some mixted cards (cf Harem) cards', function() {
+            var Harem = Card.extend(Treasure, Victory, {
+                initialize: function() {
+                    Card.initialize.call(this, 6);
+                    Treasure.initialize.call(this, 2);
+                    Victory.initialize.call(this, 2);
+                }
+            });
+
+            Card.isPrototypeOf(Harem).should.be.true;
+
+            var c = Harem.new();
+            c.should.have.property('money', 2);
+            c.should.have.property('points', 2);
+            c.should.have.property('cost', 6);
+            c.type.should.have.length(2);
+            c.type.should.containEql('treasure').and.containEql('victory');
         });
     });
 });
