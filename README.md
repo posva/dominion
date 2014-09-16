@@ -23,6 +23,20 @@ grunt
 
 # Tasks
 
-* deploy: build with `r.js`
-* test: launch the tests
-* serve: launch a local server
+* `deploy`: build with `r.js`
+* `test`: launch the tests
+* `serve`: launch a local server
+* `jshint`: lint js code
+* `coverage`: launch the coverage test
+
+# Coding Style
+
+* Indentation: 2 spaces
+* Braces: at the end of the line like
+    ```
+    if (test) {
+      do();
+    }
+    ```
+* Protoypes: start with Upper Case. ex: `var cafe = Cafe.new()`
+* Globals: add them to the `globals.js` file
