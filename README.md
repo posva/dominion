@@ -1,3 +1,4 @@
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/posva/dominion?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 DOMINION
 ===
 [![Build Status](https://travis-ci.org/posva/dominion.svg?branch=master)](https://travis-ci.org/posva/dominion)
