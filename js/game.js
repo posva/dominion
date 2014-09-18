@@ -25,26 +25,6 @@ define(["selfish"], function(selfish) {
       // Load card from js.
       // about expansions (use folders)
     },
-    generateCard: function(j) {
-      var type, cost, money, points,
-      i,
-      obj = {}; // object litteral. card specification
-      if (typeof j === "string") {
-        j = JSON.parse(j);
-      } else if (typeof j !== 'object') {
-        // check valid card TODO create a function
-        if (!j.type.length) { // not an array Array
-          j.type = [j.type];
-        }
-          i = 0;
-          Crafted = Card;
-          while( i < j.type.length-1) {
-            Crafted = Crafted.extend(this.classes[j.type[i]]);
-          }
-          Crafted = Crafted.extend(this.classes[j.type[i]], obj);
-
-      }
-    }
   });
 
   return Game;

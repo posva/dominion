@@ -131,9 +131,6 @@ describe('Card Testing', function() {
 
       test(h1);
       test(h2);
-
-      // XXX I want to test gitter notifications
-      true.should.be.false;
     });
   });
 
