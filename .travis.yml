@@ -3,3 +3,10 @@ node_js:
   - "0.10"
 before_install:
   - npm install -g grunt-cli
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/ad3892c1b2dcefe48754
+    on_success: change
+    on_failure: always
+    #on_start: false
