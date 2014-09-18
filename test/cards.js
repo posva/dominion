@@ -91,4 +91,50 @@ describe('Card Testing', function() {
       c.type.should.containEql('treasure').and.containEql('victory');
     });
   });
+
+  describe('#Chained inheritance', function() {
+    it('should be the same as multiple args extend()', function() {
+      var obj = {
+        initialize: function() {
+          Card.initialize.call(this, 6);
+          Treasure.initialize.call(this, 2);
+          Victory.initialize.call(this, 2);
+        }
+      };
+
+      var Harem = Card.extend(Treasure, Victory, obj);
+
+      var Harem2 = Card.extend(Treasure);
+      Harem2 = Harem2.extend(Victory, obj);
+      // it's necessary to add an object litteral with the initialize function
+      // Furthermore it must be added at the end
+
+      // the prototype is Card
+      Card.isPrototypeOf(Harem).should.be.true;
+      Treasure.isPrototypeOf(Harem).should.be.false;
+      Victory.isPrototypeOf(Harem).should.be.false;
+
+      Card.isPrototypeOf(Harem2).should.be.true;
+      Treasure.isPrototypeOf(Harem2).should.be.false;
+      Victory.isPrototypeOf(Harem2).should.be.false;
+
+      var h1 = Harem.new(),
+      h2 = Harem2.new();
+
+      var test = function(c) {
+        c.should.have.property('money', 2);
+        c.should.have.property('points', 2);
+        c.should.have.property('cost', 6);
+        c.type.should.have.length(2);
+        c.type.should.containEql('treasure').and.containEql('victory');
+      };
+
+      test(h1);
+      test(h2);
+
+      // XXX I want to test gitter notifications
+      true.should.be.false;
+    });
+  });
+
 });
