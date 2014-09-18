@@ -16,7 +16,7 @@ describe('Utils Testing', function() {
     });
   });
 
-  describe('#extensions', function(){
+  describe('#Array shuffle', function(){
     it('should work without problems', function(){
       var a = [1, 2, 3, 4, 5, 6, 7, 8 , 9, 10], i,
       cpy = [];

@@ -1,10 +1,25 @@
-define(["selfish"], function(selfish) {
+define(['selfish'], function(selfish) {
   var Base = selfish.Base;
   var Card = Base.extend({
-    initialize: function(cost) {
-      this.cost = cost || 0;
-      this.img = "";
-      this.text = "Empty text";
+    initialize: function(name, text, cost, img) {
+      var conf;
+      if (name && typeof name === 'object') {
+        conf = name;
+        conf.name = conf.name || 'Empty Name';
+        conf.text = conf.text || 'Empty Text';
+        conf.cost = conf.cost || 0;
+        conf.img = conf.img || '';
+      } else {
+        conf = {};
+        conf.name = name || 'Empty Name';
+        conf.text = text || 'Empty Text';
+        conf.cost = cost || 0;
+        conf.img = img || '';
+      }
+      this.cost = conf.cost;
+      this.img = conf.img;
+      this.name = conf.name;
+      this.text = conf.text;
       this.type = [];
     },
   });

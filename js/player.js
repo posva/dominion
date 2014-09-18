@@ -1,4 +1,4 @@
-define(["selfish", "utils"], function(selfish, U) {
+define(['selfish', 'utils'], function(selfish, U) {
   var Base = selfish.Base;
   var Player = Base.extend({
     initialize: function() {

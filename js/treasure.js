@@ -1,8 +1,12 @@
-define(["selfish"], function(selfish) {
+define(['selfish'], function(selfish) {
   var Base = selfish.Base;
   var Treasure = Base.extend({
     initialize: function(money) {
-      this.money = money;
+      if (typeof money === 'function') {
+        this.money = money;
+      } else {
+        this.money = function() { return money; };
+      }
       this.type.push('treasure');
     },
   });
