@@ -5,6 +5,7 @@
 # where the base cards (copper, curse) are. Then launch the script:
 # ../../script/genCardsDeps.py *.js
 # -> define(['cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 'cards/gold', 'cards/province', 'cards/silver'], function(Copper, Curse, Duchy, Estate, Gold, Province, Silver) {
+# {'curse': Curse, 'estate': Estate, 'copper': Copper, 'province': Province, 'duchy': Duchy, 'silver': Silver, 'gold': Gold}
 
 import getopt, sys, time, os, re
 
