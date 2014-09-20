@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "domready": "^1.0.6",
-    "jsonfile": "^2.0.0",
     "requirejs": "^2.1.15",
     "selfish": "^0.3.2"
   },

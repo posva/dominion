@@ -16,6 +16,7 @@ Therefore I may never end this project. You should not take this as an example.
 # Building
 
 You need `grunt` to launch the different tasks (install with `npm install -g grunt-cli`).
+Then you just have to do:
 
 ```
 npm install
@@ -41,6 +42,15 @@ if (test) {
 ```
 * Protoypes: start with Upper Case. ex: `var cafe = Cafe.new()`
 * Globals: add them to the `globals.js` file
+
+# License
+
+TODO
+
+# Technologies that are going to be used
+
+* Phaser for display in clent
+* nodejs for server and client application
 
 # Copyright
 
