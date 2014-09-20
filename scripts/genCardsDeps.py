@@ -23,8 +23,15 @@ def getReturn(fi):
 dep = [] # define(['cards/copper',...],
 names = [] # function(Copper, ...) {
 nar = re.compile('js/(.*)\.js')
+obj = {} # dic name -> card
 for f in sys.argv[1:]:
-    names.append(getReturn(f))
-    dep.append(nar.search(os.path.abspath(f)).group(1))
+    ckey = nar.search(os.path.abspath(f)).group(1)
+    cval = getReturn(f)
+
+    names.append(cval)
+    dep.append(ckey)
+    obj[os.path.basename(ckey)] = cval
+
 print('define(%s, function(%s) {'%(str(dep), str(names).replace('[',
 '').replace(']', '').replace("'", '')))
+print(re.sub(r'\'([a-zA-Z_]+)\'([,}])', r'\1\2', str(obj)))
