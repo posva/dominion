@@ -1,6 +1,6 @@
-var requirejs = require("requirejs");
-var assert = require("assert");
-var should = require("should");
+var requirejs = require('requirejs');
+var assert = require('assert');
+var should = require('should');
 requirejs.config({
   baseUrl: 'js',
   nodeRequire: require
