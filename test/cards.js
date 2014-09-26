@@ -9,12 +9,13 @@ requirejs.config({
 describe('Card Testing', function() {
   // module loading
   // Load modules with requirejs before tests
-  var Card, Victory, Treasure;
+  var Card, Victory, Treasure, Curse;
   before(function(done) {
-    requirejs(['card', 'victory', 'treasure'], function(card, victory, treasure) {
+    requirejs(['card', 'victory', 'treasure', 'curse'], function(card, victory, treasure, curse) {
       Card = card;
       Victory = victory;
       Treasure = treasure;
+      Curse = curse;
       done();
     });
   });
@@ -182,6 +183,40 @@ describe('Card Testing', function() {
         t.points().should.be.within(0, 10);
       }
     });
+  });
+
+  describe('#curses cards', function() {
+    it('should create some curses cards', function() {
+      var TestCurse = Card.extend(Curse, {
+        initialize: function() {
+          Card.initialize.call(this);
+          Curse.initialize.call(this, -1);
+        }
+      });
+      var TestCurse2 = Card.extend(Curse, {
+        initialize: function() {
+          Card.initialize.call(this);
+          Curse.initialize.call(this, -4);
+        }
+      });
+      var curse = TestCurse.new();
+      curse.points().should.be.eql(-1);
+      curse = TestCurse2.new();
+      curse.points().should.be.eql(-4);
+    });
+    it('should create a curse with variable points', function() {
+      var TestCurse = Card.extend(Curse, {
+        initialize: function() {
+          Card.initialize.call(this);
+          Curse.initialize.call(this, function() {
+            return -Math.floor(Math.random()*3);
+          });
+        }
+      });
+      var curse = TestCurse.new();
+      curse.points().should.be.within(-3, 0);
+    });
+
   });
 
 });

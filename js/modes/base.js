@@ -31,7 +31,6 @@ define(['lodash', 'cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 
     },
     getAmounts: function(n) {
       var r;
-      n = n || 0;
       if (typeof n !== 'number') {
         return r; // only numbers please
       }

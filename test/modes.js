@@ -54,6 +54,13 @@ describe('Dummy', function() {
                   }
                 }
               });
+              describe('Card creation', function() {
+                _.forOwn(v.cards, function(c, name) {
+                  it('should be able to create ' + name, function() {
+                    c.new().should.be.ok;
+                  });
+                });
+              });
             });
           });
         });

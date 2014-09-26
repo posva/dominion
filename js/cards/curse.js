@@ -1,5 +1,5 @@
-define(['card'], function(Card) {
-  var Curse = Card.extend({
+define(['card', 'curse'], function(Card, Curse) {
+  var CurseCard = Card.extend(Curse, {
     initialize: function() {
       Card.initialize.call(this, {
         name: 'Curse',
@@ -7,11 +7,9 @@ define(['card'], function(Card) {
         cost: 0,
         img: ''
       });
-      this.points = function() {
-        return -1;
-      };
+      Curse.initialize.call(this, -1);
     }
   });
 
-  return Curse;
+  return CurseCard;
 });
