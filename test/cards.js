@@ -48,7 +48,7 @@ describe('Card Testing', function() {
     });
   });
 
-  describe('#Victory+Card', function() {
+  describe('#Combining', function() {
     it('should be able to create some victory cards', function() {
       var Estate = Card.extend(Victory, {
         initialize: function() {
@@ -66,9 +66,7 @@ describe('Card Testing', function() {
       e.type.should.have.length(1);
       e.type.should.containEql('victory');
     });
-  });
 
-  describe('#Treasure+Card', function() {
     it('should be able to create some treasure cards', function() {
       var Copper = Card.extend(Treasure, {
         initialize: function() {
@@ -87,9 +85,7 @@ describe('Card Testing', function() {
       c.type.should.have.length(1);
       c.type.should.containEql('treasure');
     });
-  });
 
-  describe('#Treasure+Victory+Card', function() {
     it('should be able to create some mixted cards (cf Harem) cards', function() {
       var Harem = Card.extend(Treasure, Victory, {
         initialize: function() {

@@ -32,8 +32,9 @@ define(['lodash', 'cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 
     getAmounts: function(n) {
       var r;
       n = n || 0;
-      if (typeof n !== 'number')
+      if (typeof n !== 'number') {
         return r; // only numbers please
+      }
       _.forOwn(amounts, function(v, k) {
         var ind = k.indexOf('-'), a, b;
         if (ind > 0) {
