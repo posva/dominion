@@ -11,15 +11,21 @@ def info(s):
     print('[1;34mINFO:[0m', s)
 
 domain = 'https://www.playdominion.com/Dominion/'
-main_dir = 'img/'
+main_dir = 'data/'
 dir_assoc = {
     'CardBuilder/img/back': 'card/layout/',
     'CardBuilder/img/frame': 'card/layout/',
     'CardBuilder/img/icon': 'set/',
     'CardBuilder/img/illustration': 'card/',
     'img': '',
+    'fonts': 'fonts/',
+    'fonts-meetingroom': 'fonts/',
 }
 downs = {
+# fonts
+    'fonts-meetingroom/MinionPro-BoldCn.woff': 'MinionPro-BoldCn.woff',
+    'fonts/TrajanPro-Bold.ttf': 'TrajanPro-Bold.ttf',
+
 # back layout
     'CardBuilder/img/back/main-full.png': 'main-full.png',
     'CardBuilder/img/back/main-half.png': 'main-half.png',
@@ -276,7 +282,7 @@ downs = {
     'CardBuilder/img/illustration/witch.jpg': 'witch.jpg',
     'CardBuilder/img/illustration/workersVillage.jpg': 'workersVillage.jpg',
     'CardBuilder/img/illustration/youngWitch.jpg': 'youngWitch.jpg',
-    'img/large_trash.png': 'card/trash.png',
+    'img/large_trash.png': 'card/layout/trash.png',
 
 #
 
@@ -294,6 +300,7 @@ def check_place():
             sys.exit(1)
 
 errors = 0
+downloads = 0
 def download(k):
     global downs, domain, main_dir, dir_assoc, errors
     d = downs[k]
@@ -309,6 +316,7 @@ def download(k):
         err('couldn\'t download')
         errors += 1
         raise
+    downloads += 1
 
 check_place()
 # create the needed dirs
@@ -327,5 +335,6 @@ info('Waiting for threads...')
 while active_count() > 1:
     time.sleep(0.5)
 
+info(str(downloads)+' files were downloaded')
 if errors > 0:
     warn('Errors ocurred, check the log')
