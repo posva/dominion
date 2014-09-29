@@ -6,9 +6,9 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
       this.hand = [];
       this.deck = [];
       this.graveyard = [];
+      this.field = []; // cards being played during his turn
       this.preHooks = []; // allows to execute code before playing a card
       this.postHooks = []; // ex: function(card) { if card.is('action') this.turn.actions++; }
-      this.field = []; // cards being played during his turn
       this.turn = {}; // information reset each turn such as actions played etc
       this.game = undefined; // game instance. Must be added by Game
       if (!_.isFunction(newGameFun)) {
@@ -23,7 +23,7 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
     // shuffle graveyard into deck
     // no check is done
     shuffleGraveyard: function() {
-      this.deck.concat(this.graveyard.splice(0));
+      this.deck = this.deck.concat(this.graveyard.splice(0));
       this.deck.shuffle();
     },
     // draw n cards. shufle if necessary
@@ -32,24 +32,24 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
         return;
       }
       if (this.deck.length >= n) {
-        this.hand.concat(this.deck.splice(0, n));
+        this.hand = this.hand.concat(this.deck.splice(0, n));
       } else {
         n -= this.deck.length;
-        this.hand.concat(this.deck.splice(0, this.deck.length));
+        this.hand = this.hand.concat(this.deck.splice(0, this.deck.length));
         this.shuffleGraveyard();
         if (this.deck.length === 0) { // you drew too much!
           return;
         } else if (this.deck.length < n) {
-          this.hand.concat(this.deck.splice(0, this.deck.length));
+          this.hand = this.hand.concat(this.deck.splice(0, this.deck.length));
         } else {
-          this.hand.concat(this.deck.splice(0, n));
+          this.hand = this.hand.concat(this.deck.splice(0, n));
         }
       }
     },
     // clean the played cards and draw five cards
     // shuffle graveyard into deck if necessary
     endTurn: function() {
-      this.graveyard.concat(
+      this.graveyard = this.graveyard.concat(
         this.hand.splice(0),
         this.field.splice(0)
       );
