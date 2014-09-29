@@ -19,7 +19,7 @@ define(['lodash', 'cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 
       'gold': 30
     }
   };
-  var Base = {
+  var base = {
     cards: {
       'curse': Curse,
       'estate': Estate,
@@ -51,8 +51,18 @@ define(['lodash', 'cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 
         }
       });
       return r;
-    }
+    },
+    playerInitializer: function() { // must be called by the player
+      var i = 0;
+      for (i = 0; i < 7; i++) {
+        this.deck.push(Copper.new());
+      }
+      for (i = 0; i < 3; i++) {
+        this.deck.push(Estate.new());
+      }
+      this.deck.shuffle();
+    },
   };
 
-  return Base;
+  return base;
 });
