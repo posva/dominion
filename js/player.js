@@ -1,12 +1,24 @@
-define(['selfish', 'utils'], function(selfish, U) {
+define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
   var Base = selfish.Base;
   var Player = Base.extend({
-    initialize: function() {
+    initialize: function(newGameFun) {
       // Possible location for cards
       this.hand = [];
       this.deck = [];
       this.graveyard = [];
+      this.preHooks = []; // allows to execute code before playing a card
+      this.postHooks = []; // ex: function(card) { if card.is('action') this.turn.actions++; }
       this.field = []; // cards being played during his turn
+      this.turn = {}; // information reset each turn such as actions played etc
+      this.game = undefined; // game instance. Must be added by Game
+      if (!_.isFunction(newGameFun)) {
+        throw {
+          name: 'PlayerInit',
+          message: 'No initializer given'
+        };
+      } else {
+        newGameFun.apply(this);
+      }
     },
     // shuffle graveyard into deck
     // no check is done
@@ -16,32 +28,39 @@ define(['selfish', 'utils'], function(selfish, U) {
     },
     // draw n cards. shufle if necessary
     drawCards: function(n) {
-      if (this.deck.length < 5) {
-        this.shuffleGraveyard();
+      if (n <= 0) {
+        return;
       }
-      this.hand.concat(this.deck.splice(0, n));
+      if (this.deck.length >= n) {
+        this.hand.concat(this.deck.splice(0, n));
+      } else {
+        n -= this.deck.length;
+        this.hand.concat(this.deck.splice(0, this.deck.length));
+        this.shuffleGraveyard();
+        if (this.deck.length === 0) { // you drew too much!
+          return;
+        } else if (this.deck.length < n) {
+          this.hand.concat(this.deck.splice(0, this.deck.length));
+        } else {
+          this.hand.concat(this.deck.splice(0, n));
+        }
+      }
     },
-    // clean the palyed cards and draw five cards
+    // clean the played cards and draw five cards
     // shuffle graveyard into deck if necessary
     endTurn: function() {
       this.graveyard.concat(
         this.hand.splice(0),
         this.field.splice(0)
       );
-
+      this.turn = {
+        actions: 0, // played actions
+        draws: 0,
+        attacks: 0,
+        preHooks: [], // array of function to be called whjen playing cards.
+        postHooks: [], // these are used for example by the Coppersmith
+      };
       this.drawCards(5);
-
-    },
-    // init the deck with 7 coppers and 3 estates
-    startGame: function() {
-      // TODO
-      var i = 0;
-      for (i = 0; i < 7; i++) {
-        this.deck.push('copper');
-      }
-      for (i = 0; i < 3; i++) {
-        this.deck.push('estate');
-      }
     },
     playCard: function(i) {
     }
