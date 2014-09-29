@@ -3,12 +3,20 @@
 import urllib.request, sys, os, re, time
 from threading import Thread, active_count
 
-def warn(s):
-    print('[1;33mWARN:[0m', s)
-def err(s):
-    print('[1;31mERR:[0m', s)
-def info(s):
-    print('[1;34mINFO:[0m', s)
+if sys.platform == 'win32':
+    def warn(s):
+        print('WARN:', s)
+    def err(s):
+        print('ERR:', s, file = sys.stderr)
+    def info(s):
+        print('INFO:', s)
+else:
+    def warn(s):
+        print('[1;33mWARN:[0m', s)
+    def err(s):
+        print('[1;31mERR:[0m', s)
+    def info(s):
+        print('[1;34mINFO:[0m', s)
 
 domain = 'https://www.playdominion.com/Dominion/'
 main_dir = 'data/'
@@ -20,6 +28,7 @@ dir_assoc = {
     'img': '',
     'fonts': 'fonts/',
     'fonts-meetingroom': 'fonts/',
+    'CardBuilder/img/default/images': 'card/layout/'
 }
 downs = {
 # fonts
@@ -29,6 +38,11 @@ downs = {
 # back layout
     'CardBuilder/img/back/main-full.png': 'main-full.png',
     'CardBuilder/img/back/main-half.png': 'main-half.png',
+
+# misc
+    'CardBuilder/img/default/images/victory-point-large.png': 'victory-point.png',
+    'CardBuilder/img/default/images/coin-large.png': 'coin.png',
+    'CardBuilder/img/default/images/potion.png': 'potion.png',
 
 # cards layout
     'CardBuilder/img/frame/action-attack-full.png': 'action-attack-full.png',
@@ -67,6 +81,8 @@ downs = {
     'CardBuilder/img/frame/victory-potion-half.png': 'victory-potion-half.png',
     'CardBuilder/img/frame/victory-reaction-full.png': 'victory-reaction-full.png',
     'CardBuilder/img/frame/victory-reaction-half.png': 'victory-reaction-half.png',
+    'CardBuilder/img/default/images/bane-full.png': 'bane-full.png',
+    'CardBuilder/img/default/images/bane-half.png': 'bane-half.png',
 
 # sets icons
     'CardBuilder/img/icon/alchemy.png': 'alchemy.png',
@@ -302,7 +318,7 @@ def check_place():
 errors = 0
 downloads = 0
 def download(k):
-    global downs, domain, main_dir, dir_assoc, errors
+    global downs, domain, main_dir, dir_assoc, errors, downloads
     d = downs[k]
     url = domain+k;
     fi = main_dir+dir_assoc[os.path.dirname(k)]+d
