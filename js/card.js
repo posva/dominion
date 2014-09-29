@@ -22,6 +22,9 @@ define(['selfish'], function(selfish) {
       this.text = conf.text;
       this.type = [];
     },
+    is: function(ty) {
+      return this.type.indexOf(ty) >= 0;
+    },
   });
 
   return Card;
