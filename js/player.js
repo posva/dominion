@@ -46,6 +46,20 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
         }
       }
     },
+    discardCard: function(i) {
+      if (typeof i !== 'number') {
+        throw {
+          name: 'DiscardError',
+          message: 'i must be a number not a '+(typeof i)
+        };
+      } else if (i < 0 || i >= this.hand.length) {
+        throw {
+          name: 'DiscardError',
+          message: 'Invalid i value ('+i+'). expect 0 <= i < '+this.hand.length
+        };
+      }
+      this.graveyard = this.graveyard.concat(this.hand.splice(i, 1));
+    },
     // clean the played cards and draw five cards
     // shuffle graveyard into deck if necessary
     endTurn: function() {
@@ -63,6 +77,9 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
       this.drawCards(5);
     },
     playCard: function(i) {
+      // TODO call a play function
+      var c = this.hand.splice(i, 1)[0];
+      this.field.push(c);
     }
   });
 
