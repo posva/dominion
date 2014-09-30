@@ -13,7 +13,16 @@ define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
     },
     currentPlayer: function(i) {
       i = i || 0;
-      return this.players[this.playerTurn + i];
+      if (Math.abs(this.playerTurn + i) >= this.players.length) {
+        i = (i >= 0 ? 1 : -1) * ((this.playerTurn + Math.abs(i)) % this.players.length);
+      } else {
+        i += this.playerTurn;
+      }
+      if (i >= 0) {
+        return this.players[i];
+      } else {
+        return this.players[this.players.length + i];
+      }
     },
     // start a game
     // init is a conf object:
@@ -27,7 +36,7 @@ define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
     // Mode allows to change how we start (number of coppers, curses, etc)
     startGame: function(init) {
       // TODO
-      if (! init) {
+      if (!init) {
         throw {
           name: 'ConfError',
           message: 'No configuration given.'
@@ -35,17 +44,17 @@ define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
       }
       // Load card from js.
       // about expansions (use folders)
-      if (!init.players || typeof init.players !== 'number' || init.players < 2 || players > 6) {
+      if (!init.players || typeof init.players !== 'number' || init.players < 2 || init.players > 6) {
         throw {
           name: 'ConfError',
-          message: 'Wrong number of players('+init.players.toString()+').'
+          message: 'Wrong number of players'+(init.players?'('+init.players.toString()+').':'.')
         };
       }
 
       if (!init.extensions || !init.extensions.length || init.extensions.length < 1) {
         throw {
           name: 'ConfError',
-          message: 'No extension givens. Cannot pick kingdom cards.'
+          message: 'No extension given. Cannot pick kingdom cards.'
         };
       } else {
         _.forEach(init.extensions, function(v) {
@@ -58,7 +67,7 @@ define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
         });
       }
 
-      if (!init.mode || !init.mode.cards) {
+      if (!init.mode || !init.mode.cards || !init.mode.playerInitializer) {
         throw {
           name: 'ConfError',
           message: 'Game mode is invalid.'
@@ -66,8 +75,14 @@ define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
       }
 
       var i;
+      _.forEach(this.players, function(v) {
+        v.game = null;
+      });
+      this.players = [];
       for (i = 0; i < init.players; i++) {
-        this.players = Player.new(mode.playerInitializer);
+        var p = Player.new(init.mode.playerInitializer);
+        p.game = this;
+        this.players.push(p);
       }
     },
   });
