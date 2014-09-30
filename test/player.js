@@ -61,53 +61,53 @@ describe('Player tests', function() {
     });
     it('should not be able to draw too much cards', function() {
       var p = Player.new(playerInitializer);
-      p.drawCards.bind(p, 8).should.not.throw();
+      p.draws.bind(p, 8).should.not.throw();
       p.hand.should.have.lengthOf(8);
       p.deck.should.have.lengthOf(2);
-      p.drawCards.bind(p, 8).should.not.throw();
+      p.draws.bind(p, 8).should.not.throw();
       p.hand.should.have.lengthOf(10);
       p.deck.should.have.lengthOf(0);
-      p.drawCards.bind(p, 8).should.not.throw();
+      p.draws.bind(p, 8).should.not.throw();
       p.hand.should.have.lengthOf(10);
       p.deck.should.have.lengthOf(0);
     });
     it('should not do anything when drawing -X', function() {
       var p = Player.new(playerInitializer);
-      p.drawCards.bind(p, -1).should.not.throw();
+      p.draws.bind(p, -1).should.not.throw();
       p.deck.should.have.lengthOf(10);
       p.hand.should.have.lengthOf(0);
-      p.drawCards.bind(p, 0).should.not.throw();
+      p.draws.bind(p, 0).should.not.throw();
       p.deck.should.have.lengthOf(10);
       p.hand.should.have.lengthOf(0);
     });
     it('should discard cards', function() {
       var p = Player.new(playerInitializer);
       p.endTurn();
-      p.discardCard.bind(p, {}).should.throw();
-      p.discardCard.bind(p, -1).should.throw();
-      p.discardCard.bind(p, 5).should.throw();
-      p.discardCard.bind(p, 6).should.throw();
-      p.discardCard(0);
+      p.discards.bind(p, {}).should.throw();
+      p.discards.bind(p, -1).should.throw();
+      p.discards.bind(p, 5).should.throw();
+      p.discards.bind(p, 6).should.throw();
+      p.discards(0);
       p.hand.should.have.lengthOf(4);
       p.graveyard.should.have.lengthOf(1);
       p.field.should.have.lengthOf(0);
-      p.discardCard(1);
+      p.discards(1);
       p.hand.should.have.lengthOf(3);
       p.graveyard.should.have.lengthOf(2);
       p.field.should.have.lengthOf(0);
-      p.discardCard(2);
+      p.discards(2);
       p.hand.should.have.lengthOf(2);
       p.graveyard.should.have.lengthOf(3);
       p.field.should.have.lengthOf(0);
-      p.discardCard(0);
+      p.discards(0);
       p.hand.should.have.lengthOf(1);
       p.graveyard.should.have.lengthOf(4);
       p.field.should.have.lengthOf(0);
-      p.discardCard(0);
+      p.discards(0);
       p.hand.should.have.lengthOf(0);
       p.graveyard.should.have.lengthOf(5);
       p.field.should.have.lengthOf(0);
-      p.discardCard.bind(p, 0).should.throw();
+      p.discards.bind(p, 0).should.throw();
       p.hand.should.have.lengthOf(0);
       p.graveyard.should.have.lengthOf(5);
       p.field.should.have.lengthOf(0);
@@ -121,20 +121,20 @@ describe('Player tests', function() {
       p.field.should.have.lengthOf(0);
 
       // play a copper
-      p.playCard(0);
+      p.plays(0);
       p.hand.should.have.lengthOf(4);
       p.graveyard.should.have.lengthOf(0);
       p.field.should.have.lengthOf(1);
 
       // discard some coppers
-      p.discardCard(0);
-      p.discardCard(0);
+      p.discards(0);
+      p.discards(0);
       p.hand.should.have.lengthOf(2);
       p.graveyard.should.have.lengthOf(2);
       p.field.should.have.lengthOf(1);
 
       // now draw more than you can
-      p.drawCards.bind(p, 9).should.not.throw();
+      p.draws.bind(p, 9).should.not.throw();
       p.hand.should.have.lengthOf(9);
       p.graveyard.should.have.lengthOf(0);
       p.field.should.have.lengthOf(1);

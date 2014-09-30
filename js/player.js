@@ -27,7 +27,7 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
       this.deck.shuffle();
     },
     // draw n cards. shufle if necessary
-    drawCards: function(n) {
+    draws: function(n) {
       if (n <= 0) {
         return;
       }
@@ -46,7 +46,7 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
         }
       }
     },
-    discardCard: function(i) {
+    discards: function(i) {
       if (typeof i !== 'number') {
         throw {
           name: 'DiscardError',
@@ -74,9 +74,9 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
         preHooks: [], // array of function to be called whjen playing cards.
         postHooks: [], // these are used for example by the Coppersmith
       };
-      this.drawCards(5);
+      this.draws(5);
     },
-    playCard: function(i) {
+    plays: function(i) {
       // TODO call a play function
       var c = this.hand.splice(i, 1)[0];
       this.field.push(c);
