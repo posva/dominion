@@ -23,6 +23,14 @@ npm install
 grunt
 ```
 
+## Notes
+
+When optimizing with `r.js` (`grunt deploy`), `selfish` is not up to date. Therefore line 6 must be changed with this:
+```js
+!(typeof define !== "function" ? function(selfish, $){ $(null, typeof exports !== 'undefined' ? exports : window); } : define)('selfish', function(require, exports) {
+```
+
+
 # Tasks
 
 * `deploy`: build with `r.js`
