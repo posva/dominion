@@ -90,6 +90,33 @@ describe('Game tests', function() {
     });
   });
 
+  describe('#Game in-turn events', function() {
+    it('should add actions', function() {
+      var g = Game.new();
+      g.actions.should.be.eql(0);
+      g.addActions(1);
+      g.actions.should.be.eql(1);
+      g.addActions(4);
+      g.actions.should.be.eql(5);
+    });
+    it('should add buys', function() {
+      var g = Game.new();
+      g.buys.should.be.eql(0);
+      g.addBuys(1);
+      g.buys.should.be.eql(1);
+      g.addBuys(4);
+      g.buys.should.be.eql(5);
+    });
+    it('should add money', function() {
+      var g = Game.new();
+      g.money.should.be.eql(0);
+      g.addMoney(1);
+      g.money.should.be.eql(1);
+      g.addMoney(4);
+      g.money.should.be.eql(5);
+    });
+  });
+
   describe('#Game interactions', function() {
     it('should get relative players with 2 players', function() {
       var g = Game.new();
@@ -99,17 +126,17 @@ describe('Game tests', function() {
         mode: base
       }).should.not.throw();
       var p1 = g.players[0], p2 = g.players[1];
-      g.currentPlayer(0).should.be.eql(p1)
-      g.currentPlayer(1).should.be.eql(p2)
-      g.currentPlayer(-1).should.be.eql(p2)
-      g.currentPlayer(2).should.be.eql(p1)
-      g.currentPlayer(-2).should.be.eql(p1)
+      g.currentPlayer(0).should.be.eql(p1);
+      g.currentPlayer(1).should.be.eql(p2);
+      g.currentPlayer(-1).should.be.eql(p2);
+      g.currentPlayer(2).should.be.eql(p1);
+      g.currentPlayer(-2).should.be.eql(p1);
       g.playerTurn = 1;
-      g.currentPlayer(0).should.be.eql(p2)
-      g.currentPlayer(1).should.be.eql(p1)
-      g.currentPlayer(-1).should.be.eql(p1)
-      g.currentPlayer(2).should.be.eql(p2)
-      g.currentPlayer(-2).should.be.eql(p2)
+      g.currentPlayer(0).should.be.eql(p2);
+      g.currentPlayer(1).should.be.eql(p1);
+      g.currentPlayer(-1).should.be.eql(p1);
+      g.currentPlayer(2).should.be.eql(p2);
+      g.currentPlayer(-2).should.be.eql(p2);
     });
   });
 

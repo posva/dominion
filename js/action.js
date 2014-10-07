@@ -1,5 +1,57 @@
-define(['selfish', 'lodash'], function(selfish, _) {
+define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
   var Base = selfish.Base;
+  var validStrings = [ 'choose', 'random' ];
+  var checkEventArray = function(ev) {
+    var str, n;
+    ev = ev || this.events;
+    //console.log('i am', ev, ev instanceof Array);
+    if (!(ev instanceof Array) || ev.length < 1) {
+      throw {
+        name: 'CardError',
+        message: 'Card '+this.name+' events is not an array'
+      };
+    }
+    if (typeof ev[0] === 'string') {
+      str = ev[0].split(' ')[1] || '';
+      if ((!str && typeof str !== 'string') || validStrings.indexOf(ev[0].split(' ')[0]) < 0) {
+        throw {
+          name: 'CardError',
+          message: 'Card '+this.name+' events array first element is not a valid string neither a function'
+        };
+      }
+      if (str === '') {
+        n = 1;
+      } else {
+        n = parseInt(str, 10);
+      }
+      if (typeof n !== 'number' || isNaN(n) || n < 1) {
+        throw {
+          name: 'CardError',
+          message: 'Card '+this.name+' has an invalid parameter: '+str
+        };
+      }
+      if (n >= ev.length) {
+        throw {
+          name: 'CardError',
+          message: 'Card '+this.name+' has too much choices: '+n+' when max is '+(ev.length-1)
+        };
+      }
+      ev = ev.slice(1); // copy the rest of the array
+    }
+    var that = this;
+    _.each(ev, function(v) {
+      if (!v || !v.isPrototypeOf || !v.isPrototypeOf(Event)) {
+        if (v instanceof Array) { // its an array!
+          checkEventArray.apply(that, [v]);
+        } else if (typeof v !== 'function') {
+          throw {
+            name: 'CardError',
+            message: 'Card '+that.name+' has invalid events'
+          };
+        }
+      }
+    });
+  };
   var Action = Base.extend({
     // events is an array which first element can be a string:
     // - choose/choose x
@@ -12,26 +64,16 @@ define(['selfish', 'lodash'], function(selfish, _) {
     //   p.discard(1, 'choose');
     // }
     initialize: function(events) {
+      //console.log(events, events[0]);
       this.events = events; // the action itself
+      // check that events is valid
+      //checkEventArray.apply(this, events);
       this.type.push('action');
     },
     // TODO add a check at initialization isntead of doing it in play
     play: function(game) {
-      var that = this;
-      var recursive = function(ev, game) {
-        var str, n;
-        if (typeof ev[0] === 'string') {
-          str = ev[0].split(' ')[1];
-          if (!str) {
-            throw {
-              name: 'CardError',
-              message: 'Card '+that.name+' has invalid events array'
-            };
-          }
-          n = parseInt(str, 10);
-        }
-      };
-    }
+    },
+    checkEventArray: checkEventArray
   });
 
   return Action;

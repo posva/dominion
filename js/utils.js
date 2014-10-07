@@ -1,4 +1,4 @@
-define(function() {
+define(['lodash'], function(_) {
   var u = {
   };
 

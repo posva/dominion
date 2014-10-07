@@ -11,6 +11,15 @@ define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
       this.trash = [];
       this.playerTurn = 0;
     },
+    addActions: function(n) {
+      this.actions += n;
+    },
+    addBuys: function(n) {
+      this.buys += n;
+    },
+    addMoney: function(n) {
+      this.money += n;
+    },
     currentPlayer: function(i) {
       i = i || 0;
       if (Math.abs(this.playerTurn + i) >= this.players.length) {

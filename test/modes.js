@@ -47,12 +47,13 @@ describe('Dummy', function() {
                 });
                 it('should have an amount for every card in \'cards\'', function() {
                   var i, amounts;
+                  var floop = function(v, k) {
+                    amounts.should.have.property(k).and.be.a.Number;
+                  };
                   for (i = 2; i < 6; i++) {
                     amounts = v.getAmounts(i);
                     if (amounts) {
-                      _.forOwn(v.cards, function(v, k) {
-                        amounts.should.have.property(k).and.be.a.Number;
-                      });
+                      _.forOwn(v.cards, floop);
                     }
                   }
                 });
