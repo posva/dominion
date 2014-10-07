@@ -1,3 +1,4 @@
+/*jshint -W030 */
 var requirejs = require('requirejs');
 var assert = require('assert');
 var should = require('should');
