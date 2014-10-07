@@ -5,8 +5,9 @@ module.exports = function(grunt) {
     requirejs: {
       compile: {
         options: {
-          //mainConfigFile: "require-config.js",
-          name: "main", // assumes a production build using almond
+          mainConfigFile: "require-config.js",
+          include: "requireLib",
+          name: "main",
           out: "built.min.js",
           done: function(done, output) {
             var duplicates = require('rjs-build-analysis').duplicates(output);
