@@ -10,6 +10,9 @@ define(['selfish'], function(selfish) {
     money: function(n)  {
       this.addMoney(parseInt(n, 10));
     },
+    buys: function(n)  {
+      this.addBuys(parseInt(n, 10));
+    },
   };
   var Event = Base.extend({
     initialize: function(game, str) {
