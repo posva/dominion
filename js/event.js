@@ -14,6 +14,10 @@ define(['selfish'], function(selfish) {
       this.addBuys(parseInt(n, 10));
     },
   };
+  /* ex: +2 Cards
+   * var ev = Event.new(game_instance, 'cards 2');
+   * ev.fire();
+   */
   var Event = Base.extend({
     initialize: function(game, str) {
       var s = str.split(' ');
@@ -23,7 +27,7 @@ define(['selfish'], function(selfish) {
           message: s[0]+' is not a valid event'
         };
       }
-      action[s[0]].apply(game, s.slice(1));
+      this.fire = action[s[0]].bind(game, s.slice(1));
     },
   });
 
