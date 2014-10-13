@@ -53,7 +53,7 @@ if (test) {
 
 # License
 
-TODO
+This code is distributed under the MIT License.
 
 # Technologies that are going to be used
 
