@@ -1,7 +1,7 @@
 define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
   var Base = selfish.Base;
   var Game = Base.extend({
-    initialize: function(init) {
+    initialize: function() {
       this.money = 0; // current turn money
       this.actions = 0; // current turn actions
       this.buys = 0; // current turn buys

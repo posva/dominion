@@ -26,6 +26,27 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
       this.deck = this.deck.concat(this.graveyard.splice(0));
       this.deck.shuffle();
     },
+    extractFromDeck: function(n) {
+      var ret = [];
+      if (n <= 0) {
+        return;
+      }
+      if (this.deck.length >= n) {
+        return this.deck.splice(0, n);
+      } else {
+        n -= this.deck.length;
+        ret = this.deck.splice(0, this.deck.length);
+        this.shuffleGraveyard();
+        if (this.deck.length === 0) { // you drew too much!
+          return ret;
+        } else if (this.deck.length < n) {
+          ret = ret.concat(this.deck.splice(0, this.deck.length));
+        } else {
+          ret = ret.concat(this.deck.splice(0, n));
+        }
+        return ret;
+      }
+    },
     // draw n cards. shufle if necessary
     draws: function(n) {
       if (n <= 0) {

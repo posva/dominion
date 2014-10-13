@@ -1,6 +1,6 @@
-define(['card', 'action', 'victory'], function(Card, Action, Victory) {
+define(['card', 'action', 'victory', 'event'], function(Card, Action, Victory, Event) {
   var GreatHall = Card.extend(Action, Victory, {
-    initialize: function() {
+    initialize: function(game) {
       Card.initialize.call(this, {
         name: 'Great Hall',
         text: '+1 Card\n+1 Action\n---\n1%V',
@@ -8,11 +8,10 @@ define(['card', 'action', 'victory'], function(Card, Action, Victory) {
         img: 'data/card/greatHall.jpg'
       });
       Victory.initialize.call(this, 1);
-      Action.initialize.call(this, function(game) {
-        var p = game.currentPlayer();
-        p.drawCard(1);
-        game.actions++;
-      });
+      Action.initialize.call(this, [
+        Event.new(game, 'cards 1'),
+        Event.new(game, 'actions 1'),
+      ]);
     }
   });
 

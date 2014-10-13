@@ -8,13 +8,20 @@ requirejs.config({
 
 describe('Event Testing', function() {
   // Load modules with requirejs before tests
-  var Event, Game;
+  var Event, Game, Card, Action, game;
   before(function(done) {
-    requirejs(['game', 'event'], function(game, event) {
+    requirejs(['game', 'event', 'card', 'action'], function(game, event, card, action) {
       Game = game;
       Event = event;
+      Action = action;
+      Card = card;
       done();
     });
+  });
+
+  before(function(done) {
+    game = Game.new();
+    done();
   });
 
   describe('#Event instances', function(){
