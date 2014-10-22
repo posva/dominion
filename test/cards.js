@@ -24,7 +24,7 @@ describe('Card Testing', function() {
   });
 
   describe('#instanciation', function(){
-    it('should work without problems', function(){
+    it('should create cards with costs, names, texts and images', function(){
       Card.should.have.property('new');
       var c1 = Card.new('name', 'text', 1, 'img.jpg');
       var c2 = Card.new();
@@ -37,18 +37,44 @@ describe('Card Testing', function() {
       c1.should.have.property('img', 'img.jpg');
       c1.should.have.property('name', 'name');
       c1.should.have.property('text', 'text');
-      c1.should.have.property('cost', 1);
+      c1.should.have.property('cost');
+      c1.cost.should.be.a.Function;
+      c1.cost().should.be.eql(1);
       c1.should.have.property('type').and.be.an.instanceOf(Array).and.have.length(0);
 
       c2.should.have.property('img', '');
-      c2.should.have.property('cost', 0);
+      c2.should.have.property('cost');
+      c2.cost.should.be.a.Function;
+      c2.cost().should.be.eql(0);
       c2.should.have.property('type').and.be.an.instanceOf(Array).and.have.length(0);
 
       c3.should.have.property('img', 'img.png');
-      c3.should.have.property('cost', 3);
+      c3.should.have.property('cost');
+      c3.cost.should.be.a.Function;
+      c3.cost().should.be.eql(3);
       c3.should.have.property('name', 'test');
       c3.should.have.property('text', 'sample text');
       c3.should.have.property('type').and.be.an.instanceOf(Array).and.have.length(0);
+    });
+    it('should have a variable cost', function() {
+      var i = 0;
+      var f = function(game) {
+        return i++;
+      };
+      var c = Card.new('name', 'text', f, 'img.jpg');
+      c.cost().should.be.eql(0);
+      c.cost().should.be.eql(1);
+      c.cost().should.be.eql(2);
+      c = Card.new({
+        cost: f,
+        name: 'test',
+        text: 'sample text',
+        img: 'img.png'
+      });
+      i = 0;
+      c.cost().should.be.eql(0);
+      c.cost().should.be.eql(1);
+      c.cost().should.be.eql(2);
     });
   });
 
@@ -64,7 +90,7 @@ describe('Card Testing', function() {
       Card.isPrototypeOf(Estate).should.be.true;
 
       var e = Estate.new();
-      e.should.have.property('cost', 2);
+      e.cost().should.be.eql(2);
       e.points().should.be.eql(1);
       e.should.not.have.property('money');
       e.type.should.have.length(1);
@@ -87,7 +113,7 @@ describe('Card Testing', function() {
       c.should.have.property('money');
       c.money().should.be.eql(1);
       c.should.not.have.property('points');
-      c.should.have.property('cost', 0);
+      c.cost().should.be.eql(0);
       c.type.should.have.length(1);
       c.type.should.containEql('treasure');
       c.is('treasure').should.be.ok;
@@ -108,7 +134,7 @@ describe('Card Testing', function() {
       c.should.have.property('money');
       c.money().should.be.eql(2);
       c.points().should.be.eql(2);
-      c.should.have.property('cost', 6);
+      c.cost().should.be.eql(6);
       c.type.should.have.length(2);
       c.type.should.containEql('treasure').and.containEql('victory');
       c.is('treasure').should.be.ok;
@@ -238,7 +264,7 @@ describe('Card Testing', function() {
         c.should.have.property('money');
         c.money().should.be.eql(2);
         c.points().should.be.eql(2);
-        c.should.have.property('cost', 6);
+        c.cost().should.be.eql(6);
         c.type.should.have.length(2);
         c.type.should.containEql('treasure').and.containEql('victory');
       };

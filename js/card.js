@@ -16,7 +16,13 @@ define(['selfish'], function(selfish) {
         conf.cost = cost || 0;
         conf.img = img || '';
       }
-      this.cost = conf.cost;
+      if (typeof conf.cost === 'function') {
+        this.cost = conf.cost;
+      } else {
+        this.cost = function() {
+          return conf.cost;
+        };
+      }
       this.img = conf.img;
       this.name = conf.name;
       this.text = conf.text;
