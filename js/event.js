@@ -20,6 +20,7 @@ define(['selfish'], function(selfish) {
    */
   var Event = Base.extend({
     initialize: function(game, str) {
+      str = str || '';
       var s = str.split(' ');
       if (!action[s[0]]) {
         throw {
