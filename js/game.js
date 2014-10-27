@@ -124,8 +124,9 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
     endTurn: function() {
       this.players[this.playerTurn].endTurn();
       this.playerTurn++;
-      if (this.playerTurn >= this.players.length)
+      if (this.playerTurn >= this.players.length) {
         this.playerTurn = 0;
+      }
       this.money = 0;
       this.actions = 1;
       this.buys = 1;

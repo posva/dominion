@@ -41,8 +41,9 @@ describe('Dummy Suite for Modes', function() {
                     v.should.have.property('cards');
                     _.forOwn(v.cards, function(c, k) {
                       c.should.have.property('card');
-                      if (c.card)
+                      if (c.card) {
                         Card.isPrototypeOf(c.card).should.be.ok;
+                      }
                     });
                   });
                   it('should have special card named \'kingdom-card\' and \'victory-card\'', function() {
@@ -78,8 +79,9 @@ describe('Dummy Suite for Modes', function() {
                 describe('#Card creation', function() {
                   _.forOwn(v.cards, function(c, name) {
                     it('should be able to create ' + name, function() {
-                      if (c.card)
+                      if (c.card) {
                         c.card.new().should.be.ok;
+                      }
                     });
                   });
                 });

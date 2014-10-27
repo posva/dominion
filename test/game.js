@@ -1,3 +1,4 @@
+/*jshint -W030 */
 var requirejs = require('requirejs');
 var assert = require('assert');
 var should = require('should');
@@ -76,10 +77,11 @@ describe('Game tests', function() {
       _.forOwn(p.deck, function(v) {
         v.should.have.property('name');
         cards.should.containEql(v.name);
-        if (v.name === 'Copper')
+        if (v.name === 'Copper') {
           coppers++;
-        else
+        }else{
           estates++;
+        }
       });
       coppers.should.be.within(2, 5);
       estates.should.be.within(0, 3);
@@ -89,10 +91,11 @@ describe('Game tests', function() {
       _.forOwn(p.hand, function(v) {
         v.should.have.property('name');
         cards.should.containEql(v.name);
-        if (v.name === 'Copper')
+        if (v.name === 'Copper') {
           coppers++;
-        else
+        }else{
           estates++;
+        }
       });
       coppers.should.be.eql(shC);
       estates.should.be.eql(shE);
@@ -108,10 +111,11 @@ describe('Game tests', function() {
       _.forOwn(p.hand, function(v) {
         v.should.have.property('name');
         cards.should.containEql(v.name);
-        if (v.name === 'Copper')
+        if (v.name === 'Copper') {
           coppers++;
-        else
+        }else{
           estates++;
+        }
       });
       coppers.should.be.eql(oC);
       estates.should.be.eql(oE);
@@ -184,10 +188,11 @@ describe('Game tests', function() {
       _.forOwn(g.cards, function(v) {
         v.should.have.property('card');
         v.should.have.property('instance');
-        if (v.instance.is('victory'))
+        if (v.instance.is('victory')) {
           v.should.have.property('amount', 8);
-        else // kingdom
+        }else { // kingdom
           v.should.have.property('amount', 10);
+        }
       });
     });
   });
