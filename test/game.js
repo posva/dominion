@@ -181,7 +181,7 @@ describe('Game tests', function() {
       var g = Game.new();
       g.startGame.bind(g, {
         players: 2,
-        cards: [Gold, Silver],
+        cards: [Gold, Silver, Duchy],
         mode: base
       }).should.not.throw();
       g.should.have.property('cards').and.be.an.Object;

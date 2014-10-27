@@ -107,9 +107,9 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
           instance: v.new(that)
         };
         if (that.cards[k].instance.is('victory')) {
-          that.cards[k].amount = init.mode.cards['victory-card'].amount[that.players.length];
+          that.cards[k].amount = init.mode.cards['victory-card'].amount[that.players.length-2];
         } else {
-          that.cards[k].amount = init.mode.cards['kingdom-card'].amount[that.players.length];
+          that.cards[k].amount = init.mode.cards['kingdom-card'].amount[that.players.length-2];
         }
       });
 
