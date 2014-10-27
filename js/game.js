@@ -7,6 +7,7 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
       this.buys = 0; // current turn buys
 
       this.players = [];
+      this.cards = {};
       this.turns = 0;
       this.trash = [];
       this.playerTurn = 0;
@@ -83,6 +84,7 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
         };
       }
 
+      // players
       var i;
       _.forEach(this.players, function(v) {
         v.game = null;
@@ -91,8 +93,43 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
       for (i = 0; i < init.players; i++) {
         var p = Player.new(init.mode.playerInitializer);
         p.game = this;
+        p.endTurn();
         this.players.push(p);
       }
+
+      // buyable cards
+      var that = this;
+      this.cards = {};
+      _.forOwn(init.cards, function(v, k) {
+        that.cards[k] = {
+          card: v,
+          amount: 0,
+          instance: v.new(that)
+        };
+        if (that.cards[k].instance.is('victory')) {
+          that.cards[k].amount = init.mode.cards['victory-card'].amount[that.players.length];
+        } else {
+          that.cards[k].amount = init.mode.cards['kingdom-card'].amount[that.players.length];
+        }
+      });
+
+      //clean any other variable
+      this.trash = [];
+      this.turns = 0;
+      this.playerTurn = 0;
+      this.money = 0;
+      this.actions = 1;
+      this.buys = 1;
+    },
+    endTurn: function() {
+      this.players[this.playerTurn].endTurn();
+      this.playerTurn++;
+      if (this.playerTurn >= this.players.length)
+        this.playerTurn = 0;
+      this.money = 0;
+      this.actions = 1;
+      this.buys = 1;
+      this.turns++;
     },
   });
 

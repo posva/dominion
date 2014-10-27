@@ -9,13 +9,14 @@ requirejs.config({
 
 describe('Game tests', function() {
   // Load modules with requirejs before tests
-  var Game, base, Gold, Silver;
+  var Game, base, Gold, Silver, Duchy;
   before(function(done) {
-    requirejs(['game', 'modes/base', 'cards/gold', 'cards/silver'], function(game, b, gold, silver) {
+    requirejs(['game', 'modes/base', 'cards/gold', 'cards/silver', 'cards/duchy'], function(game, b, gold, silver, duchy) {
       Game = game;
       base = b;
       Gold = gold;
       Silver = silver;
+      Duchy = duchy;
       done();
     });
   });
@@ -62,6 +63,59 @@ describe('Game tests', function() {
         mode: {}
       }).should.throw(/mode.*invalid/);
     });
+    // check that a started game is ok for  base mode an with a Gold card as a fake kingdom card
+    var checkGame = function(game) {
+      var cards = ['Copper', 'Estate'];
+      var p = game.currentPlayer();
+      var estates = 0, coppers = 0;
+      game.trash.should.be.empty;
+      p.deck.should.have.lengthOf(5);
+      p.hand.should.have.lengthOf(5);
+      p.graveyard.should.be.empty;
+      p.field.should.be.empty;
+      _.forOwn(p.deck, function(v) {
+        v.should.have.property('name');
+        cards.should.containEql(v.name);
+        if (v.name === 'Copper')
+          coppers++;
+        else
+          estates++;
+      });
+      coppers.should.be.within(2, 5);
+      estates.should.be.within(0, 3);
+      var shE = 3 - estates, shC = 7 - coppers, oE = estates, oC = coppers;
+      coppers = 0;
+      estates = 0;
+      _.forOwn(p.hand, function(v) {
+        v.should.have.property('name');
+        cards.should.containEql(v.name);
+        if (v.name === 'Copper')
+          coppers++;
+        else
+          estates++;
+      });
+      coppers.should.be.eql(shC);
+      estates.should.be.eql(shE);
+
+      // new turn
+      game.currentPlayer().should.be.equal(p);
+      game.endTurn();
+      game.currentPlayer().should.not.be.equal(p);
+      game.playerTurn.should.be.eql(1);
+      p.deck.should.be.empty;
+      coppers = 0;
+      estates = 0;
+      _.forOwn(p.hand, function(v) {
+        v.should.have.property('name');
+        cards.should.containEql(v.name);
+        if (v.name === 'Copper')
+          coppers++;
+        else
+          estates++;
+      });
+      coppers.should.be.eql(oC);
+      estates.should.be.eql(oE);
+    };
     it('should start the game', function() {
       var g = Game.new();
       g.startGame.bind(g, {
@@ -70,6 +124,7 @@ describe('Game tests', function() {
         mode: base
       }).should.not.throw();
       g.players.should.have.length(2);
+      checkGame(g);
     });
     it('should start the game multiple times', function() {
       var g = Game.new();
@@ -78,18 +133,21 @@ describe('Game tests', function() {
         cards: [Gold],
         mode: base
       }).should.not.throw();
+      checkGame(g);
       g.startGame.bind(g, {
         players: 2,
         cards: [Gold],
         mode: base
       }).should.not.throw();
       g.players.should.have.length(2);
+      checkGame(g);
       g.startGame.bind(g, {
         players: 2,
         cards: [Gold],
         mode: base
       }).should.not.throw();
       g.players.should.have.length(2);
+      checkGame(g);
     });
     it('should start the game multiple times with different confs', function() {
       var g = Game.new();
@@ -99,18 +157,38 @@ describe('Game tests', function() {
         mode: base
       }).should.not.throw();
       g.players.should.have.length(2);
+      checkGame(g);
       g.startGame.bind(g, {
         players: 4,
         cards: [Silver],
         mode: base
       }).should.not.throw();
       g.players.should.have.length(4);
+      checkGame(g);
       g.startGame.bind(g, {
         players: 2,
         cards: [Gold],
         mode: base
       }).should.not.throw();
       g.players.should.have.length(2);
+      checkGame(g);
+    });
+    it('should have the right number of availabe cards', function() {
+      var g = Game.new();
+      g.startGame.bind(g, {
+        players: 2,
+        cards: [Gold, Silver],
+        mode: base
+      }).should.not.throw();
+      g.should.have.property('cards').and.be.an.Object;
+      _.forOwn(g.cards, function(v) {
+        v.should.have.property('card');
+        v.should.have.property('instance');
+        if (v.instance.is('victory'))
+          v.should.have.property('amount', 8);
+        else // kingdom
+          v.should.have.property('amount', 10);
+      });
     });
   });
 
@@ -161,6 +239,31 @@ describe('Game tests', function() {
       g.currentPlayer(-1).should.be.eql(p1);
       g.currentPlayer(2).should.be.eql(p2);
       g.currentPlayer(-2).should.be.eql(p2);
+    });
+    it('should start over again after last player', function() {
+      var g = Game.new();
+      g.startGame.bind(g, {
+        players: 2,
+        cards: [Gold],
+        mode: base
+      }).should.not.throw();
+      var p = g.currentPlayer();
+      g.playerTurn.should.be.eql(0);
+      g.endTurn.bind(g).should.not.throw();
+      g.playerTurn.should.be.eql(1);
+      g.endTurn.bind(g).should.not.throw();
+      g.currentPlayer().should.be.equal(p);
+      g.playerTurn.should.be.eql(0);
+    });
+    it.skip('should be able to buy cards and add them to the deck', function() {
+      var g = Game.new();
+      g.startGame.bind(g, {
+        players: 2,
+        cards: [Gold],
+        mode: base
+      }).should.not.throw();
+      var p = g.currentPlayer();
+      g.buy('gold');
     });
   });
 
