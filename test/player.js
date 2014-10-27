@@ -54,6 +54,7 @@ describe('Player tests', function() {
     });
     it('should be able to end turns', function() {
       var p = Player.new(playerInitializer);
+      var i;
       for (i = 0; i < 10; i++) {
         p.endTurn.bind(p).should.not.throw();
       }
