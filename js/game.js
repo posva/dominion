@@ -1,4 +1,4 @@
-define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
+define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Card) {
   var Base = selfish.Base;
   var Game = Base.extend({
     initialize: function() {
@@ -36,7 +36,7 @@ define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
     // start a game
     // init is a conf object:
     // {
-    //  extensions: [], // extensions object
+    //  cards: [], // kingdom cards object
     //  mode: base, // mode object
     //  players: 3,
     // }
@@ -60,17 +60,17 @@ define(['selfish', 'lodash', 'player'], function(selfish, _, Player) {
         };
       }
 
-      if (!init.extensions || !init.extensions.length || init.extensions.length < 1) {
+      if (!init.cards || !init.cards.length || init.cards.length < 1) {
         throw {
           name: 'ConfError',
-          message: 'No extension given. Cannot pick kingdom cards.'
+          message: 'No cards given. Cannot pick kingdom cards.'
         };
       } else {
-        _.forEach(init.extensions, function(v) {
-          if (!v.cards) {
+        _.forEach(init.cards, function(v) {
+          if (!Card.isPrototypeOf(v)) {
             throw {
               name: 'ConfError',
-              message: 'At least one of the extensions is invalid.'
+              message: 'At least one of the given kingdom cards is invalid.'
             };
           }
         });

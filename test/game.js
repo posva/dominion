@@ -9,11 +9,13 @@ requirejs.config({
 
 describe('Game tests', function() {
   // Load modules with requirejs before tests
-  var Game, base;
+  var Game, base, Gold, Silver;
   before(function(done) {
-    requirejs(['game', 'modes/base'], function(game, b) {
+    requirejs(['game', 'modes/base', 'cards/gold', 'cards/silver'], function(game, b, gold, silver) {
       Game = game;
       base = b;
+      Gold = gold;
+      Silver = silver;
       done();
     });
   });
@@ -40,23 +42,23 @@ describe('Game tests', function() {
       g.startGame.bind(g, { players: 1}).should.throw(/number.*players/);
       g.startGame.bind(g, { players: 7}).should.throw(/number.*players/);
     });
-    it('should throw errors for extensions', function() {
+    it('should throw errors for cards', function() {
       var g = Game.new();
       g.startGame.bind(g, {
         players: 2,
-        extensions: []
-      }).should.throw(/[nN]o extensions? given/);
+        cards: []
+      }).should.throw(/[nN]o cards? given/);
       g.startGame.bind(g, {
         players: 2,
-        extensions: [{}, {cards: {}}]
-      }).should.throw(/one.*extensions?.*invalid/);
+        cards: [{}]
+      }).should.throw(/one.*cards?.*invalid/);
 
     });
     it('should throw errors for modes', function() {
       var g = Game.new();
       g.startGame.bind(g, {
         players: 2,
-        extensions: [{cards: {}}],
+        cards: [Gold],
         mode: {}
       }).should.throw(/mode.*invalid/);
     });
@@ -64,7 +66,7 @@ describe('Game tests', function() {
       var g = Game.new();
       g.startGame.bind(g, {
         players: 2,
-        extensions: [{cards: {}}],
+        cards: [Gold],
         mode: base
       }).should.not.throw();
       g.players.should.have.length(2);
@@ -73,17 +75,39 @@ describe('Game tests', function() {
       var g = Game.new();
       g.startGame.bind(g, {
         players: 2,
-        extensions: [{cards: {}}],
+        cards: [Gold],
         mode: base
       }).should.not.throw();
       g.startGame.bind(g, {
         players: 2,
-        extensions: [{cards: {}}],
+        cards: [Gold],
         mode: base
       }).should.not.throw();
+      g.players.should.have.length(2);
       g.startGame.bind(g, {
         players: 2,
-        extensions: [{cards: {}}],
+        cards: [Gold],
+        mode: base
+      }).should.not.throw();
+      g.players.should.have.length(2);
+    });
+    it('should start the game multiple times with different confs', function() {
+      var g = Game.new();
+      g.startGame.bind(g, {
+        players: 2,
+        cards: [Gold],
+        mode: base
+      }).should.not.throw();
+      g.players.should.have.length(2);
+      g.startGame.bind(g, {
+        players: 4,
+        cards: [Silver],
+        mode: base
+      }).should.not.throw();
+      g.players.should.have.length(4);
+      g.startGame.bind(g, {
+        players: 2,
+        cards: [Gold],
         mode: base
       }).should.not.throw();
       g.players.should.have.length(2);
@@ -122,7 +146,7 @@ describe('Game tests', function() {
       var g = Game.new();
       g.startGame.bind(g, {
         players: 2,
-        extensions: [{cards: {}}],
+        cards: [Gold],
         mode: base
       }).should.not.throw();
       var p1 = g.players[0], p2 = g.players[1];
