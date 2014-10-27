@@ -1,56 +1,42 @@
 define(['lodash', 'cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 'cards/gold', 'cards/province', 'cards/silver'], function(_, Copper, Curse, Duchy, Estate, Gold, Province, Silver) {
-  var amounts = {
-    '2': { // TODO
-      'curse': 10,
-      'estate': 8,
-      'copper': 40,
-      'province': 8,
-      'duchy': 8,
-      'silver': 30,
-      'gold': 30
-    },
-    '3-4': { // TODO
-      'curse': 30,
-      'estate': 12,
-      'copper': 40,
-      'province': 12,
-      'duchy': 12,
-      'silver': 30,
-      'gold': 30
-    }
-  };
   var base = {
     cards: {
-      'curse': Curse,
-      'estate': Estate,
-      'copper': Copper,
-      'province': Province,
-      'duchy': Duchy,
-      'silver': Silver,
-      'gold': Gold
-    },
-    getAmounts: function(n) {
-      var r;
-      if (typeof n !== 'number') {
-        return r; // only numbers please
+      'curse': {
+        card: Curse,
+        amount: [10, 20, 30, 40, 50]
+      },
+      'estate': {
+        card: Estate,
+        amount: [8, 12, 12, 12, 12]
+      },
+      'duchy': {
+        card: Duchy,
+        amount: [8, 12, 12, 12, 12]
+      },
+      'province': {
+        card: Province,
+        amount: [8, 12, 12, 15, 18]
+      },
+      'copper': {
+        card: Copper,
+        amount: [46, 39, 32, 85, 78]
+      },
+      'silver': {
+        card: Silver,
+        amount: [40, 40, 40, 80, 80]
+      },
+      'gold': {
+        card: Gold,
+        amount: [30, 30, 30, 60, 60]
+      },
+      'kingdom-card': {
+        card: null,
+        amount: [10, 10, 10, 10, 10]
+      },
+      'victory-card': {
+        card: null,
+        amount: [8, 12, 12, 12, 12]
       }
-      _.forOwn(amounts, function(v, k) {
-        var ind = k.indexOf('-'), a, b;
-        if (ind > 0) {
-          a = parseInt(k.substr(0, ind));
-          b = parseInt(k.substr(ind+1), 10);
-          if (n >= a && n <= b) {
-            r = v;
-            return false;
-          }
-        } else {
-          if (n === parseInt(k, 10)) {
-            r = v;
-            return false;
-          }
-        }
-      });
-      return r;
     },
     playerInitializer: function() { // must be called by the player
       var i = 0;
@@ -62,6 +48,10 @@ define(['lodash', 'cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 
       }
       this.deck.shuffle();
     },
+    isGameOver: function(game) {
+      // TODO
+      return false;
+    }
   };
 
   return base;

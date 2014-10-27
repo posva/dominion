@@ -10,10 +10,13 @@ requirejs.config({
 });
 
 describe('Dummy Suite for Modes', function() {
-  var modes = {}, modes_array = [], Player;
+  var modes = {}, modes_array = [], Player, Card, Game, Gold;
   before(function(done) {
-    requirejs(['player'], function(player) {
+    requirejs(['player', 'card', 'game', 'cards/gold'], function(player, card, game, gold) {
       Player = player;
+      Card = card;
+      Game = game;
+      Gold = gold;
       fs.readdir('js/modes', function(err, files) {
         // find modes files
         _.forEach(files, function(v) {
@@ -36,38 +39,47 @@ describe('Dummy Suite for Modes', function() {
                 describe('#Common', function(){
                   it('should have a cards object', function(){
                     v.should.have.property('cards');
+                    _.forOwn(v.cards, function(c, k) {
+                      c.should.have.property('card');
+                      if (c.card)
+                        Card.isPrototypeOf(c.card).should.be.ok;
+                    });
+                  });
+                  it('should have special card named \'kingdom-card\' and \'victory-card\'', function() {
+                    v.cards.should.have.property('kingdom-card');
+                    v.cards.should.have.property('victory-card');
+                    v.cards['kingdom-card'].should.have.property('card', null);
+                    v.cards['victory-card'].should.have.property('card', null);
                   });
                   it('should be able to get amounts of cards', function(){
-                    v.getAmounts.should.be.a.Function;
-                    assert.strictEqual(v.getAmounts('1'), undefined);
-                    assert.strictEqual(v.getAmounts({}), undefined);
-                    assert.strictEqual(v.getAmounts([]), undefined);
-                    assert.strictEqual(v.getAmounts(1), undefined);
-                    v.getAmounts(2).should.be.ok.and.be.an.Object;
-                    v.getAmounts(3).should.be.ok.and.be.an.Object;
-                    v.getAmounts(4).should.be.ok.and.be.an.Object;
-                  });
-                  it('should have an amount for every card in \'cards\'', function() {
-                    var i, amounts;
-                    var floop = function(v, k) {
-                      amounts.should.have.property(k).and.be.a.Number;
-                    };
-                    for (i = 2; i < 6; i++) {
-                      amounts = v.getAmounts(i);
-                      if (amounts) {
-                        _.forOwn(v.cards, floop);
-                      }
-                    }
+                    _.forOwn(v.cards, function(c, k) {
+                      c.should.have.property('amount');
+                      c.amount.should.be.an.Array.and.have.lengthOf(5);
+                      _.forOwn(c.amount, function(v) {
+                        v.should.be.a.Number;
+                      });
+                    });
                   });
                   it('should have a working playerInitializer', function() {
                     v.playerInitializer.should.be.a.Function;
                     Player.new.bind(Player, v.playerInitializer).should.not.throw();
                   });
+                  it('should have working isGameOver', function() {
+                    var game = Game.new();
+                    game.startGame({
+                      players: 2,
+                      cards: [Gold],
+                      mode: v
+                    });
+                    v.isGameOver.should.be.a.Function;
+                    v.isGameOver.bind(v, game).should.not.throw();
+                  });
                 });
                 describe('#Card creation', function() {
                   _.forOwn(v.cards, function(c, name) {
                     it('should be able to create ' + name, function() {
-                      c.new().should.be.ok;
+                      if (c.card)
+                        c.card.new().should.be.ok;
                     });
                   });
                 });
