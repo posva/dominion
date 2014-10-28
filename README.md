@@ -27,11 +27,11 @@ grunt
 
 When optimizing with `r.js` (`grunt deploy`), `selfish` is not up to date. Therefore line 6 must be changed with this:
 ```js
-!(typeof define !== "function" ? function(selfish, $){ $(null, typeof exports !== 'undefined' ? exports : window); } : define)('selfish', function(require, exports) {
+!(typeof define !== "function" ? function(_, $){ $(null, typeof exports !== 'undefined' ? exports : window); } : define)('selfish', function(require, exports) {
 ```
 
 
-# Tasks
+# Grunt Tasks
 
 * `deploy`: build with `r.js`
 * `test`: launch the tests
@@ -41,15 +41,12 @@ When optimizing with `r.js` (`grunt deploy`), `selfish` is not up to date. There
 
 # Coding Style
 
+Coding style is mostly 1TBS.
+
 * Indentation: 2 spaces
-* Braces: at the end of the line like
-```
-if (test) {
-  do();
-}
-```
-* Protoypes: start with Upper Case. ex: `var cafe = Cafe.new()`
-* Globals: add them to the `globals.js` file
+* Curly braces: at the end of the line
+* Protoypes: start with Upper Case. ex: `var cafe = Cafe.new()`, instances with lower case
+* Globals: add them to the `globals.js` file. You can check global leaks with `mocha --check-leaks`
 
 # License
 
@@ -64,4 +61,4 @@ This code is distributed under the MIT License.
 
 The original game [Dominion](http://en.wikipedia.org/wiki/Dominion_(card_game)) was created by Donald X. Vaccarino and published by Rio Grande Games.
 The online version [playdominion.com](http://playdominion.com) was developed by Goko (I think :no_mouth:).
-Any picture used for the cards belong to them and do not apply to the project Licence (which is not defined yet)
+Any picture used for the cards belong to them and do not apply to the project Licence.
