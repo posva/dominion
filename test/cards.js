@@ -10,15 +10,18 @@ requirejs.config({
 describe('Card Testing', function() {
   // module loading
   // Load modules with requirejs before tests
-  var Card, Victory, Treasure, Curse, Action, utils;
+  var Card, Victory, Treasure, Curse, Action, utils, Game, base, Event;
   before(function(done) {
-    requirejs(['card', 'victory', 'treasure', 'curse', 'action', 'utils'], function(card, victory, treasure, curse, action, u) {
+    requirejs(['card', 'victory', 'treasure', 'curse', 'action', 'utils', 'modes/base', 'game', 'event'], function(card, victory, treasure, curse, action, u, b, game, event) {
       Card = card;
       Victory = victory;
       Treasure = treasure;
       Curse = curse;
       Action = action;
       utils = u;
+      base = b;
+      Game = game;
+      Event = event;
       done();
     });
   });
@@ -142,10 +145,12 @@ describe('Card Testing', function() {
     });
 
     it('should create an action card', function() {
+      var game = Game.new();
       var events = [
-        function(game) {
+        function() {
         // do something
         },
+        Event.new(game, 'cards 1')
       ];
       var Ac = Card.extend(Action, {
         initialize: function() {
@@ -154,8 +159,8 @@ describe('Card Testing', function() {
         }
       });
       Ac.new.bind(Ac).should.not.throw();
-      var c = Ac.new();
-      c.checkEventArray.bind(c, events).should.not.throw();
+      var c = Ac.new(game);
+      c.checkEventArray.bind(c).should.not.throw();
       c.play.should.be.a.Function;
       c.play.bind(c).should.not.throw();
       c.is('action').should.be.ok;
@@ -227,6 +232,15 @@ describe('Card Testing', function() {
       });
       a = A.new();
       a.checkEventArray.bind(a).should.throw(/not a valid string/);
+
+      A = Card.extend(Action, {
+        initialize: function() {
+          Card.initialize.call(this, {cost: 2});
+          Action.initialize.call(this, [null]);
+        }
+      });
+      a = A.new();
+      a.checkEventArray.bind(a).should.throw(/valid.*event/);
     });
   });
 

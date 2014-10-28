@@ -40,7 +40,7 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
     }
     var that = this;
     _.each(ev, function(v) {
-      if (!v || !v.isPrototypeOf || !v.isPrototypeOf(Event)) {
+      if (!v || !Event.isPrototypeOf(v)) {
         if (v instanceof Array) { // its an array!
           checkEventArray.apply(that, [v]);
         } else if (typeof v !== 'function') {
