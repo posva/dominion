@@ -9,13 +9,17 @@ requirejs.config({
 
 describe('Event Testing', function() {
   // Load modules with requirejs before tests
-  var Event, Game, Card, Action, game;
+  var Event, Game, Card, Action, game, Gold, Silver, Duchy, base;
   before(function(done) {
-    requirejs(['game', 'event', 'card', 'action'], function(game, event, card, action) {
+    requirejs(['game', 'event', 'card', 'action', 'cards/gold', 'cards/silver', 'cards/duchy', 'modes/base'], function(game, event, card, action, gold, silver, duchy, B) {
       Game = game;
       Event = event;
       Action = action;
       Card = card;
+      Gold = gold;
+      Silver = silver;
+      Duchy = duchy;
+      base = B;
       done();
     });
   });
@@ -44,9 +48,63 @@ describe('Event Testing', function() {
     });
   });
   describe('#Event execution', function(){
-    it('should draw cards');
-    it('should add money');
-    it('should add actions');
+    it('should draw cards', function() {
+      game.startGame.bind(game, {
+        players: 2,
+        cards: [Gold, Silver, Duchy],
+        mode: base
+      }).should.not.throw();
+      var e = Event.new(game, 'cards 1');
+      var p = game.currentPlayer();
+      e.fire.bind(e).should.not.throw();
+      p.hand.should.have.lengthOf(6);
+
+      e = Event.new(game, 'cards 3');
+      e.fire.bind(e).should.not.throw();
+      p.hand.should.have.lengthOf(9);
+    });
+    it('should add money', function() {
+      game.startGame.bind(game, {
+        players: 2,
+        cards: [Gold, Silver, Duchy],
+        mode: base
+      }).should.not.throw();
+      var e = Event.new(game, 'money 1');
+      e.fire.bind(e).should.not.throw();
+      game.money.should.be.eql(1);
+
+      e = Event.new(game, 'money 3');
+      e.fire.bind(e).should.not.throw();
+      game.money.should.be.eql(4);
+    });
+    it('should add actions', function() {
+      game.startGame.bind(game, {
+        players: 2,
+        cards: [Gold, Silver, Duchy],
+        mode: base
+      }).should.not.throw();
+      var e = Event.new(game, 'actions 1');
+      e.fire.bind(e).should.not.throw();
+      game.actions.should.be.eql(2);
+
+      e = Event.new(game, 'actions 3');
+      e.fire.bind(e).should.not.throw();
+      game.actions.should.be.eql(5);
+    });
+    it('should add buys', function() {
+      game.startGame.bind(game, {
+        players: 2,
+        cards: [Gold, Silver, Duchy],
+        mode: base
+      }).should.not.throw();
+      var e = Event.new(game, 'buys 1');
+      e.fire.bind(e).should.not.throw();
+      game.buys.should.be.eql(2);
+
+      e = Event.new(game, 'buys 3');
+      e.fire.bind(e).should.not.throw();
+      game.buys.should.be.eql(5);
+    });
   });
 
 });
