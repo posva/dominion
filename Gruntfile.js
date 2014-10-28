@@ -94,7 +94,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
 
-  grunt.registerTask('default', ['jshint:sys', 'jshint:src', 'coverage', 'deploy']);
+  grunt.registerTask('default', ['jshint:sys', 'jshint:src', 'jshint:tests', 'coverage', 'deploy']);
   grunt.registerTask('deploy', ['requirejs']);
   grunt.registerTask('serve', ['http-server:dev']);
   grunt.registerTask('test', ['mochaTest']);
