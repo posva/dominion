@@ -267,7 +267,7 @@ describe('Game tests', function() {
     });
     it('should be able to buy cards and actually get them', function() {
       var p = g.currentPlayer();
-      var gold = g.cards['Gold'].instance;
+      var gold = g.cards.Gold.instance;
       g.endActions();
       g.addMoney(20);
       g.addBuys(1);
@@ -283,7 +283,7 @@ describe('Game tests', function() {
     });
     it('should not be able to buy more than allowed', function() {
       var p = g.currentPlayer();
-      var gold = g.cards['Gold'].instance;
+      var gold = g.cards.Gold.instance;
       g.endActions();
       g.addMoney(20);
       g.buys.should.be.eql(1);
@@ -294,9 +294,12 @@ describe('Game tests', function() {
       g.buys.should.be.eql(0);
       p.field.should.containEql(gold);
     });
+    it('should not be able to buy cards that doesn\'t exist', function() {
+      should(g.buy('Bad card name')).be.eql(null);
+    });
     it('should not be able to buy with less money', function() {
       var p = g.currentPlayer();
-      var gold = g.cards['Gold'].instance;
+      var gold = g.cards.Gold.instance;
       g.endActions();
       g.buys.should.be.eql(1);
       should(g.buy('Gold')).be.eql(null); // no more buys
@@ -360,7 +363,7 @@ describe('Game tests', function() {
     });
     it('should be able to play treasures if not playing actions', function() {
       var p = g.currentPlayer();
-      var gg = g.cards['Gold'].instance;
+      var gg = g.cards.Gold.instance;
       p.hand.push(gg);
       p.hand.containCard('Gold').should.be.ok;
       g.endActions();
@@ -373,7 +376,7 @@ describe('Game tests', function() {
     });
     it('should not be able to play treasures if playing actions', function() {
       var p = g.currentPlayer();
-      var gg = g.cards['Gold'].instance;
+      var gg = g.cards.Gold.instance;
       p.hand.push(gg);
       p.hand.containCard('Gold').should.be.ok;
       p.hand.should.have.lengthOf(6);
