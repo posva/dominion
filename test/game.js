@@ -10,14 +10,16 @@ requirejs.config({
 
 describe('Game tests', function() {
   // Load modules with requirejs before tests
-  var Game, base, Gold, Silver, Duchy;
+  var Game, base, Gold, Silver, Duchy, GreatHall, Player;
   before(function(done) {
-    requirejs(['game', 'modes/base', 'cards/gold', 'cards/silver', 'cards/duchy'], function(game, b, gold, silver, duchy) {
+    requirejs(['game', 'modes/base', 'cards/gold', 'cards/silver', 'cards/duchy', 'cards/intrigue/great-hall', 'player'], function(game, b, gold, silver, duchy, gh, player) {
       Game = game;
       base = b;
       Gold = gold;
       Silver = silver;
       Duchy = duchy;
+      GreatHall = gh;
+      Player = player;
       done();
     });
   });
@@ -225,13 +227,16 @@ describe('Game tests', function() {
   });
 
   describe('#Game interactions', function() {
-    it('should get relative players with 2 players', function() {
-      var g = Game.new();
-      g.startGame.bind(g, {
+    var g;
+    beforeEach(function() {
+      g = Game.new();
+      g.startGame({
         players: 2,
-        cards: [Gold],
+        cards: [Gold, GreatHall],
         mode: base
-      }).should.not.throw();
+      });
+    });
+    it('should get relative players with 2 players', function() {
       var p1 = g.players[0], p2 = g.players[1];
       g.currentPlayer(0).should.be.eql(p1);
       g.currentPlayer(1).should.be.eql(p2);
@@ -246,29 +251,139 @@ describe('Game tests', function() {
       g.currentPlayer(-2).should.be.eql(p2);
     });
     it('should start over again after last player', function() {
-      var g = Game.new();
-      g.startGame.bind(g, {
-        players: 2,
-        cards: [Gold],
-        mode: base
-      }).should.not.throw();
       var p = g.currentPlayer();
-      g.playerTurn.should.be.eql(0);
-      g.endTurn.bind(g).should.not.throw();
-      g.playerTurn.should.be.eql(1);
-      g.endTurn.bind(g).should.not.throw();
-      g.currentPlayer().should.be.equal(p);
-      g.playerTurn.should.be.eql(0);
+      var i, o;
+      for (i = 0; i < 10; i++) {
+        g.playerTurn.should.be.eql(0);
+        g.endTurn.bind(g).should.not.throw();
+        g.playerTurn.should.be.eql(1);
+        o = g.currentPlayer();
+        (o.hand.length + o.graveyard.length + o.deck.length).should.be.eql(10);
+        g.endTurn.bind(g).should.not.throw();
+        g.currentPlayer().should.be.equal(p);
+        o = g.currentPlayer();
+        (o.hand.length + o.graveyard.length + o.deck.length).should.be.eql(10);
+      }
     });
-    it.skip('should be able to buy cards and add them to the deck', function() {
-      var g = Game.new();
-      g.startGame.bind(g, {
-        players: 2,
-        cards: [Gold],
-        mode: base
-      }).should.not.throw();
+    it('should be able to buy cards and actually get them', function() {
       var p = g.currentPlayer();
-      g.buy('gold');
+      var gold = g.cards['Gold'].instance;
+      g.endActions();
+      g.addMoney(20);
+      g.addBuys(1);
+      g.buy('Gold').should.be.eql(gold);
+      g.buys.should.be.eql(1);
+      g.buy('Gold').should.be.eql(gold);
+      g.buys.should.be.eql(0);
+      p.field.should.have.lengthOf(2);
+      p.field.should.containEql(gold);
+      g.endTurn();
+      p.field.should.have.lengthOf(0);
+      p.graveyard.should.containEql(gold);
+    });
+    it('should not be able to buy more than allowed', function() {
+      var p = g.currentPlayer();
+      var gold = g.cards['Gold'].instance;
+      g.endActions();
+      g.addMoney(20);
+      g.buys.should.be.eql(1);
+      g.buy('Gold').should.be.eql(gold);
+      should(g.buy('Gold')).be.eql(null); // no more buys
+      should(g.buy('Gold')).be.eql(null);
+      p.field.should.have.lengthOf(1);
+      g.buys.should.be.eql(0);
+      p.field.should.containEql(gold);
+    });
+    it('should not be able to buy with less money', function() {
+      var p = g.currentPlayer();
+      var gold = g.cards['Gold'].instance;
+      g.endActions();
+      g.buys.should.be.eql(1);
+      should(g.buy('Gold')).be.eql(null); // no more buys
+      g.addMoney(1);
+      should(g.buy('Gold')).be.eql(null);
+      g.addMoney(1);
+      should(g.buy('Gold')).be.eql(null);
+      g.addMoney(1);
+      should(g.buy('Gold')).be.eql(null);
+      p.field.should.have.lengthOf(0);
+      g.buys.should.be.eql(1);
+      g.money.should.be.eql(3);
+    });
+    it('should be able to play an action if not buying', function() {
+      var p = g.currentPlayer();
+      var greatH = g.cards['Great Hall'].instance;
+      p.hand.push(greatH);
+      p.hand.containCard('Great Hall').should.be.ok;
+      // the first phase is always action
+      g.phase.should.be.eql('action');
+      p.hand.should.have.lengthOf(6);
+      g.play(5).should.be.eql(greatH); // we played the right card
+      p.field.should.have.lengthOf(1);
+      p.hand.should.have.lengthOf(6); // +1 card from GH
+      p.field.containCard('Great Hall').should.be.ok;
+      p.hand.containCard('Great Hall').should.not.be.ok;
+      g.actions.should.be.eql(1); // because of Great Hall
+    });
+    it('should not be able to play an action if buying', function() {
+      var p = g.currentPlayer();
+      var greatH = g.cards['Great Hall'].instance;
+      p.hand.push(greatH);
+      p.hand.containCard('Great Hall').should.be.ok;
+      // the first phase is always action
+      g.endActions();
+      g.phase.should.be.eql('buy');
+      p.hand.should.have.lengthOf(6);
+      should(g.play(5)).be.eql(null); // we cannot play the card!
+      should(g.play(5)).be.eql(null);
+      should(g.play(5)).be.eql(null);
+      p.field.should.have.lengthOf(0);
+      p.hand.should.have.lengthOf(6);
+      p.hand[5].should.be.eql(greatH);
+      g.actions.should.be.eql(1); // we played nothing
+    });
+    it('should not be able to play an action if no actions are left', function() {
+      var p = g.currentPlayer();
+      var greatH = g.cards['Great Hall'].instance;
+      p.hand.push(greatH);
+      p.hand.containCard('Great Hall').should.be.ok;
+      // the first phase is always action
+      g.actions = 0;
+      p.hand.should.have.lengthOf(6);
+      should(g.play(5)).be.eql(null); // we cannot play the card!
+      should(g.play(5)).be.eql(null);
+      should(g.play(5)).be.eql(null);
+      p.field.should.have.lengthOf(0);
+      p.hand.should.have.lengthOf(6);
+      p.hand[5].should.be.eql(greatH);
+      g.actions.should.be.eql(0); // we played nothing
+    });
+    it('should be able to play treasures if not playing actions', function() {
+      var p = g.currentPlayer();
+      var gg = g.cards['Gold'].instance;
+      p.hand.push(gg);
+      p.hand.containCard('Gold').should.be.ok;
+      g.endActions();
+      p.hand.should.have.lengthOf(6);
+      g.play(5).should.be.eql(gg); // we cannot play the card!
+      p.field.should.have.lengthOf(1);
+      p.hand.should.have.lengthOf(5);
+      p.field[0].should.be.eql(gg);
+      g.money.should.be.eql(3); // we played nothing
+    });
+    it('should not be able to play treasures if playing actions', function() {
+      var p = g.currentPlayer();
+      var gg = g.cards['Gold'].instance;
+      p.hand.push(gg);
+      p.hand.containCard('Gold').should.be.ok;
+      p.hand.should.have.lengthOf(6);
+      should(g.play(5)).be.eql(null); // we cannot play the card!
+      should(g.play(5)).be.eql(null);
+      should(g.play(5)).be.eql(null);
+      p.field.should.have.lengthOf(0);
+      p.hand.should.have.lengthOf(6);
+      p.hand[5].should.be.eql(gg);
+      g.money.should.be.eql(0); // we played nothing
     });
   });
 

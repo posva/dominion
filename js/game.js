@@ -10,6 +10,7 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
       this.cards = {};
       this.turns = 0;
       this.trash = [];
+      this.phase = 'action';
       this.playerTurn = 0;
     },
     addActions: function(n) {
@@ -101,11 +102,13 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
       var that = this;
       this.cards = {};
       _.forOwn(init.cards, function(v, k) {
-        that.cards[k] = {
+        var tmp = {
           card: v,
           amount: 0,
           instance: v.new(that)
         };
+        k = tmp.instance.name;
+        that.cards[k] = tmp;
         if (that.cards[k].instance.is('victory')) {
           that.cards[k].amount = init.mode.cards['victory-card'].amount[that.players.length-2];
         } else {
@@ -120,6 +123,45 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
       this.money = 0;
       this.actions = 1;
       this.buys = 1;
+      this.phase = 'action';
+    },
+    // play the card at index i in current player.
+    // return the card played or null if the card could not be played
+    play: function(i) {
+      var p = this.currentPlayer();
+      var c = p.hand[i];
+      if (!c ||
+          (c.is('action') && (this.actions < 1 || this.phase !== 'action')) ||
+          (c.is('treasure') && this.phase !== 'buy') // a treasure cannot be an action but may do things
+         ) {
+        return null;
+      } // else play the card
+      if (c.is('treasure')) {
+        this.addMoney(c.money());
+      }
+      p.plays(i);
+      this.actions--;
+      return c;
+    },
+    // buy a card with name name
+    // rteturn the bought card ot null if the card couldn't be bought
+    buy: function(name) {
+      var p = this.currentPlayer();
+      var card = this.cards[name], c;
+      if (!card || card.amount < 1) {
+        return null;
+      }
+      c = card.instance;
+      if (this.phase !== 'buy' || this.buys < 1 || this.money < c.cost()) {
+        return null;
+      }
+      p.field.push(c);
+      card.amount--;
+      this.buys--;
+      return c;
+    },
+    endActions: function() {
+      this.phase = 'buy';
     },
     endTurn: function() {
       this.players[this.playerTurn].endTurn();
@@ -131,6 +173,7 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
       this.actions = 1;
       this.buys = 1;
       this.turns++;
+      this.phase = 'action';
     },
   });
 

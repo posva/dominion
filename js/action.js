@@ -52,6 +52,28 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       }
     });
   };
+  // recursive fucntion to play actions
+  // TODO choose and other string functions
+  var subPlay = function(arr, game) {
+    if (typeof arr[0] === 'string') {
+      return false; // stop iteration of actions if waiting for a choose
+    } else {
+      _.forEach(arr, function(v) {
+        if (typeof v === 'object' && v.length) {
+          if (!subPlay(v, game)) {
+            return false; // stop iteration
+          }
+        } else {
+          if (Event.isPrototypeOf(v)) {
+            v.fire();
+          } else {
+            v(game);
+          }
+        }
+      });
+      return true; // all is ok
+    }
+  };
   var Action = Base.extend({
     // events is an array which first element can be a string:
     // - choose/choose x
@@ -71,7 +93,9 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       this.type.push('action');
     },
     // TODO add a check at initialization isntead of doing it in play
+    // Even better just do dynamic tests for cards
     play: function(game) {
+      subPlay(this.events, game);
     },
     checkEventArray: checkEventArray
   });

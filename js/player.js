@@ -97,10 +97,14 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
       };
       this.draws(5);
     },
+    // plays card at index i. i must be a valid index for a card to be played
+    // game must check if the card can be played
     plays: function(i) {
-      // TODO call a play function
       var c = this.hand.splice(i, 1)[0];
       this.field.push(c);
+      if (c.play && typeof c.play === 'function') {
+        c.play(this.game);
+      }
     }
   });
 
