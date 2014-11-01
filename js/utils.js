@@ -13,5 +13,15 @@ define(['lodash'], function(_) {
     }
     return this;
   };
+  Array.prototype.containCard = function(s) {
+    var i;
+    for (i = 0; i < this.length; i++) {
+      if (this[i].name === s) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return u;
 });
