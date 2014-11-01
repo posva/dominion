@@ -1,31 +1,31 @@
 define(['lodash', 'cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 'cards/gold', 'cards/province', 'cards/silver'], function(_, Copper, Curse, Duchy, Estate, Gold, Province, Silver) {
   var base = {
     cards: {
-      'curse': {
+      'Curse': {
         card: Curse,
         amount: [10, 20, 30, 40, 50]
       },
-      'estate': {
+      'Estate': {
         card: Estate,
         amount: [8, 12, 12, 12, 12]
       },
-      'duchy': {
+      'Duchy': {
         card: Duchy,
         amount: [8, 12, 12, 12, 12]
       },
-      'province': {
+      'Province': {
         card: Province,
         amount: [8, 12, 12, 15, 18]
       },
-      'copper': {
+      'Copper': {
         card: Copper,
         amount: [46, 39, 32, 85, 78]
       },
-      'silver': {
+      'Silver': {
         card: Silver,
         amount: [40, 40, 40, 80, 80]
       },
-      'gold': {
+      'Gold': {
         card: Gold,
         amount: [30, 30, 30, 60, 60]
       },

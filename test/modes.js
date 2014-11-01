@@ -10,13 +10,14 @@ requirejs.config({
 });
 
 describe('Dummy Suite for Modes', function() {
-  var modes = {}, modes_array = [], Player, Card, Game, Gold;
+  var modes = {}, modes_array = [], Player, Card, Game, Gold, Duchy;
   before(function(done) {
-    requirejs(['player', 'card', 'game', 'cards/gold'], function(player, card, game, gold) {
+    requirejs(['player', 'card', 'game', 'cards/gold', 'cards/duchy'], function(player, card, game, gold, duchy) {
       Player = player;
       Card = card;
       Game = game;
       Gold = gold;
+      Duchy = duchy;
       fs.readdir('js/modes', function(err, files) {
         // find modes files
         _.forEach(files, function(v) {
@@ -37,12 +38,29 @@ describe('Dummy Suite for Modes', function() {
               describe(k+ '.js', function(){
                 v = modes[k];
                 describe('#Common', function(){
-                  it('should have a cards object', function(){
+                  var game;
+                  before(function() {
+                    game = Game.new();
+                    game.startGame({
+                      players: 2,
+                      cards: [Gold],
+                      mode: v
+                    });
+                  });
+                  it('should have a valid cards object', function(){
                     v.should.have.property('cards');
                     _.forOwn(v.cards, function(c, k) {
                       c.should.have.property('card');
                       if (c.card) {
                         Card.isPrototypeOf(c.card).should.be.ok;
+                      }
+                    });
+                  });
+                  it('should match key and card name in cards object', function() {
+                    _.forOwn(v.cards, function(c, name) {
+                      if (c.card) {
+                        var i = c.card.new(game);
+                        i.name.should.be.eql(name);
                       }
                     });
                   });
@@ -61,9 +79,14 @@ describe('Dummy Suite for Modes', function() {
                       });
                     });
                   });
-                  it('should have a working playerInitializer', function() {
+                  it('should start a game', function() {
                     v.playerInitializer.should.be.a.Function;
-                    Player.new.bind(Player, v.playerInitializer).should.not.throw();
+                    var g = Game.new();
+                      g.startGame.bind(g, {
+                      players: 2,
+                      cards: [Duchy],
+                      mode: v
+                    }).should.not.throw();
                   });
                   it('should have working isGameOver', function() {
                     var game = Game.new();
@@ -77,10 +100,19 @@ describe('Dummy Suite for Modes', function() {
                   });
                 });
                 describe('#Card creation', function() {
+                  var game;
+                  before(function() {
+                    game = Game.new();
+                    game.startGame({
+                      players: 2,
+                      cards: [Gold],
+                      mode: v
+                    });
+                  });
                   _.forOwn(v.cards, function(c, name) {
                     if (c.card) {
                       it('should be able to create ' + name, function() {
-                        c.card.new().should.be.ok;
+                        c.card.new(game).should.be.ok;
                       });
                     }
                   });
