@@ -179,11 +179,11 @@ describe('Game tests', function() {
       g.players.should.have.length(2);
       checkGame(g);
     });
-    it('should have the right number of availabe cards', function() {
+    it('should have the right number of available cards', function() {
       var g = Game.new();
       g.startGame.bind(g, {
         players: 2,
-        cards: [Gold, Silver, Duchy],
+        cards: [Duchy],
         mode: base
       }).should.not.throw();
       g.should.have.property('cards').and.be.an.Object;
@@ -192,8 +192,10 @@ describe('Game tests', function() {
         v.should.have.property('instance');
         if (v.instance.is('victory')) {
           v.should.have.property('amount', 8);
-        }else { // kingdom
+        }else if (v.instance.is('action')) { // kingdom
           v.should.have.property('amount', 10);
+        } else {
+          v.should.have.property('amount', base.cards[v.instance.name].amount[0]);
         }
       });
     });
@@ -280,6 +282,23 @@ describe('Game tests', function() {
       g.endTurn();
       p.field.should.have.lengthOf(0);
       p.graveyard.should.containEql(gold);
+    });
+    it('should buy cards from expansion and from mode', function() {
+      var p = g.currentPlayer();
+      var gold = g.cards.Gold.instance;
+      var copper = g.cards.Copper.instance;
+      var province = g.cards.Province.instance;
+      g.endActions();
+      g.addMoney(14);
+      g.addBuys(2);
+      g.buy('Gold').should.be.eql(gold);
+      g.buy('Copper').should.be.eql(copper);
+      g.buy('Province').should.be.eql(province);
+      g.buys.should.be.eql(0);
+      p.field.should.have.lengthOf(3);
+      p.field.should.containEql(gold);
+      p.field.should.containEql(province);
+      p.field.should.containEql(copper);
     });
     it('should not be able to buy more than allowed', function() {
       var p = g.currentPlayer();

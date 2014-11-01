@@ -1,7 +1,7 @@
 define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
   var Base = selfish.Base;
   var Player = Base.extend({
-    initialize: function(newGameFun) {
+    initialize: function(newGameFun, game) {
       // Possible location for cards
       this.hand = [];
       this.deck = [];
@@ -10,14 +10,14 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
       this.preHooks = []; // allows to execute code before playing a card
       this.postHooks = []; // ex: function(card) { if card.is('action') this.turn.actions++; }
       this.turn = {}; // information reset each turn such as actions played etc
-      this.game = undefined; // game instance. Must be added by Game
+      this.game = game; // game instance. Must be added by Game
       if (!_.isFunction(newGameFun)) {
         throw {
           name: 'PlayerInit',
           message: 'No initializer given'
         };
       } else {
-        newGameFun.apply(this);
+        newGameFun.apply(this, [game]);
       }
     },
     // shuffle graveyard into deck

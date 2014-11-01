@@ -46,7 +46,6 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
     // Expansion may do some special initialization like potions and more
     // Mode allows to change how we start (number of coppers, curses, etc)
     startGame: function(init) {
-      // TODO
       if (!init) {
         throw {
           name: 'ConfError',
@@ -84,23 +83,23 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
           message: 'Game mode is invalid.'
         };
       }
-
-      // players
-      var i;
-      _.forEach(this.players, function(v) {
-        v.game = null;
-      });
-      this.players = [];
-      for (i = 0; i < init.players; i++) {
-        var p = Player.new(init.mode.playerInitializer);
-        p.game = this;
-        p.endTurn();
-        this.players.push(p);
-      }
-
       // buyable cards
       var that = this;
       this.cards = {};
+      _.forOwn(init.mode.cards, function(v, k) {
+        if (!v.card) {
+          return; // kingdom an victory special cards
+        }
+        var tmp = {
+          card: v.card,
+          amount: 0,
+          instance: v.card.new(that)
+        };
+        k = tmp.instance.name;
+        that.cards[k] = tmp;
+        that.cards[k].amount = v.amount[init.players-2];
+      });
+      // expansions cards can overwrite mode cards
       _.forOwn(init.cards, function(v, k) {
         var tmp = {
           card: v,
@@ -110,11 +109,23 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
         k = tmp.instance.name;
         that.cards[k] = tmp;
         if (that.cards[k].instance.is('victory')) {
-          that.cards[k].amount = init.mode.cards['victory-card'].amount[that.players.length-2];
+          that.cards[k].amount = init.mode.cards['victory-card'].amount[init.players-2];
         } else {
-          that.cards[k].amount = init.mode.cards['kingdom-card'].amount[that.players.length-2];
+          that.cards[k].amount = init.mode.cards['kingdom-card'].amount[init.players-2];
         }
       });
+
+      // players
+      var i;
+      _.forEach(this.players, function(v) {
+        v.game = null;
+      });
+      this.players = [];
+      for (i = 0; i < init.players; i++) {
+        var p = Player.new(init.mode.playerInitializer, this);
+        p.endTurn();
+        this.players.push(p);
+      }
 
       //clean any other variable
       this.trash = [];

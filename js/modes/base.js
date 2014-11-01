@@ -38,13 +38,13 @@ define(['lodash', 'cards/copper', 'cards/curse', 'cards/duchy', 'cards/estate', 
         amount: [8, 12, 12, 12, 12]
       }
     },
-    playerInitializer: function() { // must be called by the player
+    playerInitializer: function(game) { // must be called by the player
       var i = 0;
       for (i = 0; i < 7; i++) {
-        this.deck.push(Copper.new());
+        this.deck.push(game.cards.Copper.instance);
       }
       for (i = 0; i < 3; i++) {
-        this.deck.push(Estate.new());
+        this.deck.push(game.cards.Estate.instance);
       }
       this.deck.shuffle();
     },
