@@ -78,11 +78,11 @@ describe('Dummy Suite for Modes', function() {
                 });
                 describe('#Card creation', function() {
                   _.forOwn(v.cards, function(c, name) {
-                    it('should be able to create ' + name, function() {
-                      if (c.card) {
+                    if (c.card) {
+                      it('should be able to create ' + name, function() {
                         c.card.new().should.be.ok;
-                      }
-                    });
+                      });
+                    }
                   });
                 });
               });

@@ -82,7 +82,7 @@ describe('Player tests', function() {
       p.deck.should.have.lengthOf(10);
       p.hand.should.have.lengthOf(0);
     });
-    it('should discard cards', function() {
+    it('should discard cards with valid indexes', function() {
       var p = Player.new(playerInitializer);
       p.endTurn();
       p.discards.bind(p, {}).should.throw();
