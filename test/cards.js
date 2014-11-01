@@ -10,9 +10,9 @@ requirejs.config({
 describe('Card Testing', function() {
   // module loading
   // Load modules with requirejs before tests
-  var Card, Victory, Treasure, Curse, Action, utils, Game, base, Event;
+  var Card, Victory, Treasure, Curse, Action, utils, Game, base, Event, Gold;
   before(function(done) {
-    requirejs(['card', 'victory', 'treasure', 'curse', 'action', 'utils', 'modes/base', 'game', 'event'], function(card, victory, treasure, curse, action, u, b, game, event) {
+    requirejs(['card', 'victory', 'treasure', 'curse', 'action', 'utils', 'modes/base', 'game', 'event', 'cards/gold'], function(card, victory, treasure, curse, action, u, b, game, event, gold) {
       Card = card;
       Victory = victory;
       Treasure = treasure;
@@ -22,6 +22,7 @@ describe('Card Testing', function() {
       base = b;
       Game = game;
       Event = event;
+      Gold = gold;
       done();
     });
   });
@@ -146,6 +147,11 @@ describe('Card Testing', function() {
 
     it('should create an action card', function() {
       var game = Game.new();
+      game.startGame.bind(game, {
+        players: 2,
+        cards: [Gold],
+        mode: base
+      }).should.not.throw();
       var events = [
         function() {
         // do something
