@@ -406,7 +406,47 @@ describe('Actions Testing', function() {
     it('should work with a "random" card');
   });
   describe('#Recursive actions', function(){
-    it('should fire all events in a simple recursive array');
+    it('should fire all events in a simple recursive array', function() {
+      var A = Card.extend(Action, {
+        initialize: function(game)  {
+          Card.initialize.call(this, {
+            name: 'name',
+            text: 'text',
+            cost: 1,
+            img: ''
+          });
+          Action.initialize.call(this, [
+            Event.new(game, 'cards 1'),
+            Event.new(game, 'buys 1'),
+            (function(game) {
+              game.currentPlayer().graveyard.push(gold);
+            }).bind(null, game),
+            [
+              Event.new(game, 'cards 1'),
+              Event.new(game, 'buys 1'),
+              function(game) {
+                game.currentPlayer().graveyard.push(silver);
+              },
+              [
+                Event.new(game, 'actions 1'),
+              ]
+            ]
+          ]);
+        },
+      });
+      A.new.bind(A, game).should.not.throw();
+      var a = A.new(game);
+      var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
+      p.hand.push(a);
+      game.play(5).should.be.eql(a);
+      p.hand.should.have.lengthOf(7);
+      game.buys.should.be.eql(3);
+      p.graveyard.should.containEql(gold);
+      p.graveyard.should.containEql(silver);
+      game.actions.should.be.eql(1);
+    });
     it('should randomly branch');
     it('should wisely branch (choose)');
   });
