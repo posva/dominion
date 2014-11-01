@@ -7,7 +7,7 @@ requirejs.config({
   nodeRequire: require
 });
 
-describe.skip('Actions Testing', function() {
+describe('Actions Testing', function() {
   // Load modules with requirejs before tests
   var Event, Game, Card, Action, game, Gold, Silver, Duchy, base;
   before(function(done) {
@@ -56,8 +56,8 @@ describe.skip('Actions Testing', function() {
       var p = game.currentPlayer();
       // add it to the player hand (what a cheater!)
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw(); // play card at index 5 in players hand
-      p.hand.should.have.lengthOf(6); // he played one card and drew 2
+      game.play(5).should.be.eql(a); // play card at index 5 in players hand
+      p.hand.should.have.lengthOf(7); // he played one card and drew 2
     });
     it('should work with a multi event action', function() {
       var A = Card.extend(Action, {
@@ -78,8 +78,8 @@ describe.skip('Actions Testing', function() {
       var a = A.new(game);
       var p = game.currentPlayer();
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
-      p.hand.should.have.lengthOf(6);
+      game.play(5).should.be.eql(a);
+      p.hand.should.have.lengthOf(7);
       game.buys.should.be.eql(3);
     });
     it('should fail if event is invalid', function() {
@@ -112,7 +112,7 @@ describe.skip('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             (function(game) {
-              game.currentPlayer().graveyard.push(Gold.new());
+              game.currentPlayer().graveyard.push(gold);
             }).bind(null, game)
           ]);
         },
@@ -120,9 +120,10 @@ describe.skip('Actions Testing', function() {
       A.new.bind(A, game).should.not.throw();
       var a = A.new(game);
       var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
-      p.graveyard.should.containEql(Gold.new());
+      game.play(5).should.be.eql(a);
+      p.graveyard.should.containEql(gold);
     });
     it('should work with a multi function action', function() {
       var A = Card.extend(Action, {
@@ -135,10 +136,10 @@ describe.skip('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             (function(game) {
-              game.currentPlayer().graveyard.push(Gold.new());
+              game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
             (function(game) {
-              game.currentPlayer().graveyard.push(Silver.new());
+              game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
         },
@@ -146,10 +147,12 @@ describe.skip('Actions Testing', function() {
       A.new.bind(A, game).should.not.throw();
       var a = A.new(game);
       var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
-      p.graveyard.should.containEql(Gold.new());
-      p.graveyard.should.containEql(Silver.new());
+      game.play(5).should.be.eql(a);
+      p.graveyard.should.containEql(gold);
+      p.graveyard.should.containEql(silver);
     });
     it('should be able to detect if function is invalid', function() {
       var A = Card.extend(Action, {
@@ -183,7 +186,7 @@ describe.skip('Actions Testing', function() {
           Action.initialize.call(this, [
             Event.new(game, 'cards 1'),
             (function(game) {
-              game.currentPlayer().graveyard.push(Silver.new());
+              game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
         },
@@ -191,10 +194,12 @@ describe.skip('Actions Testing', function() {
       A.new.bind(A, game).should.not.throw();
       var a = A.new(game);
       var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
-      p.graveyard.should.containEql(Silver.new());
-      p.hand.should.have.lengthOf(5);
+      game.play(5).should.be.eql(a);
+      p.graveyard.should.containEql(silver);
+      p.hand.should.have.lengthOf(6);
     });
     it('should work with actions with one event and multiple functions', function() {
       var A = Card.extend(Action, {
@@ -208,10 +213,10 @@ describe.skip('Actions Testing', function() {
           Action.initialize.call(this, [
             Event.new(game, 'cards 1'),
             (function(game) {
-              game.currentPlayer().graveyard.push(Silver.new());
+              game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
             (function(game) {
-              game.currentPlayer().graveyard.push(Gold.new());
+              game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
         },
@@ -219,11 +224,13 @@ describe.skip('Actions Testing', function() {
       A.new.bind(A, game).should.not.throw();
       var a = A.new(game);
       var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
-      p.graveyard.should.containEql(Silver.new());
-      p.graveyard.should.containEql(Gold.new());
-      p.hand.should.have.lengthOf(5);
+      game.play(5).should.be.eql(a);
+      p.graveyard.should.containEql(silver);
+      p.graveyard.should.containEql(gold);
+      p.hand.should.have.lengthOf(6);
     });
     it('should work with actions with multiple events and one function', function() {
       var A = Card.extend(Action, {
@@ -238,7 +245,7 @@ describe.skip('Actions Testing', function() {
             Event.new(game, 'cards 1'),
             Event.new(game, 'buys 1'),
             (function(game) {
-              game.currentPlayer().graveyard.push(Gold.new());
+              game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
         },
@@ -246,10 +253,12 @@ describe.skip('Actions Testing', function() {
       A.new.bind(A, game).should.not.throw();
       var a = A.new(game);
       var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
-      p.graveyard.should.containEql(Gold.new());
-      p.hand.should.have.lengthOf(5);
+      game.play(5).should.be.eql(a);
+      p.graveyard.should.containEql(gold);
+      p.hand.should.have.lengthOf(6);
       game.buys.should.be.eql(2);
     });
     it('should work with actions with multiple events and multiple functions', function() {
@@ -265,10 +274,10 @@ describe.skip('Actions Testing', function() {
             Event.new(game, 'cards 1'),
             Event.new(game, 'buys 1'),
             (function(game) {
-              game.currentPlayer().graveyard.push(Gold.new());
+              game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
             (function(game) {
-              game.currentPlayer().graveyard.push(Silver.new());
+              game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
         },
@@ -276,15 +285,17 @@ describe.skip('Actions Testing', function() {
       A.new.bind(A, game).should.not.throw();
       var a = A.new(game);
       var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
-      p.graveyard.should.containEql(Gold.new());
-      p.graveyard.should.containEql(Silver.new());
-      p.hand.should.have.lengthOf(5);
+      game.play(5).should.be.eql(a);
+      p.graveyard.should.containEql(gold);
+      p.graveyard.should.containEql(silver);
+      p.hand.should.have.lengthOf(6);
       game.buys.should.be.eql(2);
     });
   });
-  describe('#Prefixed actions', function(){
+  describe.skip('#Prefixed actions', function(){
     it('should work with "choose" functions cards', function() {
       var A = Card.extend(Action, {
         initialize: function(game)  {
@@ -297,10 +308,10 @@ describe.skip('Actions Testing', function() {
           Action.initialize.call(this, [
             'choose', // eq to choose 1
             (function(game) {
-              game.currentPlayer().graveyard.push(Gold.new());
+              game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
             (function(game) {
-              game.currentPlayer().graveyard.push(Silver.new());
+              game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
         },
@@ -308,19 +319,21 @@ describe.skip('Actions Testing', function() {
       A.new.bind(A, game).should.not.throw();
       var a = A.new(game);
       var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
+      game.play(5).should.be.eql(a);
       game.choose(0);
-      p.graveyard.should.containEql(Gold.new());
-      p.graveyard.should.not.containEql(Silver.new());
+      p.graveyard.should.containEql(gold);
+      p.graveyard.should.not.containEql(silver);
 
       // play again
       p.hand.push(a);
       game.addActions(1); // or we won't be able to play
-      game.play.bind(game, 5).should.not.throw();
+      game.play(5).should.be.eql(a);
       game.choose(1);
-      p.graveyard.should.containEql(Gold.new());
-      p.graveyard.should.containEql(Silver.new());
+      p.graveyard.should.containEql(gold);
+      p.graveyard.should.containEql(silver);
     });
     it('should work with "choose" events cards', function() {
       var A = Card.extend(Action, {
@@ -342,14 +355,14 @@ describe.skip('Actions Testing', function() {
       var a = A.new(game);
       var p = game.currentPlayer();
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
+      game.play(5).should.be.eql(a);
       game.choose(0);
       p.hand.should.have.lengthOf(5);
       game.buys.should.be.eql(1);
 
       game.addActions(1); // or we won't be able to play
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
+      game.play(5).should.be.eql(a);
       game.choose(1);
       game.buys.should.be.eql(2);
     });
@@ -367,7 +380,7 @@ describe.skip('Actions Testing', function() {
             Event.new(game, 'cards 1'),
             Event.new(game, 'buys 1'),
             (function(game) {
-              game.currentPlayer().graveyard.push(Gold.new());
+              game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
         },
@@ -375,18 +388,20 @@ describe.skip('Actions Testing', function() {
       A.new.bind(A, game).should.not.throw();
       var a = A.new(game);
       var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
+      game.play(5).should.be.eql(a);
       game.choose(0);
       p.hand.should.have.lengthOf(5);
       game.buys.should.be.eql(1);
-      p.graveyard.should.not.containEql(Gold.new());
+      p.graveyard.should.not.containEql(gold);
 
       game.addActions(1); // or we won't be able to play
       p.hand.push(a);
-      game.play.bind(game, 5).should.not.throw();
+      game.play(5).should.be.eql(a);
       game.choose(2);
-      p.graveyard.should.containEql(Gold.new());
+      p.graveyard.should.containEql(gold);
     });
     it('should work with a "random" card');
   });
