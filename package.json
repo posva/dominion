@@ -13,22 +13,22 @@
     }
   },
   "dependencies": {
-    "domready": "^1.0.6",
+    "domready": "^1.0.7",
     "lodash": "^2.4.1",
     "requirejs": "^2.1.15",
     "selfish": "^0.3.3"
   },
   "devDependencies": {
-    "coveralls": "^2.11.1",
+    "coveralls": "^2.11.2",
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-requirejs": "~0.4.4",
     "grunt-coveralls": "^1.0.0",
     "grunt-http-server": "1.0.0",
-    "grunt-mocha-istanbul": "^2.1.0",
+    "grunt-mocha-istanbul": "^2.2.0",
     "grunt-mocha-test": "^0.12.0",
     "istanbul": "^0.3.2",
-    "mocha": "^1.21.5",
+    "mocha": "^2.0.1",
     "rjs-build-analysis": "0.0.3",
     "should": "^4.1.0"
   }
