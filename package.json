@@ -16,7 +16,7 @@
     "domready": "^1.0.6",
     "lodash": "^2.4.1",
     "requirejs": "^2.1.15",
-    "selfish": "^0.3.2"
+    "selfish": "^0.3.3"
   },
   "devDependencies": {
     "coveralls": "^2.11.1",
@@ -28,8 +28,8 @@
     "grunt-mocha-istanbul": "^2.1.0",
     "grunt-mocha-test": "^0.12.0",
     "istanbul": "^0.3.2",
-    "mocha": "^1.21.4",
+    "mocha": "^1.21.5",
     "rjs-build-analysis": "0.0.3",
-    "should": "~4.0.4"
+    "should": "^4.1.0"
   }
 }
