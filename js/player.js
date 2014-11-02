@@ -102,6 +102,9 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
     plays: function(i) {
       var c = this.hand.splice(i, 1)[0];
       this.field.push(c);
+      if (c.cleanMemory && typeof c.cleanMemory === 'function') {
+        c.cleanMemory();
+      }
       if (c.play && typeof c.play === 'function') {
         c.play(this.game);
       }

@@ -295,7 +295,7 @@ describe('Actions Testing', function() {
       game.buys.should.be.eql(2);
     });
   });
-  describe.skip('#Prefixed actions', function(){
+  describe('#Prefixed actions', function(){
     it('should work with "choose" functions cards', function() {
       var A = Card.extend(Action, {
         initialize: function(game)  {
@@ -323,7 +323,7 @@ describe('Actions Testing', function() {
       var silver = game.cards.Silver.instance;
       p.hand.push(a);
       game.play(5).should.be.eql(a);
-      game.choose(0);
+      game.chooseAction(0);
       p.graveyard.should.containEql(gold);
       p.graveyard.should.not.containEql(silver);
 
@@ -331,7 +331,7 @@ describe('Actions Testing', function() {
       p.hand.push(a);
       game.addActions(1); // or we won't be able to play
       game.play(5).should.be.eql(a);
-      game.choose(1);
+      game.chooseAction(1);
       p.graveyard.should.containEql(gold);
       p.graveyard.should.containEql(silver);
     });
@@ -356,14 +356,14 @@ describe('Actions Testing', function() {
       var p = game.currentPlayer();
       p.hand.push(a);
       game.play(5).should.be.eql(a);
-      game.choose(0);
-      p.hand.should.have.lengthOf(5);
+      game.chooseAction(0);
+      p.hand.should.have.lengthOf(6);
       game.buys.should.be.eql(1);
 
       game.addActions(1); // or we won't be able to play
       p.hand.push(a);
-      game.play(5).should.be.eql(a);
-      game.choose(1);
+      game.play(6).should.be.eql(a);
+      game.chooseAction(1);
       game.buys.should.be.eql(2);
     });
     it('should work with a "choose" with mixed events and functions cards', function() {
@@ -392,15 +392,15 @@ describe('Actions Testing', function() {
       var silver = game.cards.Silver.instance;
       p.hand.push(a);
       game.play(5).should.be.eql(a);
-      game.choose(0);
-      p.hand.should.have.lengthOf(5);
+      game.chooseAction(0);
+      p.hand.should.have.lengthOf(6);
       game.buys.should.be.eql(1);
       p.graveyard.should.not.containEql(gold);
 
       game.addActions(1); // or we won't be able to play
       p.hand.push(a);
-      game.play(5).should.be.eql(a);
-      game.choose(2);
+      game.play(6).should.be.eql(a);
+      game.chooseAction(2);
       p.graveyard.should.containEql(gold);
     });
     it('should work with a "random" card');

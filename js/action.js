@@ -54,23 +54,33 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
   };
   // recursive fucntion to play actions
   // TODO choose and other string functions
-  var subPlay = function(arr, game) {
+  var subPlay = function(arr, game, mem) {
+    this.lastMemory = mem;
     if (typeof arr[0] === 'string') {
+      if (this.memory.indexOf(mem) >= 0) {
+        return true; // shown must go on
+      }
+      this.memory.push(mem);
+      game.waitChoose(this, arr);
       return false; // stop iteration of actions if waiting for a choose
     } else {
-      _.forEach(arr, function(v) {
+      _.forEach(arr, function(v, i) {
         if (typeof v === 'object' && v.length) {
-          if (!subPlay(v, game)) {
+          if (!subPlay.apply(this, [v, game, mem+','+i])) {
             return false; // stop iteration
           }
         } else {
+          if (this.memory.indexOf(mem+','+i) >= 0) {
+            return; // keep iterating
+          }
+          this.memory.push(mem+','+i);
           if (Event.isPrototypeOf(v)) {
             v.fire();
           } else {
             v(game);
           }
         }
-      });
+      }, this);
       return true; // all is ok
     }
   };
@@ -91,11 +101,27 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       // check that events is valid
       //checkEventArray.apply(this, events);
       this.type.push('action');
+
+      // those variable allow for choose or any other kind of inteerruptions
+      // they will ensure that all events get fired following the right order
+      // memory example: '1' -> 0 is a choose array: [ ['choose', ...,...],...,...]
+      // 1,2,3 -> [[..., [...,...,['choose', ..., ...], ...], ...], ..., ...]
+      // in this last example are in deep 3 and we stopped at array 0, then 1, then 2
+      this.memory = []; // remember all the actions done
+      // if the array isn't empty then we're calling an action to continue
+      // therefore this memory must be cleaned by game before playing an action
+      this.lastMemory = '';
     },
     // TODO add a check at initialization isntead of doing it in play
     // Even better just do dynamic tests for cards
     play: function(game) {
-      subPlay(this.events, game);
+      return subPlay.apply(this, [this.events, game, '']);
+    },
+    replay: function(arr, game) {
+      return subPlay.apply(this, [arr, game, this.lastMemory]);
+    },
+    cleanMemory: function() {
+      this.memory = [];
     },
     checkEventArray: checkEventArray
   });

@@ -1,4 +1,4 @@
-define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Card) {
+define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Player, Card, Event) {
   var Base = selfish.Base;
   var Game = Base.extend({
     initialize: function() {
@@ -12,6 +12,10 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
       this.trash = [];
       this.phase = 'action';
       this.playerTurn = 0;
+
+      this.waitingAction = null; // when an action must be called back after a choose X
+      this.waitingArray = null;
+      this.waitingChoices = 0;
     },
     addActions: function(n) {
       this.actions += n;
@@ -34,6 +38,49 @@ define(['selfish', 'lodash', 'player', 'card'], function(selfish, _, Player, Car
       } else {
         return this.players[this.players.length + i];
       }
+    },
+    // must be called when when we wait the player to choose an action
+    waitChoose: function(action, arr) {
+      this.waitingAction = action;
+      this.waitingArray = arr;
+      this.waitingChoices = parseInt(arr[0].split(' ')[1], 10);
+      this.waitingChoices = this.waitingChoices || 1; // no text => 1 choice
+      //console.log(arr);
+      // somehow use arr with ui
+    },
+    // called after the waitChoose. i is the 0-index of the arr
+    chooseAction: function(i) {
+      if (typeof i === 'number') {
+        i = [i];
+      }
+      for (k = 0; k < i.length; k++) {
+        i[k]++; // because of string
+        if (i[k] < 1 || i[k] >= this.waitingArray.length) {
+          throw {
+            name: 'Choose Error',
+            message: 'Cannot choose option '+i[k]+', there are only '+this.waitingArray.length+' options.'
+          };
+        }
+      }
+      if (i.length !== this.waitingChoices) {
+        throw {
+          name: 'Choose Error',
+          message: 'Got '+i.length+' choices instead of '+this.waitingChoices
+        };
+      }
+      var arr = [];
+      _.forEach(i, function(v) {
+        arr.push(this.waitingArray[v]);
+      }, this);
+      if (this.waitingAction.replay(arr, this)) {
+        this.waitingAction.play(this);
+      }
+    },
+    // return an array with all players except the one playing
+    otherPlayers: function() {
+      var a = this.players.slice();
+      a.splice(this.playerTurn, 1);
+      return a;
     },
     // start a game
     // init is a conf object:
