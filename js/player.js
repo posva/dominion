@@ -29,7 +29,7 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
     extractFromDeck: function(n) {
       var ret = [];
       if (n <= 0) {
-        return;
+        return ret;
       }
       if (this.deck.length >= n) {
         return this.deck.splice(0, n);

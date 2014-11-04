@@ -10,12 +10,13 @@ requirejs.config({
 
 describe('Player tests', function() {
   // Load modules with requirejs before tests
-  var Copper, Estate, Player;
+  var Copper, Estate, Player, Gold;
   before(function(done) {
-    requirejs(['player', 'cards/copper', 'cards/estate'], function(player, copper, estate) {
+    requirejs(['player', 'cards/copper', 'cards/estate', 'cards/gold'], function(player, copper, estate, gold) {
       Player = player;
       Copper = copper;
       Estate = estate;
+      Gold = gold;
       done();
     });
   });
@@ -163,6 +164,80 @@ describe('Player tests', function() {
       p.hand[7].name.should.be.eql('Copper');
       p.hand[8].name.should.be.eql('Copper');
     });
+  });
+  describe('#Extract cards from player', function() {
+    it('should do nothing with values <= 0', function() {
+      var p = Player.new(playerInitializer);
+      p.endTurn();
+      var l = p.deck.length;
+      var cards = p.extractFromDeck(0);
+      cards.should.have.lengthOf(0);
+      p.deck.should.have.lengthOf(l);
+      cards = p.extractFromDeck(-3);
+      cards.should.have.lengthOf(0);
+      p.deck.should.have.lengthOf(l);
+    });
+    it('should be able to extract cards from deck', function() {
+      var p = Player.new(playerInitializer);
+      p.endTurn();
+      var l = p.deck.length;
+      var cp = p.deck.slice(0, 3);
+      var cards = p.extractFromDeck(3);
+      p.deck.should.have.lengthOf(l-3);
+      cards.should.be.eql(cp);
+      cp = p.deck.slice(0, 1);
+      cards = p.extractFromDeck(1);
+      l -= 3;
+      p.deck.should.have.lengthOf(l-1);
+      cards.should.be.eql(cp);
+     });
+     it('should be able to extract the whole deck but not beyond', function() {
+      var p = Player.new(playerInitializer);
+      p.endTurn();
+      var l = p.deck.length;
+      var cp = p.deck.slice(0, 7);
+      var cards = p.extractFromDeck(7);
+      p.deck.should.have.lengthOf(0);
+      cards.should.be.eql(cp);
+      cards = p.extractFromDeck(7);
+      p.deck.should.have.lengthOf(0);
+      cards.should.be.empty;
+     });
+     it('should be able to extract cards after shuffling the deck', function() {
+      var p = Player.new(playerInitializer);
+      p.endTurn();
+      p.endTurn();
+      p.deck.should.have.lengthOf(0);
+      p.graveyard.should.have.lengthOf(5);
+      var cards = p.extractFromDeck(3);
+      p.graveyard.should.have.lengthOf(0);
+      p.deck.should.have.lengthOf(2);
+      cards.should.have.lengthOf(3);
+     });
+     it('should be able to extract, shuffle and extract the missing cards', function() {
+      var p = Player.new(playerInitializer);
+      p.endTurn();
+      p.graveyard.push(Gold.new());
+      p.graveyard.push(Gold.new());
+      p.graveyard.push(Gold.new());
+      var l = p.deck.length;
+      var cards = p.extractFromDeck(7);
+      cards.should.have.lengthOf(7);
+      p.deck.should.have.lengthOf(1);
+      cards.containCard('Gold').should.be.ok;
+     });
+     it('should be able to extract, shuffle and extract as much as possible', function() {
+      var p = Player.new(playerInitializer);
+      p.endTurn();
+      p.graveyard.push(Gold.new());
+      p.graveyard.push(Gold.new());
+      p.graveyard.push(Gold.new());
+      var l = p.deck.length;
+      var cards = p.extractFromDeck(11);
+      p.deck.should.have.lengthOf(0);
+      cards.should.have.lengthOf(8);
+      cards.containCard('Gold').should.be.ok;
+     });
   });
 
 });
