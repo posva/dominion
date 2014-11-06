@@ -403,6 +403,146 @@ describe('Actions Testing', function() {
       game.chooseAction(2);
       p.graveyard.should.containEql(gold);
     });
+    it('should be able to choose more than 1', function() {
+      var A = Card.extend(Action, {
+        initialize: function(game)  {
+          Card.initialize.call(this, {
+            name: 'name',
+            text: 'text',
+            cost: 1,
+            img: ''
+          });
+          Action.initialize.call(this, [
+            'choose 2',
+            Event.new(game, 'cards 1'),
+            Event.new(game, 'buys 1'),
+            (function(game) {
+              game.currentPlayer().graveyard.push(gold);
+            }).bind(null, game),
+          ]);
+        },
+      });
+      A.new.bind(A, game).should.not.throw();
+      var a = A.new(game);
+      var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
+      p.hand.push(a);
+      game.play(5).should.be.eql(a);
+      game.chooseAction([0, 1]);
+      p.hand.should.have.lengthOf(6);
+      game.buys.should.be.eql(2);
+      p.graveyard.should.not.containEql(gold);
+
+      game.addActions(1); // or we won't be able to play
+      p.hand.push(a);
+      game.play(6).should.be.eql(a);
+      game.chooseAction([1,2]);
+      p.hand.should.have.lengthOf(6);
+      game.buys.should.be.eql(3);
+      p.graveyard.should.containEql(gold);
+    });
+    it('should refuse to choose a wrong number of actions', function() {
+      var A = Card.extend(Action, {
+        initialize: function(game)  {
+          Card.initialize.call(this, {
+            name: 'name',
+            text: 'text',
+            cost: 1,
+            img: ''
+          });
+          Action.initialize.call(this, [
+            'choose 2',
+            Event.new(game, 'cards 1'),
+            Event.new(game, 'buys 1'),
+            (function(game) {
+              game.currentPlayer().graveyard.push(gold);
+            }).bind(null, game),
+          ]);
+        },
+      });
+      A.new.bind(A, game).should.not.throw();
+      var a = A.new(game);
+      var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
+      p.hand.push(a);
+      game.play(5).should.be.eql(a);
+      game.chooseAction.bind(game, 0).should.throw(/1 choices instead of 2/);
+      p.hand.should.have.lengthOf(5);
+      game.buys.should.be.eql(1);
+      p.graveyard.should.not.containEql(gold);
+      game.chooseAction.bind(game, [1, 2, 0]).should.throw(/3 choices instead of 2/);
+      p.hand.should.have.lengthOf(5);
+      game.buys.should.be.eql(1);
+      p.graveyard.should.not.containEql(gold);
+    });
+    it('should refuse to choose an action that doesn\'t exist (wrong index)', function() {
+      var A = Card.extend(Action, {
+        initialize: function(game)  {
+          Card.initialize.call(this, {
+            name: 'name',
+            text: 'text',
+            cost: 1,
+            img: ''
+          });
+          Action.initialize.call(this, [
+            'choose 2',
+            Event.new(game, 'cards 1'),
+            Event.new(game, 'buys 1'),
+            (function(game) {
+              game.currentPlayer().graveyard.push(gold);
+            }).bind(null, game),
+          ]);
+        },
+      });
+      A.new.bind(A, game).should.not.throw();
+      var a = A.new(game);
+      var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
+      p.hand.push(a);
+      game.play(5).should.be.eql(a);
+      game.chooseAction.bind(game, -1).should.throw(/Cannot choose option -1/);
+      p.hand.should.have.lengthOf(5);
+      game.buys.should.be.eql(1);
+      p.graveyard.should.not.containEql(gold);
+      game.chooseAction.bind(game, [1, 3, 0]).should.throw(/Cannot choose option 3/);
+      p.hand.should.have.lengthOf(5);
+      game.buys.should.be.eql(1);
+      p.graveyard.should.not.containEql(gold);
+    });
+    it('should refuse to choose the same action for a choose >1', function() {
+      var A = Card.extend(Action, {
+        initialize: function(game)  {
+          Card.initialize.call(this, {
+            name: 'name',
+            text: 'text',
+            cost: 1,
+            img: ''
+          });
+          Action.initialize.call(this, [
+            'choose 2',
+            Event.new(game, 'cards 1'),
+            Event.new(game, 'buys 1'),
+            (function(game) {
+              game.currentPlayer().graveyard.push(gold);
+            }).bind(null, game),
+          ]);
+        },
+      });
+      A.new.bind(A, game).should.not.throw();
+      var a = A.new(game);
+      var p = game.currentPlayer();
+      var gold = game.cards.Gold.instance;
+      var silver = game.cards.Silver.instance;
+      p.hand.push(a);
+      game.play(5).should.be.eql(a);
+      game.chooseAction.bind(game, [1,1]).should.throw(/Cannot choose the same option twice/);
+      p.hand.should.have.lengthOf(5);
+      game.buys.should.be.eql(1);
+      p.graveyard.should.not.containEql(gold);
+    });
     it('should work with a "random" card');
   });
   describe('#Recursive actions', function(){
@@ -448,7 +588,113 @@ describe('Actions Testing', function() {
       game.actions.should.be.eql(1);
     });
     it('should randomly branch');
-    it('should wisely branch (choose)');
+    it('should wisely branch (choose)', function() {
+      var fun = [
+        'choose',
+        Event.new(game, 'cards 2'),
+        Event.new(game, 'buys 2'),
+        Event.new(game, 'money 2'),
+      ];
+      var A = Card.extend(Action, {
+        initialize: function(game)  {
+          Card.initialize.call(this, {
+            name: 'name',
+            text: 'text',
+            cost: 1,
+            img: ''
+          });
+          Action.initialize.call(this, [
+            'choose 1',
+            [
+              Event.new(game, 'cards 1'),
+              fun
+            ],
+            [
+              Event.new(game, 'buys 1'),
+              fun
+            ],
+            [
+              Event.new(game, 'money 1'),
+              fun
+            ],
+          ]);
+        },
+      });
+      A.new.bind(A, game).should.not.throw();
+      var a = A.new(game);
+      var p = game.currentPlayer();
+      p.hand.push(a);
+      game.play(5).should.be.eql(a);
+      game.chooseAction(0);
+      game.chooseAction(2);
+      p.hand.should.have.lengthOf(6);
+      game.buys.should.be.eql(1);
+      game.money.should.be.eql(2);
+    });
+    it.skip('should deeply choose', function() {
+      var mad = [
+        'choose',
+        Event.new(game, 'cards 3'),
+        Event.new(game, 'buys 3'),
+        Event.new(game, 'money 3'),
+      ];
+      var fun = [
+        'choose',
+        [
+          Event.new(game, 'cards 2'),
+          mad
+        ],
+        [
+          Event.new(game, 'buys 2'),
+          mad
+        ],
+        [
+          Event.new(game, 'money 2'),
+          mad
+        ]
+      ];
+      var A = Card.extend(Action, {
+        initialize: function(game)  {
+          Card.initialize.call(this, {
+            name: 'name',
+            text: 'text',
+            cost: 1,
+            img: ''
+          });
+          Action.initialize.call(this, [
+            'choose 1',
+            [
+              Event.new(game, 'cards 1'),
+              fun
+            ],
+            [
+              Event.new(game, 'buys 1'),
+              fun
+            ],
+            [
+              Event.new(game, 'money 1'),
+              fun
+            ],
+          ]);
+        },
+      });
+      A.new.bind(A, game).should.not.throw();
+      var a = A.new(game);
+      var p = game.currentPlayer();
+      p.hand.push(a);
+      game.play(5).should.be.eql(a);
+      p.hand.should.have.lengthOf(5);
+      game.chooseAction(0);
+      p.hand.should.have.lengthOf(6);
+      console.log('ACTIONS: '+game.actions+'; BUYS: '+game.buys+'; MONEY: '+game.money);
+      game.chooseAction(2);
+      console.log('ACTIONS: '+game.actions+'; BUYS: '+game.buys+'; MONEY: '+game.money);
+      game.money.should.be.eql(2);
+      game.chooseAction(1);
+      console.log('ACTIONS: '+game.actions+'; BUYS: '+game.buys+'; MONEY: '+game.money);
+      game.buys.should.be.eql(1);
+      game.money.should.be.eql(5);
+    });
   });
 
 });

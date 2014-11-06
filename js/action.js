@@ -61,26 +61,31 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
         return true; // shown must go on
       }
       this.memory.push(mem);
+      this.solve(); // solve pushed actions as they may interfeer with the choose
       game.waitChoose(this, arr);
       return false; // stop iteration of actions if waiting for a choose
     } else {
-      _.forEach(arr, function(v, i) {
+      var ok = _.forEach(arr, function(v, i) {
+        var localMem = mem+','+i;
         if (typeof v === 'object' && v.length) {
-          if (!subPlay.apply(this, [v, game, mem+','+i])) {
+          if (!subPlay.apply(this, [v, game, localMem])) {
             return false; // stop iteration
           }
         } else {
-          if (this.memory.indexOf(mem+','+i) >= 0) {
+          if (this.memory.indexOf(localMem) >= 0) {
             return; // keep iterating
           }
-          this.memory.push(mem+','+i);
+          this.memory.push(localMem);
           if (Event.isPrototypeOf(v)) {
-            v.fire();
+            this.actionsFile.push(v.fire.bind(v));
           } else {
-            v(game);
+            this.actionsFile.push(v.bind(null, game));
           }
         }
       }, this);
+      //if (!ok) {
+        //return false;
+      //}
       return true; // all is ok
     }
   };
@@ -111,17 +116,32 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       // if the array isn't empty then we're calling an action to continue
       // therefore this memory must be cleaned by game before playing an action
       this.lastMemory = '';
+
+      this.actionsFile = []; // Pile up every action and then execute them all
     },
     // TODO add a check at initialization isntead of doing it in play
     // Even better just do dynamic tests for cards
     play: function(game) {
+      //console.log('Play');
       return subPlay.apply(this, [this.events, game, '']);
     },
+    // resume the play after a choose or similar call
     replay: function(arr, game) {
+      //console.log('Replay', arr);
       return subPlay.apply(this, [arr, game, this.lastMemory]);
+    },
+    // once all the actions have been chosed we can solve them
+    solve: function() {
+      //console.log('SOLVE');
+      var f = this.actionsFile.shift();
+      while (typeof f === 'function') {
+        f();
+        f = this.actionsFile.shift();
+      }
     },
     cleanMemory: function() {
       this.memory = [];
+      this.actionsFile = [];
     },
     checkEventArray: checkEventArray
   });

@@ -106,7 +106,9 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
         c.cleanMemory();
       }
       if (c.play && typeof c.play === 'function') {
-        c.play(this.game);
+        if (c.play(this.game)) {
+          c.solve();
+        }
       }
     }
   });

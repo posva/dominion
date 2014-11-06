@@ -17,71 +17,6 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
       this.waitingArray = null;
       this.waitingChoices = 0;
     },
-    addActions: function(n) {
-      this.actions += n;
-    },
-    addBuys: function(n) {
-      this.buys += n;
-    },
-    addMoney: function(n) {
-      this.money += n;
-    },
-    currentPlayer: function(i) {
-      i = i || 0;
-      if (Math.abs(this.playerTurn + i) >= this.players.length) {
-        i = (i >= 0 ? 1 : -1) * ((this.playerTurn + Math.abs(i)) % this.players.length);
-      } else {
-        i += this.playerTurn;
-      }
-      if (i >= 0) {
-        return this.players[i];
-      } else {
-        return this.players[this.players.length + i];
-      }
-    },
-    // must be called when when we wait the player to choose an action
-    waitChoose: function(action, arr) {
-      this.waitingAction = action;
-      this.waitingArray = arr;
-      this.waitingChoices = parseInt(arr[0].split(' ')[1], 10);
-      this.waitingChoices = this.waitingChoices || 1; // no text => 1 choice
-      //console.log(arr);
-      // somehow use arr with ui
-    },
-    // called after the waitChoose. i is the 0-index of the arr
-    chooseAction: function(i) {
-      if (typeof i === 'number') {
-        i = [i];
-      }
-      for (k = 0; k < i.length; k++) {
-        i[k]++; // because of string
-        if (i[k] < 1 || i[k] >= this.waitingArray.length) {
-          throw {
-            name: 'Choose Error',
-            message: 'Cannot choose option '+i[k]+', there are only '+this.waitingArray.length+' options.'
-          };
-        }
-      }
-      if (i.length !== this.waitingChoices) {
-        throw {
-          name: 'Choose Error',
-          message: 'Got '+i.length+' choices instead of '+this.waitingChoices
-        };
-      }
-      var arr = [];
-      _.forEach(i, function(v) {
-        arr.push(this.waitingArray[v]);
-      }, this);
-      if (this.waitingAction.replay(arr, this)) {
-        this.waitingAction.play(this);
-      }
-    },
-    // return an array with all players except the one playing
-    otherPlayers: function() {
-      var a = this.players.slice();
-      a.splice(this.playerTurn, 1);
-      return a;
-    },
     // start a game
     // init is a conf object:
     // {
@@ -182,6 +117,82 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
       this.actions = 1;
       this.buys = 1;
       this.phase = 'action';
+    },
+    addActions: function(n) {
+      this.actions += n;
+    },
+    addBuys: function(n) {
+      this.buys += n;
+    },
+    addMoney: function(n) {
+      this.money += n;
+    },
+    currentPlayer: function(i) {
+      i = i || 0;
+      if (Math.abs(this.playerTurn + i) >= this.players.length) {
+        i = (i >= 0 ? 1 : -1) * ((this.playerTurn + Math.abs(i)) % this.players.length);
+      } else {
+        i += this.playerTurn;
+      }
+      if (i >= 0) {
+        return this.players[i];
+      } else {
+        return this.players[this.players.length + i];
+      }
+    },
+    // must be called when when we wait the player to choose an action
+    waitChoose: function(action, arr) {
+      this.waitingAction = action;
+      this.waitingArray = arr;
+      this.waitingChoices = parseInt(arr[0].split(' ')[1], 10);
+      this.waitingChoices = this.waitingChoices || 1; // no text => 1 choice
+      //console.log('Wait for', arr);
+      // somehow use arr with ui
+    },
+    // called after the waitChoose. i is the 0-index of the arr
+    chooseAction: function(i) {
+      if (typeof i === 'number') {
+        i = [i];
+      }
+      var k;
+      for (k = 0; k < i.length; k++) {
+        i[k]++; // because of string
+        if (i[k] < 1 || i[k] >= this.waitingArray.length) {
+          throw {
+            name: 'Choose Error',
+            message: 'Cannot choose option '+(i[k]-1)+', there are only '+this.waitingArray.length+' options.'
+          };
+        }
+        var lind = i.lastIndexOf(i[k]-1);
+        if (lind > k && lind >= 0) {
+          throw {
+            name: 'Choose Error',
+            message: 'Cannot choose the same option twice: option '+(i[k]-1)+' at index '+k+' and '+lind
+          };
+        }
+      }
+      if (i.length !== this.waitingChoices) {
+        throw {
+          name: 'Choose Error',
+          message: 'Got '+i.length+' choices instead of '+this.waitingChoices
+        };
+      }
+      var arr = [];
+      _.forEach(i, function(v) {
+        arr.push(this.waitingArray[v]);
+      }, this);
+      //console.log('Extracted', arr, 'from', this.waitingArray);
+      if (this.waitingAction.replay(arr, this)) {
+        if (this.waitingAction.play(this)) {
+          this.waitingAction.solve();
+        }
+      }
+    },
+    // return an array with all players except the one playing
+    otherPlayers: function() {
+      var a = this.players.slice();
+      a.splice(this.playerTurn, 1);
+      return a;
     },
     // play the card at index i in current player.
     // return the card played or null if the card could not be played
