@@ -75,7 +75,15 @@ module.exports = function(grunt) {
           coverage: true
         }
       },
-    }
+    },
+    shell: {
+      download: {
+        options: {
+          stdout: true
+        },
+        command: 'python3 scripts/download-resources.py'
+      }
+    },
   });
 
   grunt.event.on('coverage', function(lcov, done){
@@ -93,11 +101,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
+  grunt.loadNpmTasks('grunt-shell');
 
   grunt.registerTask('default', ['jshint:sys', 'jshint:src', 'jshint:tests', 'coverage', 'deploy']);
   grunt.registerTask('deploy', ['requirejs']);
   grunt.registerTask('serve', ['http-server:dev']);
   grunt.registerTask('test', ['mochaTest']);
   grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
+
+  grunt.registerTask('get:img', ['shell:download']);
 
 };
