@@ -1,6 +1,15 @@
 define(['selfish'], function(selfish) {
   var Base = selfish.Base;
   var Card = Base.extend({
+    /**
+     * Description
+     * @method initialize
+     * @param {} name
+     * @param {} text
+     * @param {} cost
+     * @param {} img
+     * @return 
+     */
     initialize: function(name, text, cost, img) {
       var conf;
       if (name && typeof name === 'object') {
@@ -19,6 +28,11 @@ define(['selfish'], function(selfish) {
       if (typeof conf.cost === 'function') {
         this.cost = conf.cost;
       } else {
+        /**
+         * Description
+         * @method cost
+         * @return MemberExpression
+         */
         this.cost = function() {
           return conf.cost;
         };
@@ -28,6 +42,12 @@ define(['selfish'], function(selfish) {
       this.text = conf.text;
       this.type = [];
     },
+    /**
+     * Description
+     * @method is
+     * @param {} ty
+     * @return BinaryExpression
+     */
     is: function(ty) {
       return this.type.indexOf(ty) >= 0;
     },
