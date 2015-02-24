@@ -5,7 +5,9 @@ define(['selfish'], function(selfish) {
       if (typeof points === 'function') {
         this.points = points;
       } else {
-        this.points = function() { return points; };
+        this.points = function() {
+          return points;
+        };
       }
       this.type.push('victory');
     },

@@ -1,6 +1,6 @@
 define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
   var Base = selfish.Base;
-  var validStrings = [ 'choose', 'random' ];
+  var validStrings = ['choose', 'random'];
   var checkEventArray = function(ev) {
     var str, n;
     ev = ev || this.events;
@@ -8,7 +8,7 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
     if (!(ev instanceof Array) || ev.length < 1) {
       throw {
         name: 'CardError',
-        message: 'Card '+this.name+' events is not an array'
+        message: 'Card ' + this.name + ' events is not an array'
       };
     }
     if (typeof ev[0] === 'string') {
@@ -16,7 +16,7 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       if ((!str && typeof str !== 'string') || validStrings.indexOf(ev[0].split(' ')[0]) < 0) {
         throw {
           name: 'CardError',
-          message: 'Card '+this.name+' events array first element is not a valid string neither a function'
+          message: 'Card ' + this.name + ' events array first element is not a valid string neither a function'
         };
       }
       if (str === '') {
@@ -27,13 +27,13 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       if (typeof n !== 'number' || isNaN(n) || n < 1) {
         throw {
           name: 'CardError',
-          message: 'Card '+this.name+' has an invalid parameter: '+str
+          message: 'Card ' + this.name + ' has an invalid parameter: ' + str
         };
       }
       if (n >= ev.length) {
         throw {
           name: 'CardError',
-          message: 'Card '+this.name+' has too much choices: '+n+' when max is '+(ev.length-1)
+          message: 'Card ' + this.name + ' has too much choices: ' + n + ' when max is ' + (ev.length - 1)
         };
       }
       ev = ev.slice(1); // copy the rest of the array
@@ -46,7 +46,7 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
         } else if (typeof v !== 'function') {
           throw {
             name: 'CardError',
-            message: 'Card '+that.name+' has invalid events'
+            message: 'Card ' + that.name + ' has invalid events'
           };
         }
       }
@@ -70,17 +70,6 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       //checkEventArray.apply(this, events);
       this.type.push('action');
 
-      // those variable allow for choose or any other kind of inteerruptions
-      // they will ensure that all events get fired following the right order
-      // memory example: '1' -> 0 is a choose array: [ ['choose', ...,...],...,...]
-      // 1,2,3 -> [[..., [...,...,['choose', ..., ...], ...], ...], ..., ...]
-      // in this last example are in deep 3 and we stopped at array 0, then 1, then 2
-      this.memory = []; // remember all the actions done
-      // if the array isn't empty then we're calling an action to continue
-      // therefore this memory must be cleaned by game before playing an action
-      this.lastMemory = '';
-
-      this.actionsFile = []; // Pile up every action and then execute them all
       this.actionQueue = []; // temp mem to save execution state
     },
     // TODO add a check at initialization isntead of doing it in play
@@ -133,7 +122,6 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       Array.prototype.unshift.apply(this.actionQueue, events);
     },
     cleanMemory: function() {
-      this.memory = [];
       this.actionQueue = [];
     },
     checkEventArray: checkEventArray

@@ -5,7 +5,9 @@ define(['selfish'], function(selfish) {
       if (typeof money === 'function') {
         this.money = money;
       } else {
-        this.money = function() { return money; };
+        this.money = function() {
+          return money;
+        };
       }
       this.type.push('treasure');
     },

@@ -42,9 +42,15 @@ describe('Game tests', function() {
     it('should throw errors for wrong number of players', function() {
       var g = Game.new();
       g.startGame.bind(g, {}).should.throw(/number.*players/);
-      g.startGame.bind(g, { players: 'im not a number'}).should.throw(/number.*players/);
-      g.startGame.bind(g, { players: 1}).should.throw(/number.*players/);
-      g.startGame.bind(g, { players: 7}).should.throw(/number.*players/);
+      g.startGame.bind(g, {
+        players: 'im not a number'
+      }).should.throw(/number.*players/);
+      g.startGame.bind(g, {
+        players: 1
+      }).should.throw(/number.*players/);
+      g.startGame.bind(g, {
+        players: 7
+      }).should.throw(/number.*players/);
     });
     it('should throw errors for cards', function() {
       var g = Game.new();
@@ -70,7 +76,8 @@ describe('Game tests', function() {
     var checkGame = function(game) {
       var cards = ['Copper', 'Estate'];
       var p = game.currentPlayer();
-      var estates = 0, coppers = 0;
+      var estates = 0,
+        coppers = 0;
       game.trash.should.be.empty;
       p.deck.should.have.lengthOf(5);
       p.hand.should.have.lengthOf(5);
@@ -81,13 +88,16 @@ describe('Game tests', function() {
         cards.should.containEql(v.name);
         if (v.name === 'Copper') {
           coppers++;
-        }else{
+        } else {
           estates++;
         }
       });
       coppers.should.be.within(2, 5);
       estates.should.be.within(0, 3);
-      var shE = 3 - estates, shC = 7 - coppers, oE = estates, oC = coppers;
+      var shE = 3 - estates,
+        shC = 7 - coppers,
+        oE = estates,
+        oC = coppers;
       coppers = 0;
       estates = 0;
       _.forOwn(p.hand, function(v) {
@@ -95,7 +105,7 @@ describe('Game tests', function() {
         cards.should.containEql(v.name);
         if (v.name === 'Copper') {
           coppers++;
-        }else{
+        } else {
           estates++;
         }
       });
@@ -115,7 +125,7 @@ describe('Game tests', function() {
         cards.should.containEql(v.name);
         if (v.name === 'Copper') {
           coppers++;
-        }else{
+        } else {
           estates++;
         }
       });
@@ -192,7 +202,7 @@ describe('Game tests', function() {
         v.should.have.property('instance');
         if (v.instance.is('victory')) {
           v.should.have.property('amount', 8);
-        }else if (v.instance.is('action')) { // kingdom
+        } else if (v.instance.is('action')) { // kingdom
           v.should.have.property('amount', 10);
         } else {
           v.should.have.property('amount', base.cards[v.instance.name].amount[0]);
@@ -259,7 +269,8 @@ describe('Game tests', function() {
       others.should.containEql(g.currentPlayer(3));
     });
     it('should get relative players with 2 players', function() {
-      var p1 = g.players[0], p2 = g.players[1];
+      var p1 = g.players[0],
+        p2 = g.players[1];
       g.currentPlayer(0).should.be.eql(p1);
       g.currentPlayer(1).should.be.eql(p2);
       g.currentPlayer(-1).should.be.eql(p2);

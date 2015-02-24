@@ -4,13 +4,13 @@ define(['selfish'], function(selfish) {
     cards: function(n) {
       this.currentPlayer().draws(parseInt(n, 10));
     },
-    actions: function(n)  {
+    actions: function(n) {
       this.addActions(parseInt(n, 10));
     },
-    money: function(n)  {
+    money: function(n) {
       this.addMoney(parseInt(n, 10));
     },
-    buys: function(n)  {
+    buys: function(n) {
       this.addBuys(parseInt(n, 10));
     },
   };
@@ -25,7 +25,7 @@ define(['selfish'], function(selfish) {
       if (!action[s[0]]) {
         throw {
           name: 'EventError',
-          message: s[0]+' is not a valid event'
+          message: s[0] + ' is not a valid event'
         };
       }
       this.fire = action[s[0]].bind(game, s.slice(1));

@@ -36,10 +36,10 @@ describe('Actions Testing', function() {
     });
   });
 
-  describe('#Event based actions', function(){
+  describe('#Event based actions', function() {
     it('should work with a single event action', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -61,7 +61,7 @@ describe('Actions Testing', function() {
     });
     it('should work with a multi event action', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -84,7 +84,7 @@ describe('Actions Testing', function() {
     });
     it('should fail if event is invalid', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -100,10 +100,10 @@ describe('Actions Testing', function() {
       A.new.bind(A, game).should.throw(/wrong.*valid.*event/);
     });
   });
-  describe('#Function based actions', function(){
+  describe('#Function based actions', function() {
     it('should work with a single function action', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -127,7 +127,7 @@ describe('Actions Testing', function() {
     });
     it('should work with a multi function action', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -137,8 +137,7 @@ describe('Actions Testing', function() {
           Action.initialize.call(this, [
             (function(game) {
               game.currentPlayer().graveyard.push(gold);
-            }).bind(null, game),
-            (function(game) {
+            }).bind(null, game), (function(game) {
               game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
@@ -156,7 +155,7 @@ describe('Actions Testing', function() {
     });
     it('should be able to detect if function is invalid', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -173,10 +172,10 @@ describe('Actions Testing', function() {
       a.checkEventArray.bind(a).should.throw(/invalid.*event/);
     });
   });
-  describe('#Mixed actions', function(){
+  describe('#Mixed actions', function() {
     it('should work with actions with one event and one function', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -184,8 +183,7 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 1'),
-            (function(game) {
+            Event.new(game, 'cards 1'), (function(game) {
               game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
@@ -203,7 +201,7 @@ describe('Actions Testing', function() {
     });
     it('should work with actions with one event and multiple functions', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -211,11 +209,9 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 1'),
-            (function(game) {
+            Event.new(game, 'cards 1'), (function(game) {
               game.currentPlayer().graveyard.push(silver);
-            }).bind(null, game),
-            (function(game) {
+            }).bind(null, game), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -234,7 +230,7 @@ describe('Actions Testing', function() {
     });
     it('should work with actions with multiple events and one function', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -243,8 +239,7 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
-            (function(game) {
+            Event.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -263,7 +258,7 @@ describe('Actions Testing', function() {
     });
     it('should work with actions with multiple events and multiple functions', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -272,11 +267,9 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
-            (function(game) {
+            Event.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
-            }).bind(null, game),
-            (function(game) {
+            }).bind(null, game), (function(game) {
               game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
@@ -295,10 +288,10 @@ describe('Actions Testing', function() {
       game.buys.should.be.eql(2);
     });
   });
-  describe('#Prefixed actions', function(){
+  describe('#Prefixed actions', function() {
     it('should work with "choose" functions cards', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -309,8 +302,7 @@ describe('Actions Testing', function() {
             'choose', // eq to choose 1
             (function(game) {
               game.currentPlayer().graveyard.push(gold);
-            }).bind(null, game),
-            (function(game) {
+            }).bind(null, game), (function(game) {
               game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
@@ -337,7 +329,7 @@ describe('Actions Testing', function() {
     });
     it('should work with "choose" events cards', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -368,7 +360,7 @@ describe('Actions Testing', function() {
     });
     it('should work with a "choose" with mixed events and functions cards', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -378,8 +370,7 @@ describe('Actions Testing', function() {
           Action.initialize.call(this, [
             'choose',
             Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
-            (function(game) {
+            Event.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -405,7 +396,7 @@ describe('Actions Testing', function() {
     });
     it('should be able to choose more than 1', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -415,8 +406,7 @@ describe('Actions Testing', function() {
           Action.initialize.call(this, [
             'choose 2',
             Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
-            (function(game) {
+            Event.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -437,14 +427,14 @@ describe('Actions Testing', function() {
       game.addActions(1); // or we won't be able to play
       p.hand.push(a);
       game.play(6).should.be.eql(a);
-      game.chooseAction([1,2]);
+      game.chooseAction([1, 2]);
       p.hand.should.have.lengthOf(6);
       game.buys.should.be.eql(3);
       p.graveyard.should.containEql(gold);
     });
     it('should refuse to choose a wrong number of actions', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -454,8 +444,7 @@ describe('Actions Testing', function() {
           Action.initialize.call(this, [
             'choose 2',
             Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
-            (function(game) {
+            Event.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -479,7 +468,7 @@ describe('Actions Testing', function() {
     });
     it('should refuse to choose an action that doesn\'t exist (wrong index)', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -489,8 +478,7 @@ describe('Actions Testing', function() {
           Action.initialize.call(this, [
             'choose 2',
             Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
-            (function(game) {
+            Event.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -514,7 +502,7 @@ describe('Actions Testing', function() {
     });
     it('should refuse to choose the same action for a choose >1', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -524,8 +512,7 @@ describe('Actions Testing', function() {
           Action.initialize.call(this, [
             'choose 2',
             Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
-            (function(game) {
+            Event.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -538,17 +525,17 @@ describe('Actions Testing', function() {
       var silver = game.cards.Silver.instance;
       p.hand.push(a);
       game.play(5).should.be.eql(a);
-      game.chooseAction.bind(game, [1,1]).should.throw(/Cannot choose the same option twice/);
+      game.chooseAction.bind(game, [1, 1]).should.throw(/Cannot choose the same option twice/);
       p.hand.should.have.lengthOf(5);
       game.buys.should.be.eql(1);
       p.graveyard.should.not.containEql(gold);
     });
     it('should work with a "random" card');
   });
-  describe('#Recursive actions', function(){
+  describe('#Recursive actions', function() {
     it('should fire all events in a simple recursive array', function() {
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -557,11 +544,9 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
-            (function(game) {
+            Event.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
-            }).bind(null, game),
-            [
+            }).bind(null, game), [
               Event.new(game, 'cards 1'),
               Event.new(game, 'buys 1'),
               function(game) {
@@ -596,7 +581,7 @@ describe('Actions Testing', function() {
         Event.new(game, 'money 2'),
       ];
       var A = Card.extend(Action, {
-        initialize: function(game)  {
+        initialize: function(game) {
           Card.initialize.call(this, {
             name: 'name',
             text: 'text',
@@ -604,8 +589,7 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            'choose 1',
-            [
+            'choose 1', [
               Event.new(game, 'cards 1'),
               fun
             ],
@@ -641,8 +625,7 @@ describe('Actions Testing', function() {
           Event.new(game, 'money 3'),
         ];
         var fun = [
-          'choose',
-          [
+          'choose', [
             Event.new(game, 'cards 2'),
             mad
           ],
@@ -658,7 +641,7 @@ describe('Actions Testing', function() {
           ]
         ];
         A = Card.extend(Action, {
-          initialize: function(game)  {
+          initialize: function(game) {
             Card.initialize.call(this, {
               name: 'name',
               text: 'text',
@@ -666,8 +649,7 @@ describe('Actions Testing', function() {
               img: ''
             });
             Action.initialize.call(this, [
-              'choose 1',
-              [
+              'choose 1', [
                 Event.new(game, 'cards 1'),
                 fun
               ],

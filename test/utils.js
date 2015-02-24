@@ -16,10 +16,11 @@ describe('Utils Testing', function() {
     });
   });
 
-  describe('#Array shuffle', function(){
-    it('should work without problems', function(){
-      var a = [1, 2, 3, 4, 5, 6, 7, 8 , 9, 10], i,
-      cpy = [];
+  describe('#Array shuffle', function() {
+    it('should work without problems', function() {
+      var a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        i,
+        cpy = [];
       for (i = 0; i < 5; i++) {
         cpy.push(a.slice(0).shuffle());
       }

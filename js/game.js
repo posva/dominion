@@ -39,7 +39,7 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
       if (!init.players || typeof init.players !== 'number' || init.players < 2 || init.players > 6) {
         throw {
           name: 'ConfError',
-          message: 'Wrong number of players'+(init.players?'('+init.players.toString()+').':'.')
+          message: 'Wrong number of players' + (init.players ? '(' + init.players.toString() + ').' : '.')
         };
       }
 
@@ -79,7 +79,7 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
         };
         k = tmp.instance.name;
         that.cards[k] = tmp;
-        that.cards[k].amount = v.amount[init.players-2];
+        that.cards[k].amount = v.amount[init.players - 2];
       });
       // expansions cards can overwrite mode cards
       _.forOwn(init.cards, function(v, k) {
@@ -91,9 +91,9 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
         k = tmp.instance.name;
         that.cards[k] = tmp;
         if (that.cards[k].instance.is('victory')) {
-          that.cards[k].amount = init.mode.cards['victory-card'].amount[init.players-2];
+          that.cards[k].amount = init.mode.cards['victory-card'].amount[init.players - 2];
         } else {
-          that.cards[k].amount = init.mode.cards['kingdom-card'].amount[init.players-2];
+          that.cards[k].amount = init.mode.cards['kingdom-card'].amount[init.players - 2];
         }
       });
 
@@ -150,21 +150,21 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
         if (i[k] < 0 || i[k] >= this.waitingAction.events.length) {
           throw {
             name: 'Choose Error',
-            message: 'Cannot choose option '+i[k]+', there are only '+this.waitingAction.events.length+' options.'
+            message: 'Cannot choose option ' + i[k] + ', there are only ' + this.waitingAction.events.length + ' options.'
           };
         }
         var lind = i.lastIndexOf(i[k]);
         if (lind > k && lind >= 0) {
           throw {
             name: 'Choose Error',
-            message: 'Cannot choose the same option twice: option '+i[k]+' at index '+k+' and '+lind
+            message: 'Cannot choose the same option twice: option ' + i[k] + ' at index ' + k + ' and ' + lind
           };
         }
       }
       if (i.length !== this.waitingAction.amount) {
         throw {
           name: 'Choose Error',
-          message: 'Got '+i.length+' choices instead of '+this.waitingAction.amount
+          message: 'Got ' + i.length + ' choices instead of ' + this.waitingAction.amount
         };
       }
       // collect events that must be played and give the to the action
@@ -188,9 +188,9 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
       var p = this.currentPlayer();
       var c = p.hand[i];
       if (!c ||
-          (c.is('action') && (this.actions < 1 || this.phase !== 'action')) ||
-          (c.is('treasure') && this.phase !== 'buy') // a treasure cannot be an action but may do things
-         ) {
+        (c.is('action') && (this.actions < 1 || this.phase !== 'action')) ||
+        (c.is('treasure') && this.phase !== 'buy') // a treasure cannot be an action but may do things
+      ) {
         return null;
       } // else play the card
       if (c.is('treasure')) {
@@ -210,7 +210,8 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
     // rteturn the bought card ot null if the card couldn't be bought
     buy: function(name) {
       var p = this.currentPlayer();
-      var card = this.cards[name], c;
+      var card = this.cards[name],
+        c;
       if (!card || card.amount < 1) {
         return null;
       }

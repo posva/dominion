@@ -29,7 +29,7 @@ describe('Event Testing', function() {
     done();
   });
 
-  describe('#Event instances', function(){
+  describe('#Event instances', function() {
     it('should create valid events', function() {
       Event.new.bind(Event, game, 'cards 1').should.not.throw();
       Event.new.bind(Event, game, 'actions 1').should.not.throw();
@@ -39,7 +39,7 @@ describe('Event Testing', function() {
       e.should.have.property('fire');
       e.fire.should.be.a.Function;
     });
-    it('should fail creating invalid events', function(){
+    it('should fail creating invalid events', function() {
       Event.new.bind(Event).should.throw();
       Event.new.bind(Event, game).should.throw();
       Event.new.bind(Event, game, 'badevent').should.throw(/not a valid event/);
@@ -47,7 +47,7 @@ describe('Event Testing', function() {
       Event.new.bind(Event, game, 23).should.throw();
     });
   });
-  describe('#Event execution', function(){
+  describe('#Event execution', function() {
     it('should draw cards', function() {
       game.startGame.bind(game, {
         players: 2,

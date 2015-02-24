@@ -71,12 +71,12 @@ define(['selfish', 'utils', 'lodash'], function(selfish, U, _) {
       if (typeof i !== 'number') {
         throw {
           name: 'DiscardError',
-          message: 'i must be a number not a '+(typeof i)
+          message: 'i must be a number not a ' + (typeof i)
         };
       } else if (i < 0 || i >= this.hand.length) {
         throw {
           name: 'DiscardError',
-          message: 'Invalid i value ('+i+'). expect 0 <= i < '+this.hand.length
+          message: 'Invalid i value (' + i + '). expect 0 <= i < ' + this.hand.length
         };
       }
       this.graveyard = this.graveyard.concat(this.hand.splice(i, 1));

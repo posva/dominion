@@ -31,8 +31,8 @@ describe('Player tests', function() {
     }
   };
 
-  describe('#Player instances', function(){
-    it('should create some players', function(){
+  describe('#Player instances', function() {
+    it('should create some players', function() {
       Player.new.bind(Player, playerInitializer).should.not.throw();
       var p = Player.new(playerInitializer);
       p.should.be.ok;
@@ -41,7 +41,7 @@ describe('Player tests', function() {
       p.field.should.have.length(0);
       p.graveyard.should.have.length(0);
     });
-    it('should fail creating some players', function(){
+    it('should fail creating some players', function() {
       Player.new.bind(Player).should.throw();
     });
     it('should draw the expected cards', function() {
@@ -143,7 +143,8 @@ describe('Player tests', function() {
       p.field.should.have.lengthOf(1);
 
       // count coppers and estates
-      var coppers = 0, estates = 0;
+      var coppers = 0,
+        estates = 0;
       _.forEach.bind(_, p.hand, function(v) {
         if (v.name === 'Copper') {
           coppers++;
@@ -183,15 +184,15 @@ describe('Player tests', function() {
       var l = p.deck.length;
       var cp = p.deck.slice(0, 3);
       var cards = p.extractFromDeck(3);
-      p.deck.should.have.lengthOf(l-3);
+      p.deck.should.have.lengthOf(l - 3);
       cards.should.be.eql(cp);
       cp = p.deck.slice(0, 1);
       cards = p.extractFromDeck(1);
       l -= 3;
-      p.deck.should.have.lengthOf(l-1);
+      p.deck.should.have.lengthOf(l - 1);
       cards.should.be.eql(cp);
-     });
-     it('should be able to extract the whole deck but not beyond', function() {
+    });
+    it('should be able to extract the whole deck but not beyond', function() {
       var p = Player.new(playerInitializer);
       p.endTurn();
       var l = p.deck.length;
@@ -202,8 +203,8 @@ describe('Player tests', function() {
       cards = p.extractFromDeck(7);
       p.deck.should.have.lengthOf(0);
       cards.should.be.empty;
-     });
-     it('should be able to extract cards after shuffling the deck', function() {
+    });
+    it('should be able to extract cards after shuffling the deck', function() {
       var p = Player.new(playerInitializer);
       p.endTurn();
       p.endTurn();
@@ -213,8 +214,8 @@ describe('Player tests', function() {
       p.graveyard.should.have.lengthOf(0);
       p.deck.should.have.lengthOf(2);
       cards.should.have.lengthOf(3);
-     });
-     it('should be able to extract, shuffle and extract the missing cards', function() {
+    });
+    it('should be able to extract, shuffle and extract the missing cards', function() {
       var p = Player.new(playerInitializer);
       p.endTurn();
       p.graveyard.push(Gold.new());
@@ -225,8 +226,8 @@ describe('Player tests', function() {
       cards.should.have.lengthOf(7);
       p.deck.should.have.lengthOf(1);
       cards.containCard('Gold').should.be.ok;
-     });
-     it('should be able to extract, shuffle and extract as much as possible', function() {
+    });
+    it('should be able to extract, shuffle and extract as much as possible', function() {
       var p = Player.new(playerInitializer);
       p.endTurn();
       p.graveyard.push(Gold.new());
@@ -237,7 +238,7 @@ describe('Player tests', function() {
       p.deck.should.have.lengthOf(0);
       cards.should.have.lengthOf(8);
       cards.containCard('Gold').should.be.ok;
-     });
+    });
   });
 
 });

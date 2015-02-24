@@ -1,6 +1,5 @@
 define(['lodash'], function(_) {
-  var u = {
-  };
+  var u = {};
 
   // extend array :*
   Array.prototype.shuffle = function() {

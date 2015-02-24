@@ -10,7 +10,9 @@ requirejs.config({
 });
 
 describe('Dummy Suite for Modes', function() {
-  var modes = {}, modes_array = [], Player, Card, Game, Gold, Duchy;
+  var modes = {},
+    modes_array = [],
+    Player, Card, Game, Gold, Duchy;
   before(function(done) {
     requirejs(['player', 'card', 'game', 'cards/gold', 'cards/duchy'], function(player, card, game, gold, duchy) {
       Player = player;
@@ -35,9 +37,9 @@ describe('Dummy Suite for Modes', function() {
           }
           describe('Modes testing', function() {
             _.forOwn(modes, function(v, k) {
-              describe(k+ '.js', function(){
+              describe(k + '.js', function() {
                 v = modes[k];
-                describe('#Common', function(){
+                describe('#Common', function() {
                   var game;
                   before(function() {
                     game = Game.new();
@@ -47,7 +49,7 @@ describe('Dummy Suite for Modes', function() {
                       mode: v
                     });
                   });
-                  it('should have a valid cards object', function(){
+                  it('should have a valid cards object', function() {
                     v.should.have.property('cards');
                     _.forOwn(v.cards, function(c, k) {
                       c.should.have.property('card');
@@ -70,7 +72,7 @@ describe('Dummy Suite for Modes', function() {
                     v.cards['kingdom-card'].should.have.property('card', null);
                     v.cards['victory-card'].should.have.property('card', null);
                   });
-                  it('should be able to get amounts of cards', function(){
+                  it('should be able to get amounts of cards', function() {
                     _.forOwn(v.cards, function(c, k) {
                       c.should.have.property('amount');
                       c.amount.should.be.an.Array.and.have.lengthOf(5);
@@ -82,7 +84,7 @@ describe('Dummy Suite for Modes', function() {
                   it('should start a game', function() {
                     v.playerInitializer.should.be.a.Function;
                     var g = Game.new();
-                      g.startGame.bind(g, {
+                    g.startGame.bind(g, {
                       players: 2,
                       cards: [Duchy],
                       mode: v
@@ -126,11 +128,11 @@ describe('Dummy Suite for Modes', function() {
     });
   });
 
-    it(':D', function(done) {
-      var a = {};
-      a.should.be.ok;
-      done();
-    });
+  it(':D', function(done) {
+    var a = {};
+    a.should.be.ok;
+    done();
+  });
 
   // TODO automate the test for every mode
 });

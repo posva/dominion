@@ -10,7 +10,9 @@ requirejs.config({
 });
 
 describe.skip('Dummy Suite for Expansions', function() {
-  var expansions = {}, expansions_array = [], Player;
+  var expansions = {},
+    expansions_array = [],
+    Player;
   before(function(done) {
     requirejs(['player'], function(player) {
       Player = player;
@@ -31,12 +33,12 @@ describe.skip('Dummy Suite for Expansions', function() {
           }
           describe('Expansions testing', function() {
             _.forOwn(expansions, function(v, k) {
-              describe('#' + k+ '.js', function(){
+              describe('#' + k + '.js', function() {
                 v = expansions[k];
-                it('should have a cards object', function(){
+                it('should have a cards object', function() {
                   v.should.have.property('cards');
                 });
-                it('should be able to get amounts of cards', function(){
+                it('should be able to get amounts of cards', function() {
                   v.getAmounts.should.be.a.Function;
                   assert.strictEqual(v.getAmounts('1'), undefined);
                   assert.strictEqual(v.getAmounts({}), undefined);
@@ -78,11 +80,11 @@ describe.skip('Dummy Suite for Expansions', function() {
     });
   });
 
-    it(':D', function(done) {
-      var a = {};
-      a.should.be.ok;
-      done();
-    });
+  it(':D', function(done) {
+    var a = {};
+    a.should.be.ok;
+    done();
+  });
 
   // TODO automate the test for every mode
 });

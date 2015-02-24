@@ -27,8 +27,8 @@ describe('Card Testing', function() {
     });
   });
 
-  describe('#instanciation', function(){
-    it('should create cards with costs, names, texts and images', function(){
+  describe('#instanciation', function() {
+    it('should create cards with costs, names, texts and images', function() {
       Card.should.have.property('new');
       var c1 = Card.new('name', 'text', 1, 'img.jpg');
       var c2 = Card.new();
@@ -86,7 +86,9 @@ describe('Card Testing', function() {
     it('should be able to create some victory cards', function() {
       var Estate = Card.extend(Victory, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
+          Card.initialize.call(this, {
+            cost: 2
+          });
           Victory.initialize.call(this, 1);
         },
       });
@@ -106,7 +108,9 @@ describe('Card Testing', function() {
     it('should be able to create some treasure cards', function() {
       var Copper = Card.extend(Treasure, {
         initialize: function() {
-          Card.initialize.call(this, {cost:0});
+          Card.initialize.call(this, {
+            cost: 0
+          });
           Treasure.initialize.call(this, 1);
         }
       });
@@ -126,7 +130,9 @@ describe('Card Testing', function() {
     it('should be able to create some mixted cards (cf Harem) cards', function() {
       var Harem = Card.extend(Treasure, Victory, {
         initialize: function() {
-          Card.initialize.call(this, {cost:6});
+          Card.initialize.call(this, {
+            cost: 6
+          });
           Treasure.initialize.call(this, 2);
           Victory.initialize.call(this, 2);
         }
@@ -153,14 +159,17 @@ describe('Card Testing', function() {
         mode: base
       }).should.not.throw();
       var events = [
+
         function() {
-        // do something
+          // do something
         },
         Event.new(game, 'cards 1')
       ];
       var Ac = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
+          Card.initialize.call(this, {
+            cost: 2
+          });
           Action.initialize.call(this, events);
         }
       });
@@ -176,7 +185,9 @@ describe('Card Testing', function() {
     it('should fail creating invalid actions cards', function() {
       var A = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
+          Card.initialize.call(this, {
+            cost: 2
+          });
           Action.initialize.call(this, 1);
         }
       });
@@ -187,8 +198,12 @@ describe('Card Testing', function() {
 
       A = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
-          Action.initialize.call(this, ['choose 2' , function(){}]);
+          Card.initialize.call(this, {
+            cost: 2
+          });
+          Action.initialize.call(this, ['choose 2',
+            function() {}
+          ]);
         }
       });
       a = A.new();
@@ -196,8 +211,12 @@ describe('Card Testing', function() {
 
       A = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
-          Action.initialize.call(this, ['choose -1' , function(){}]);
+          Card.initialize.call(this, {
+            cost: 2
+          });
+          Action.initialize.call(this, ['choose -1',
+            function() {}
+          ]);
         }
       });
       a = A.new();
@@ -205,8 +224,12 @@ describe('Card Testing', function() {
 
       A = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
-          Action.initialize.call(this, ['choose dafs' , function(){}]);
+          Card.initialize.call(this, {
+            cost: 2
+          });
+          Action.initialize.call(this, ['choose dafs',
+            function() {}
+          ]);
         }
       });
       a = A.new();
@@ -214,7 +237,9 @@ describe('Card Testing', function() {
 
       A = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
+          Card.initialize.call(this, {
+            cost: 2
+          });
           Action.initialize.call(this, ['choose']);
         }
       });
@@ -223,8 +248,16 @@ describe('Card Testing', function() {
 
       A = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
-          Action.initialize.call(this, ['choose', function() {}, [function() {}, 1]]);
+          Card.initialize.call(this, {
+            cost: 2
+          });
+          Action.initialize.call(this, ['choose',
+            function() {},
+            [
+              function() {},
+              1
+            ]
+          ]);
         }
       });
       a = A.new();
@@ -232,8 +265,16 @@ describe('Card Testing', function() {
 
       A = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
-          Action.initialize.call(this, ['sdfsd', function() {}, [function() {}, 1]]);
+          Card.initialize.call(this, {
+            cost: 2
+          });
+          Action.initialize.call(this, ['sdfsd',
+            function() {},
+            [
+              function() {},
+              1
+            ]
+          ]);
         }
       });
       a = A.new();
@@ -241,7 +282,9 @@ describe('Card Testing', function() {
 
       A = Card.extend(Action, {
         initialize: function() {
-          Card.initialize.call(this, {cost: 2});
+          Card.initialize.call(this, {
+            cost: 2
+          });
           Action.initialize.call(this, [null]);
         }
       });
@@ -255,7 +298,9 @@ describe('Card Testing', function() {
     it('should be the same as multiple args extend()', function() {
       var obj = {
         initialize: function() {
-          Card.initialize.call(this, {cost:6});
+          Card.initialize.call(this, {
+            cost: 6
+          });
           Treasure.initialize.call(this, 2);
           Victory.initialize.call(this, 2);
         }
@@ -278,7 +323,7 @@ describe('Card Testing', function() {
       Victory.isPrototypeOf(Harem2).should.be.false;
 
       var h1 = Harem.new(),
-      h2 = Harem2.new();
+        h2 = Harem2.new();
 
       var test = function(c) {
         c.should.have.property('money');
@@ -294,34 +339,36 @@ describe('Card Testing', function() {
     });
   });
 
-  describe('#treasure with variable money', function(){
-    it('should return a variable value', function(){
+  describe('#treasure with variable money', function() {
+    it('should return a variable value', function() {
       var TestCard = Card.extend(Treasure, {
         initialize: function() {
           Card.initialize.call(this);
           Treasure.initialize.call(this, function() {
-            return Math.floor(Math.random()*10);
+            return Math.floor(Math.random() * 10);
           });
         }
       });
-      var t = TestCard.new(), i;
+      var t = TestCard.new(),
+        i;
       for (i = 0; i < 10; i++) {
         t.money().should.be.within(0, 10);
       }
     });
   });
 
-  describe('#victory with variable points', function(){
-    it('should return a variable value', function(){
+  describe('#victory with variable points', function() {
+    it('should return a variable value', function() {
       var TestCard = Card.extend(Victory, {
         initialize: function() {
           Card.initialize.call(this);
           Victory.initialize.call(this, function() {
-            return Math.floor(Math.random()*10);
+            return Math.floor(Math.random() * 10);
           });
         }
       });
-      var t = TestCard.new(), i;
+      var t = TestCard.new(),
+        i;
       for (i = 0; i < 10; i++) {
         t.points().should.be.within(0, 10);
       }
@@ -352,7 +399,7 @@ describe('Card Testing', function() {
         initialize: function() {
           Card.initialize.call(this);
           Curse.initialize.call(this, function() {
-            return -Math.floor(Math.random()*3);
+            return -Math.floor(Math.random() * 3);
           });
         }
       });

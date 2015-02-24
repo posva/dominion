@@ -8,7 +8,8 @@ define(['card', 'victory', 'lodash'], function(Card, Victory, _) {
         img: 'data/card/duke.jpg'
       });
       Victory.initialize.call(this, function(game) {
-        var p = game.currentPlayer(), cards;
+        var p = game.currentPlayer(),
+          cards;
         cards = p.deck.concat(p.hand, p.graveyard);
         var count = 0;
         _.forEach(cards, function(v) {
