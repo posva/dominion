@@ -507,7 +507,7 @@ describe('Actions Testing', function() {
       p.hand.should.have.lengthOf(5);
       game.buys.should.be.eql(1);
       p.graveyard.should.not.containEql(gold);
-      game.chooseAction.bind(game, [1, 3, 0]).should.throw(/Cannot choose option 3/);
+      game.chooseAction.bind(game, [1, 3]).should.throw(/Cannot choose option 3/);
       p.hand.should.have.lengthOf(5);
       game.buys.should.be.eql(1);
       p.graveyard.should.not.containEql(gold);
