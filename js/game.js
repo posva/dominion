@@ -140,53 +140,41 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
         return this.players[this.players.length + i];
       }
     },
-    // must be called when when we wait the player to choose an action
-    waitChoose: function(action, arr) {
-      this.waitingAction = action;
-      this.waitingArray = arr;
-      this.waitingChoices = parseInt(arr[0].split(' ')[1], 10);
-      this.waitingChoices = this.waitingChoices || 1; // no text => 1 choice
-      //console.log('Wait for', arr);
-      // somehow use arr with ui
-    },
-    // called after the waitChoose. i is the 0-index of the arr
+    // called when an actions needs choosing. i is the 0-index of the arr
     chooseAction: function(i) {
       if (typeof i === 'number') {
         i = [i];
       }
       var k;
       for (k = 0; k < i.length; k++) {
-        i[k]++; // because of string
-        if (i[k] < 1 || i[k] >= this.waitingArray.length) {
+        if (i[k] < 0 || i[k] >= this.waitingAction.events.length) {
           throw {
             name: 'Choose Error',
-            message: 'Cannot choose option '+(i[k]-1)+', there are only '+this.waitingArray.length+' options.'
+            message: 'Cannot choose option '+i[k]+', there are only '+this.waitingAction.events.length+' options.'
           };
         }
-        var lind = i.lastIndexOf(i[k]-1);
+        var lind = i.lastIndexOf(i[k]);
         if (lind > k && lind >= 0) {
           throw {
             name: 'Choose Error',
-            message: 'Cannot choose the same option twice: option '+(i[k]-1)+' at index '+k+' and '+lind
+            message: 'Cannot choose the same option twice: option '+i[k]+' at index '+k+' and '+lind
           };
         }
       }
-      if (i.length !== this.waitingChoices) {
+      if (i.length !== this.waitingAction.amount) {
         throw {
           name: 'Choose Error',
-          message: 'Got '+i.length+' choices instead of '+this.waitingChoices
+          message: 'Got '+i.length+' choices instead of '+this.waitingAction.amount
         };
       }
-      var arr = [];
+      // collect events that must be played and give the to the action
+      var events = [];
       _.forEach(i, function(v) {
-        arr.push(this.waitingArray[v]);
+        events.push(this.waitingAction.events[v]);
       }, this);
-      //console.log('Extracted', arr, 'from', this.waitingArray);
-      if (this.waitingAction.replay(arr, this)) {
-        if (this.waitingAction.play(this)) {
-          this.waitingAction.solve();
-        }
-      }
+      //console.log('Extracted', events, 'from', this.waitingAction.events);
+      this.waitingAction.action.stackChoosenEvents(events);
+      this.waitingAction = this.waitingAction.action.play(this);
     },
     // return an array with all players except the one playing
     otherPlayers: function() {
@@ -208,8 +196,14 @@ define(['selfish', 'lodash', 'player', 'card', 'event'], function(selfish, _, Pl
       if (c.is('treasure')) {
         this.addMoney(c.money());
       }
-      p.plays(i);
-      this.actions--;
+      var res = p.plays(i);
+      if (res) { // there is a choose
+        // TODO bind here ui stuff
+        this.waitingAction = res;
+      }
+      if (c.is('action')) {
+        this.actions--;
+      }
       return c;
     },
     // buy a card with name name

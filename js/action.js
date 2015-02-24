@@ -52,43 +52,6 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       }
     });
   };
-  // recursive fucntion to play actions
-  // TODO choose and other string functions
-  var subPlay = function(arr, game, mem) {
-    this.lastMemory = mem;
-    if (typeof arr[0] === 'string') {
-      if (this.memory.indexOf(mem) >= 0) {
-        return true; // shown must go on
-      }
-      this.memory.push(mem);
-      this.solve(); // solve pushed actions as they may interfeer with the choose
-      game.waitChoose(this, arr);
-      return false; // stop iteration of actions if waiting for a choose
-    } else {
-      var ok = _.forEach(arr, function(v, i) {
-        var localMem = mem+','+i;
-        if (typeof v === 'object' && v.length) {
-          if (!subPlay.apply(this, [v, game, localMem])) {
-            return false; // stop iteration
-          }
-        } else {
-          if (this.memory.indexOf(localMem) >= 0) {
-            return; // keep iterating
-          }
-          this.memory.push(localMem);
-          if (Event.isPrototypeOf(v)) {
-            this.actionsFile.push(v.fire.bind(v));
-          } else {
-            this.actionsFile.push(v.bind(null, game));
-          }
-        }
-      }, this);
-      //if (!ok) {
-        //return false;
-      //}
-      return true; // all is ok
-    }
-  };
   var Action = Base.extend({
     // events is an array which first element can be a string:
     // - choose/choose x
@@ -118,30 +81,60 @@ define(['selfish', 'lodash', 'event'], function(selfish, _, Event) {
       this.lastMemory = '';
 
       this.actionsFile = []; // Pile up every action and then execute them all
+      this.actionQueue = []; // temp mem to save execution state
     },
     // TODO add a check at initialization isntead of doing it in play
     // Even better just do dynamic tests for cards
     play: function(game) {
       //console.log('Play');
-      return subPlay.apply(this, [this.events, game, '']);
-    },
-    // resume the play after a choose or similar call
-    replay: function(arr, game) {
-      //console.log('Replay', arr);
-      return subPlay.apply(this, [arr, game, this.lastMemory]);
-    },
-    // once all the actions have been chosed we can solve them
-    solve: function() {
-      //console.log('SOLVE');
-      var f = this.actionsFile.shift();
-      while (typeof f === 'function') {
-        f();
-        f = this.actionsFile.shift();
+      var me = this;
+      // fun to add all elements of an array to the events queue
+      var queueEvents = function queueEvents(array) {
+        if (typeof array[0] === 'string') { // chooselike -> we push the whole array
+          me.actionQueue.push(array);
+        } else {
+          _.forEach(array, function queueEventsLoop(ev) {
+            me.actionQueue.push(ev);
+          }, me);
+        }
+      };
+
+      // if this is teh first call add every element in the array
+      if (this.actionQueue.length === 0) {
+        queueEvents(this.events);
       }
+
+      var event, pendingChoices;
+      while (this.actionQueue.length > 0) {
+        event = this.actionQueue.shift();
+        if (typeof event === 'object' && event.length) {
+          if (typeof event[0] === 'string') { // it is a chooselike (embeded array)
+            pendingChoices = {
+              action: this,
+              events: event.slice(1),
+              amount: parseInt(event[0].split(' ')[1], 10) || 1 // no text = 1
+            };
+            // we must wait for player input
+            return pendingChoices;
+          } else { // array of events. we must expand it
+            Array.prototype.unshift.apply(this.actionQueue, event);
+          }
+        } else if (Event.isPrototypeOf(event)) {
+          event.fire();
+        } else { // a function
+          event(game);
+        }
+      }
+
+      return false; // we are not waiting for user input
+    },
+    stackChoosenEvents: function(events) {
+      // we push in front because we must resolve the choose first
+      Array.prototype.unshift.apply(this.actionQueue, events);
     },
     cleanMemory: function() {
       this.memory = [];
-      this.actionsFile = [];
+      this.actionQueue = [];
     },
     checkEventArray: checkEventArray
   });

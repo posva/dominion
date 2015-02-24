@@ -631,69 +631,93 @@ describe('Actions Testing', function() {
       game.buys.should.be.eql(1);
       game.money.should.be.eql(2);
     });
-    it.skip('should deeply choose', function() {
-      var mad = [
-        'choose',
-        Event.new(game, 'cards 3'),
-        Event.new(game, 'buys 3'),
-        Event.new(game, 'money 3'),
-      ];
-      var fun = [
-        'choose',
-        [
-          Event.new(game, 'cards 2'),
-          mad
-        ],
-        [
-          Event.new(game, 'buys 2'),
-          mad
-        ],
-        [
-          Event.new(game, 'money 2'),
-          mad
-        ]
-      ];
-      var A = Card.extend(Action, {
-        initialize: function(game)  {
-          Card.initialize.call(this, {
-            name: 'name',
-            text: 'text',
-            cost: 1,
-            img: ''
-          });
-          Action.initialize.call(this, [
-            'choose 1',
-            [
-              Event.new(game, 'cards 1'),
-              fun
-            ],
-            [
-              Event.new(game, 'buys 1'),
-              fun
-            ],
-            [
-              Event.new(game, 'money 1'),
-              fun
-            ],
-          ]);
-        },
+    describe('#Deeper choose', function() {
+      var A, a;
+      before(function() {
+        var mad = [
+          'choose',
+          Event.new(game, 'cards 3'),
+          Event.new(game, 'buys 3'),
+          Event.new(game, 'money 3'),
+        ];
+        var fun = [
+          'choose',
+          [
+            Event.new(game, 'cards 2'),
+            mad
+          ],
+          [
+            Event.new(game, 'buys 2'),
+            mad,
+            Event.new(game, 'money 2'),
+            mad,
+          ],
+          [
+            Event.new(game, 'money 2'),
+            mad
+          ]
+        ];
+        A = Card.extend(Action, {
+          initialize: function(game)  {
+            Card.initialize.call(this, {
+              name: 'name',
+              text: 'text',
+              cost: 1,
+              img: ''
+            });
+            Action.initialize.call(this, [
+              'choose 1',
+              [
+                Event.new(game, 'cards 1'),
+                fun
+              ],
+              [
+                Event.new(game, 'buys 1'),
+                fun,
+                Event.new(game, 'money 1'),
+              ],
+              [
+                Event.new(game, 'money 1'),
+                fun
+              ],
+            ]);
+          },
+        });
+        a = A.new(game);
       });
-      A.new.bind(A, game).should.not.throw();
-      var a = A.new(game);
-      var p = game.currentPlayer();
-      p.hand.push(a);
-      game.play(5).should.be.eql(a);
-      p.hand.should.have.lengthOf(5);
-      game.chooseAction(0);
-      p.hand.should.have.lengthOf(6);
-      console.log('ACTIONS: '+game.actions+'; BUYS: '+game.buys+'; MONEY: '+game.money);
-      game.chooseAction(2);
-      console.log('ACTIONS: '+game.actions+'; BUYS: '+game.buys+'; MONEY: '+game.money);
-      game.money.should.be.eql(2);
-      game.chooseAction(1);
-      console.log('ACTIONS: '+game.actions+'; BUYS: '+game.buys+'; MONEY: '+game.money);
-      game.buys.should.be.eql(1);
-      game.money.should.be.eql(5);
+      it('should deeply choose', function() {
+        var p = game.currentPlayer();
+        p.hand.push(a);
+        game.play(5).should.be.eql(a);
+        p.hand.should.have.lengthOf(5);
+        game.chooseAction(0);
+        p.hand.should.have.lengthOf(6);
+        game.chooseAction(2);
+        game.money.should.be.eql(2);
+        game.chooseAction(2);
+        game.buys.should.be.eql(1);
+        game.money.should.be.eql(5);
+      });
+      it('should do thing in the right order', function() {
+        var p = game.currentPlayer();
+        p.hand.push(a);
+        game.play(5).should.be.eql(a);
+        p.hand.should.have.lengthOf(5);
+        game.chooseAction(1);
+        game.buys.should.be.eql(2);
+        game.money.should.be.eql(0);
+        game.chooseAction(1);
+        game.buys.should.be.eql(4);
+        game.money.should.be.eql(0);
+        game.chooseAction(0);
+        p.hand.should.have.lengthOf(8);
+        game.buys.should.be.eql(4);
+        game.money.should.be.eql(2);
+        game.chooseAction(2);
+        p.hand.should.have.lengthOf(8);
+        game.buys.should.be.eql(4);
+        game.money.should.be.eql(6);
+      });
     });
   });
 
