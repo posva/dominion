@@ -238,6 +238,26 @@ describe('Game tests', function() {
         mode: base
       });
     });
+    it('should get other players without current player', function() {
+      var p = g.currentPlayer();
+      var others = g.otherPlayers();
+      others.should.not.containEql(p);
+    });
+    it('should get other players without missing anyone', function() {
+      g = Game.new();
+      g.startGame({
+        players: 4,
+        cards: [Gold, GreatHall],
+        mode: base
+      });
+      var p = g.currentPlayer();
+      var others = g.otherPlayers();
+      others.should.have.lengthOf(3);
+      others.should.not.containEql(p);
+      others.should.containEql(g.currentPlayer(1));
+      others.should.containEql(g.currentPlayer(2));
+      others.should.containEql(g.currentPlayer(3));
+    });
     it('should get relative players with 2 players', function() {
       var p1 = g.players[0], p2 = g.players[1];
       g.currentPlayer(0).should.be.eql(p1);
