@@ -35,6 +35,7 @@ describe('Event Testing', function() {
       Event.new.bind(Event, game, 'actions 1').should.not.throw();
       Event.new.bind(Event, game, 'buys 1').should.not.throw();
       Event.new.bind(Event, game, 'money 1').should.not.throw();
+      Event.new.bind(Event, game, 'none').should.not.throw();
       var e = Event.new(game, 'cards 2');
       e.should.have.property('fire');
       e.fire.should.be.a.Function;
@@ -48,12 +49,14 @@ describe('Event Testing', function() {
     });
   });
   describe('#Event execution', function() {
-    it('should draw cards', function() {
-      game.startGame.bind(game, {
+    beforeEach(function() {
+      game.startGame({
         players: 2,
         cards: [Gold, Silver, Duchy],
         mode: base
-      }).should.not.throw();
+      });
+    });
+    it('should draw cards', function() {
       var e = Event.new(game, 'cards 1');
       var p = game.currentPlayer();
       e.fire.bind(e).should.not.throw();
@@ -64,11 +67,6 @@ describe('Event Testing', function() {
       p.hand.should.have.lengthOf(9);
     });
     it('should add money', function() {
-      game.startGame.bind(game, {
-        players: 2,
-        cards: [Gold, Silver, Duchy],
-        mode: base
-      }).should.not.throw();
       var e = Event.new(game, 'money 1');
       e.fire.bind(e).should.not.throw();
       game.money.should.be.eql(1);
@@ -78,11 +76,6 @@ describe('Event Testing', function() {
       game.money.should.be.eql(4);
     });
     it('should add actions', function() {
-      game.startGame.bind(game, {
-        players: 2,
-        cards: [Gold, Silver, Duchy],
-        mode: base
-      }).should.not.throw();
       var e = Event.new(game, 'actions 1');
       e.fire.bind(e).should.not.throw();
       game.actions.should.be.eql(2);
@@ -92,11 +85,6 @@ describe('Event Testing', function() {
       game.actions.should.be.eql(5);
     });
     it('should add buys', function() {
-      game.startGame.bind(game, {
-        players: 2,
-        cards: [Gold, Silver, Duchy],
-        mode: base
-      }).should.not.throw();
       var e = Event.new(game, 'buys 1');
       e.fire.bind(e).should.not.throw();
       game.buys.should.be.eql(2);
@@ -104,6 +92,14 @@ describe('Event Testing', function() {
       e = Event.new(game, 'buys 3');
       e.fire.bind(e).should.not.throw();
       game.buys.should.be.eql(5);
+    });
+    it('should do nothing', function() {
+      var e = Event.new(game, 'none');
+      e.fire.bind(e).should.not.throw();
+      game.buys.should.be.eql(1);
+      game.money.should.be.eql(0);
+      game.actions.should.be.eql(1);
+      game.currentPlayer().hand.should.have.lengthOf(5);
     });
   });
 

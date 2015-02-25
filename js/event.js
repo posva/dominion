@@ -13,6 +13,7 @@ define(['selfish'], function(selfish) {
     buys: function(n) {
       this.addBuys(parseInt(n, 10));
     },
+    none: function() {}
   };
   /* ex: +2 Cards
    * var ev = Event.new(game_instance, 'cards 2');
