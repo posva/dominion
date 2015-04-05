@@ -1,4 +1,4 @@
-var _ = require('lodash');
+'use strict';
 var Copper = require('../cards/copper');
 var Curse = require('../cards/curse');
 var Duchy = require('../cards/duchy');
@@ -58,7 +58,7 @@ var base = {
   },
   isGameOver: function(game) {
     // TODO
-    return false;
+    return game && false;
   }
 };
 

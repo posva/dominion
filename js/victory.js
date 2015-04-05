@@ -1,3 +1,4 @@
+'use strict';
 var Base = require('selfish').Base;
 var Victory = Base.extend({
   initialize: function(points) {

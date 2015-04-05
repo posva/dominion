@@ -1,5 +1,6 @@
+'use strict';
 var Base = require('selfish').Base;
-var U = require('./utils');
+require('./utils');
 var _ = require('lodash');
 var Player = Base.extend({
   initialize: function(newGameFun, game) {

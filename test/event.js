@@ -1,9 +1,8 @@
 /*jshint -W030 */
-var should = require('should');
+'use strict';
+require('should');
 var Game = require('../js/game');
 var ActionEvent = require('../js/action-event');
-var Card = require('../js/card');
-var Action = require('../js/action');
 var Silver = require('../js/cards/silver');
 var Gold = require('../js/cards/gold');
 var Duchy = require('../js/cards/duchy');

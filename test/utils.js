@@ -1,7 +1,14 @@
-var should = require('should');
+/* jshint -W030 */
+'use strict';
+require('should');
 var utils = require('../js/utils');
 
 describe('Utils Testing', function() {
+  describe('#Utils instance', function() {
+    it('should not be empty', function() {
+      utils.should.be.ok;
+    });
+  });
   describe('#Array shuffle', function() {
     it('should work without problems', function() {
       var a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],

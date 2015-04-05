@@ -1,3 +1,4 @@
+'use strict';
 var Base = require('selfish').Base;
 var Card = Base.extend({
   initialize: function(name, text, cost, img) {

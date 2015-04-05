@@ -1,3 +1,4 @@
+'use strict';
 var Card = require('../card');
 var Treasure = require('../treasure');
 

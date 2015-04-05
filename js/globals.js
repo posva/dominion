@@ -1,3 +1,4 @@
+'use strict';
 var G = {
   emptyFunc: function() {},
   cardsPerPlayers: {

@@ -1,3 +1,4 @@
+'use strict';
 var Treasure = require('./treasure');
 var selfish = require('selfish');
 var Curse = require('./cards/curse');
@@ -8,6 +9,7 @@ var app = {
     window.Treasure = Treasure;
     window.Base = selfish.Base;
     window.Curse = Curse;
+    window.Duke = Duke;
   }
 };
 

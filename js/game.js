@@ -1,8 +1,8 @@
+'use strict';
 var Base = require('selfish').Base;
 var _ = require('lodash');
 var Player = require('./player');
 var Card = require('./card');
-var ActionEvent = require('./action-event');
 var Game = Base.extend({
   initialize: function() {
     this.money = 0; // current turn money

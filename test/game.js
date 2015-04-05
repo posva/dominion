@@ -1,8 +1,8 @@
 /*jshint -W030 */
+'use strict';
 var should = require('should');
 var _ = require('lodash');
 var Game = require('../js/game');
-var Player = require('../js/player');
 var Gold = require('../js/cards/gold');
 var Silver = require('../js/cards/silver');
 var Duchy = require('../js/cards/duchy');
@@ -10,16 +10,6 @@ var GreatHall = require('../js/cards/intrigue/great-hall');
 var base = require('../js/modes/base');
 
 describe('Game tests', function() {
-  var playerInitializer = function() {
-    var i = 0;
-    for (i = 0; i < 7; i++) {
-      this.deck.push(Copper.new());
-    }
-    for (i = 0; i < 3; i++) {
-      this.deck.push(Estate.new());
-    }
-  };
-
   describe('#Game initialization', function() {
     it('should throw errors for empty conf', function() {
       var g = Game.new();
@@ -58,7 +48,7 @@ describe('Game tests', function() {
         mode: {}
       }).should.throw(/mode.*invalid/);
     });
-    // check that a started game is ok for  base mode an with a Gold card as a fake kingdom card
+    // check that a started game is ok for base mode and with a Gold card as a fake kingdom card
     var checkGame = function(game) {
       var cards = ['Copper', 'Estate'];
       var p = game.currentPlayer();
@@ -335,7 +325,6 @@ describe('Game tests', function() {
     });
     it('should not be able to buy with less money', function() {
       var p = g.currentPlayer();
-      var gold = g.cards.Gold.instance;
       g.endActions();
       g.buys.should.be.eql(1);
       should(g.buy('Gold')).be.eql(null); // no more buys

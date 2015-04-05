@@ -1,8 +1,8 @@
+'use strict';
 var Card = require('../../card');
 var Victory = require('../../victory');
 var Action = require('../../action');
 var ActionEvent = require('../../action-event');
-var _ = require('lodash');
 
 var GreatHall = Card.extend(Action, Victory, {
   initialize: function(game) {

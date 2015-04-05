@@ -1,4 +1,5 @@
 /*jshint -W030 */
+'use strict';
 var should = require('should');
 var _ = require('lodash');
 var fs = require('fs');
@@ -29,18 +30,18 @@ describe('Expansions testing', function() {
       });
       it('should be able to get amounts of cards', function() {
         v.getAmounts.should.be.a.Function;
-        assert.strictEqual(v.getAmounts('1'), undefined);
-        assert.strictEqual(v.getAmounts({}), undefined);
-        assert.strictEqual(v.getAmounts([]), undefined);
-        assert.strictEqual(v.getAmounts(1), undefined);
+        should(v.getAmounts('1')).be.ko;
+        should(v.getAmounts({})).be.ko;
+        should(v.getAmounts([])).be.ko;
+        should(v.getAmounts(1)).be.ko;
         v.getAmounts(2).should.be.ok.and.be.an.Object;
         v.getAmounts(3).should.be.ok.and.be.an.Object;
         v.getAmounts(4).should.be.ok.and.be.an.Object;
       });
       it('should have an amount for every card in \'cards\'', function() {
         var i, amounts;
-        var floop = function(v, k) {
-          amounts.should.have.property(k).and.be.a.Number;
+        var floop = function(_v, card) {
+          amounts.should.have.property(card).and.be.a.Number;
         };
         for (i = 2; i < 6; i++) {
           amounts = v.getAmounts(i);

@@ -1,5 +1,6 @@
 /*jshint -W030 */
-var should = require('should');
+'use strict';
+require('should');
 var _ = require('lodash');
 var Player = require('../js/player');
 var Gold = require('../js/cards/gold');
@@ -181,7 +182,7 @@ describe('Player tests', function() {
     it('should be able to extract the whole deck but not beyond', function() {
       var p = Player.new(playerInitializer);
       p.endTurn();
-      var l = p.deck.length;
+      p.deck.length.should.be.above(1);
       var cp = p.deck.slice(0, 7);
       var cards = p.extractFromDeck(7);
       p.deck.should.have.lengthOf(0);
@@ -207,7 +208,7 @@ describe('Player tests', function() {
       p.graveyard.push(Gold.new());
       p.graveyard.push(Gold.new());
       p.graveyard.push(Gold.new());
-      var l = p.deck.length;
+      p.deck.should.have.lengthOf(5);
       var cards = p.extractFromDeck(7);
       cards.should.have.lengthOf(7);
       p.deck.should.have.lengthOf(1);
@@ -219,7 +220,7 @@ describe('Player tests', function() {
       p.graveyard.push(Gold.new());
       p.graveyard.push(Gold.new());
       p.graveyard.push(Gold.new());
-      var l = p.deck.length;
+      p.deck.should.have.lengthOf(5);
       var cards = p.extractFromDeck(11);
       p.deck.should.have.lengthOf(0);
       cards.should.have.lengthOf(8);

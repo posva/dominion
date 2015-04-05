@@ -1,6 +1,6 @@
 /*jshint -W030 */
-var should = require('should');
-var Player = require('../js/player');
+'use strict';
+require('should');
 var Card = require('../js/card');
 var Game = require('../js/game');
 var Gold = require('../js/cards/gold');
@@ -34,7 +34,7 @@ describe('Modes testing', function() {
         });
         it('should have a valid cards object', function() {
           v.should.have.property('cards');
-          _.forOwn(v.cards, function(c, k) {
+          _.forOwn(v.cards, function(c) {
             c.should.have.property('card');
             if (c.card) {
               Card.isPrototypeOf(c.card).should.be.ok;
@@ -56,11 +56,11 @@ describe('Modes testing', function() {
           v.cards['victory-card'].should.have.property('card', null);
         });
         it('should be able to get amounts of cards', function() {
-          _.forOwn(v.cards, function(c, k) {
+          _.forOwn(v.cards, function(c) {
             c.should.have.property('amount');
             c.amount.should.be.an.Array.and.have.lengthOf(5);
-            _.forOwn(c.amount, function(v) {
-              v.should.be.a.Number;
+            _.forOwn(c.amount, function(amount) {
+              amount.should.be.a.Number;
             });
           });
         });
@@ -74,7 +74,7 @@ describe('Modes testing', function() {
           }).should.not.throw();
         });
         it('should have working isGameOver', function() {
-          var game = Game.new();
+          game = Game.new();
           game.startGame({
             players: 2,
             cards: [Gold],

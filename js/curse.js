@@ -1,3 +1,4 @@
+'use strict';
 var Base = require('selfish').Base;
 var Curse = Base.extend({
   initialize: function(points) {

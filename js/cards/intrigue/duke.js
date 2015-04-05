@@ -1,3 +1,4 @@
+'use strict';
 var Card = require('../card');
 var Victory = require('../victory');
 var _ = require('lodash');

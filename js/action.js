@@ -1,3 +1,4 @@
+'use strict';
 var Base = require('selfish').Base;
 var _ = require('lodash');
 var ActionEvent = require('./action-event');

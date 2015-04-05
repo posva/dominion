@@ -1,5 +1,6 @@
 /*jshint -W030 */
-var should = require('should');
+'use strict';
+require('should');
 var Game = require('../js/game');
 var ActionEvent = require('../js/action-event');
 var Card = require('../js/card');
@@ -7,7 +8,7 @@ var Action = require('../js/action');
 var Curse = require('../js/curse');
 var Treasure = require('../js/treasure');
 var Victory = require('../js/victory');
-var utils = require('../js/utils');
+require('../js/utils');
 var Gold = require('../js/cards/gold');
 var base = require('../js/modes/base');
 
@@ -48,7 +49,7 @@ describe('Card Testing', function() {
     });
     it('should have a variable cost', function() {
       var i = 0;
-      var f = function(game) {
+      var f = function(/*game*/) {
         return i++;
       };
       var c = Card.new('name', 'text', f, 'img.jpg');

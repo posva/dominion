@@ -2,8 +2,18 @@
   "name": "Dominion",
   "version": "0.0.1",
   "private": true,
+  "author": "Eduardo San Martin Morote <i@posva.net> (http://posva.net)",
+  "homepage": "https://github.com/posva/dominion",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/posva/dominion.git",
+    "web": "https://github.com/posva/dominion"
+  },
+  "bugs": {
+    "url": "http://github.com/posva/dominion/issues/"
+  },
   "scripts": {
-    "test": "grunt"
+    "test": "gulp"
   },
   "config": {
     "blanket": {
@@ -17,16 +27,12 @@
     "selfish": "^0.3.3"
   },
   "devDependencies": {
-    "coveralls": "^2.11.2",
-    "grunt": "~0.4.5",
-    "grunt-contrib-jshint": "^0.11.0",
-    "grunt-coveralls": "^1.0.0",
-    "grunt-http-server": "^1.2.0",
-    "grunt-mocha-istanbul": "^2.2.0",
-    "grunt-mocha-test": "^0.12.0",
-    "grunt-shell": "^1.1.1",
-    "istanbul": "^0.3.2",
-    "mocha": "^2.0.1",
+    "gulp": "^3.8.11",
+    "gulp-coveralls": "^0.1.3",
+    "gulp-eslint": "^0.8.0",
+    "gulp-istanbul": "^0.8.1",
+    "gulp-mocha": "^2.0.1",
+    "gulp-plumber": "^1.0.0",
     "should": "^5.0.1"
   }
 }
