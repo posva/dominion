@@ -1,29 +1,15 @@
 /*jshint -W030 */
-var requirejs = require('requirejs');
-var assert = require('assert');
 var should = require('should');
 var _ = require('lodash');
-requirejs.config({
-  baseUrl: 'js',
-  nodeRequire: require
-});
+var Game = require('../js/game');
+var Player = require('../js/player');
+var Gold = require('../js/cards/gold');
+var Silver = require('../js/cards/silver');
+var Duchy = require('../js/cards/duchy');
+var GreatHall = require('../js/cards/intrigue/great-hall');
+var base = require('../js/modes/base');
 
 describe('Game tests', function() {
-  // Load modules with requirejs before tests
-  var Game, base, Gold, Silver, Duchy, GreatHall, Player;
-  before(function(done) {
-    requirejs(['game', 'modes/base', 'cards/gold', 'cards/silver', 'cards/duchy', 'cards/intrigue/great-hall', 'player'], function(game, b, gold, silver, duchy, gh, player) {
-      Game = game;
-      base = b;
-      Gold = gold;
-      Silver = silver;
-      Duchy = duchy;
-      GreatHall = gh;
-      Player = player;
-      done();
-    });
-  });
-
   var playerInitializer = function() {
     var i = 0;
     for (i = 0; i < 7; i++) {

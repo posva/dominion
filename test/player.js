@@ -1,26 +1,12 @@
 /*jshint -W030 */
-var requirejs = require('requirejs');
-var assert = require('assert');
 var should = require('should');
 var _ = require('lodash');
-requirejs.config({
-  baseUrl: 'js',
-  nodeRequire: require
-});
+var Player = require('../js/player');
+var Gold = require('../js/cards/gold');
+var Estate = require('../js/cards/estate');
+var Copper = require('../js/cards/copper');
 
 describe('Player tests', function() {
-  // Load modules with requirejs before tests
-  var Copper, Estate, Player, Gold;
-  before(function(done) {
-    requirejs(['player', 'cards/copper', 'cards/estate', 'cards/gold'], function(player, copper, estate, gold) {
-      Player = player;
-      Copper = copper;
-      Estate = estate;
-      Gold = gold;
-      done();
-    });
-  });
-
   var playerInitializer = function() {
     var i = 0;
     for (i = 0; i < 7; i++) {

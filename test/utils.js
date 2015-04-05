@@ -1,21 +1,7 @@
-var requirejs = require('requirejs');
-var assert = require('assert');
 var should = require('should');
-requirejs.config({
-  baseUrl: 'js',
-  nodeRequire: require
-});
+var utils = require('../js/utils');
 
 describe('Utils Testing', function() {
-  // Load modules with requirejs before tests
-  var U;
-  before(function(done) {
-    requirejs(['utils'], function(u) {
-      U = u;
-      done();
-    });
-  });
-
   describe('#Array shuffle', function() {
     it('should work without problems', function() {
       var a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],

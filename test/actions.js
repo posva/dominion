@@ -1,29 +1,16 @@
 /*jshint -W030 */
-var requirejs = require('requirejs');
-var assert = require('assert');
 var should = require('should');
-requirejs.config({
-  baseUrl: 'js',
-  nodeRequire: require
-});
+var Game = require('../js/game');
+var ActionEvent = require('../js/action-event');
+var Card = require('../js/card');
+var Action = require('../js/action');
+var Silver = require('../js/cards/silver');
+var Gold = require('../js/cards/gold');
+var Duchy = require('../js/cards/duchy');
+var base = require('../js/modes/base');
 
 describe('Actions Testing', function() {
-  // Load modules with requirejs before tests
-  var Event, Game, Card, Action, game, Gold, Silver, Duchy, base;
-  before(function(done) {
-    requirejs(['game', 'event', 'card', 'action', 'cards/gold', 'cards/silver', 'cards/duchy', 'modes/base'], function(game, event, card, action, gold, silver, duchy, B) {
-      Game = game;
-      Event = event;
-      Action = action;
-      Card = card;
-      Gold = gold;
-      Silver = silver;
-      Duchy = duchy;
-      base = B;
-      done();
-    });
-  });
-
+  var game;
   before(function(done) {
     game = Game.new();
     done();
@@ -47,7 +34,7 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 2')
+            ActionEvent.new(game, 'cards 2')
           ]);
         },
       });
@@ -69,8 +56,8 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 2'),
-            Event.new(game, 'buys 2')
+            ActionEvent.new(game, 'cards 2'),
+            ActionEvent.new(game, 'buys 2')
           ]);
         },
       });
@@ -92,8 +79,8 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'wrong 2'),
-            Event.new(game, 'buys 2')
+            ActionEvent.new(game, 'wrong 2'),
+            ActionEvent.new(game, 'buys 2')
           ]);
         },
       });
@@ -183,7 +170,7 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'), (function(game) {
               game.currentPlayer().graveyard.push(silver);
             }).bind(null, game),
           ]);
@@ -209,7 +196,7 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'), (function(game) {
               game.currentPlayer().graveyard.push(silver);
             }).bind(null, game), (function(game) {
               game.currentPlayer().graveyard.push(gold);
@@ -238,8 +225,8 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -266,8 +253,8 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game), (function(game) {
               game.currentPlayer().graveyard.push(silver);
@@ -338,8 +325,8 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             'choose',
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'),
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'),
           ]);
         },
       });
@@ -369,8 +356,8 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             'choose',
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -405,8 +392,8 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             'choose 2',
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -443,8 +430,8 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             'choose 2',
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -477,8 +464,8 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             'choose 2',
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -511,8 +498,8 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             'choose 2',
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game),
           ]);
@@ -543,17 +530,17 @@ describe('Actions Testing', function() {
             img: ''
           });
           Action.initialize.call(this, [
-            Event.new(game, 'cards 1'),
-            Event.new(game, 'buys 1'), (function(game) {
+            ActionEvent.new(game, 'cards 1'),
+            ActionEvent.new(game, 'buys 1'), (function(game) {
               game.currentPlayer().graveyard.push(gold);
             }).bind(null, game), [
-              Event.new(game, 'cards 1'),
-              Event.new(game, 'buys 1'),
+              ActionEvent.new(game, 'cards 1'),
+              ActionEvent.new(game, 'buys 1'),
               function(game) {
                 game.currentPlayer().graveyard.push(silver);
               },
               [
-                Event.new(game, 'actions 1'),
+                ActionEvent.new(game, 'actions 1'),
               ]
             ]
           ]);
@@ -576,9 +563,9 @@ describe('Actions Testing', function() {
     it('should wisely branch (choose)', function() {
       var fun = [
         'choose',
-        Event.new(game, 'cards 2'),
-        Event.new(game, 'buys 2'),
-        Event.new(game, 'money 2'),
+        ActionEvent.new(game, 'cards 2'),
+        ActionEvent.new(game, 'buys 2'),
+        ActionEvent.new(game, 'money 2'),
       ];
       var A = Card.extend(Action, {
         initialize: function(game) {
@@ -590,15 +577,15 @@ describe('Actions Testing', function() {
           });
           Action.initialize.call(this, [
             'choose 1', [
-              Event.new(game, 'cards 1'),
+              ActionEvent.new(game, 'cards 1'),
               fun
             ],
             [
-              Event.new(game, 'buys 1'),
+              ActionEvent.new(game, 'buys 1'),
               fun
             ],
             [
-              Event.new(game, 'money 1'),
+              ActionEvent.new(game, 'money 1'),
               fun
             ],
           ]);
@@ -620,23 +607,23 @@ describe('Actions Testing', function() {
       before(function() {
         var mad = [
           'choose',
-          Event.new(game, 'cards 3'),
-          Event.new(game, 'buys 3'),
-          Event.new(game, 'money 3'),
+          ActionEvent.new(game, 'cards 3'),
+          ActionEvent.new(game, 'buys 3'),
+          ActionEvent.new(game, 'money 3'),
         ];
         var fun = [
           'choose', [
-            Event.new(game, 'cards 2'),
+            ActionEvent.new(game, 'cards 2'),
             mad
           ],
           [
-            Event.new(game, 'buys 2'),
+            ActionEvent.new(game, 'buys 2'),
             mad,
-            Event.new(game, 'money 2'),
+            ActionEvent.new(game, 'money 2'),
             mad,
           ],
           [
-            Event.new(game, 'money 2'),
+            ActionEvent.new(game, 'money 2'),
             mad
           ]
         ];
@@ -650,16 +637,16 @@ describe('Actions Testing', function() {
             });
             Action.initialize.call(this, [
               'choose 1', [
-                Event.new(game, 'cards 1'),
+                ActionEvent.new(game, 'cards 1'),
                 fun
               ],
               [
-                Event.new(game, 'buys 1'),
+                ActionEvent.new(game, 'buys 1'),
                 fun,
-                Event.new(game, 'money 1'),
+                ActionEvent.new(game, 'money 1'),
               ],
               [
-                Event.new(game, 'money 1'),
+                ActionEvent.new(game, 'money 1'),
                 fun
               ],
             ]);

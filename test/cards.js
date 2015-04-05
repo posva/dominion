@@ -1,31 +1,17 @@
 /*jshint -W030 */
-var requirejs = require('requirejs');
-var assert = require('assert');
 var should = require('should');
-requirejs.config({
-  baseUrl: 'js',
-  nodeRequire: require
-});
+var Game = require('../js/game');
+var ActionEvent = require('../js/action-event');
+var Card = require('../js/card');
+var Action = require('../js/action');
+var Curse = require('../js/curse');
+var Treasure = require('../js/treasure');
+var Victory = require('../js/victory');
+var utils = require('../js/utils');
+var Gold = require('../js/cards/gold');
+var base = require('../js/modes/base');
 
 describe('Card Testing', function() {
-  // module loading
-  // Load modules with requirejs before tests
-  var Card, Victory, Treasure, Curse, Action, utils, Game, base, Event, Gold;
-  before(function(done) {
-    requirejs(['card', 'victory', 'treasure', 'curse', 'action', 'utils', 'modes/base', 'game', 'event', 'cards/gold'], function(card, victory, treasure, curse, action, u, b, game, event, gold) {
-      Card = card;
-      Victory = victory;
-      Treasure = treasure;
-      Curse = curse;
-      Action = action;
-      utils = u;
-      base = b;
-      Game = game;
-      Event = event;
-      Gold = gold;
-      done();
-    });
-  });
 
   describe('#instanciation', function() {
     it('should create cards with costs, names, texts and images', function() {
@@ -163,7 +149,7 @@ describe('Card Testing', function() {
         function() {
           // do something
         },
-        Event.new(game, 'cards 1')
+        ActionEvent.new(game, 'cards 1')
       ];
       var Ac = Card.extend(Action, {
         initialize: function() {

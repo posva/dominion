@@ -25,7 +25,7 @@ grunt
 
 # Grunt Tasks
 
-* `deploy`: build with `r.js`
+* `deploy`: build with `browserify`
 * `test`: launch the tests
 * `serve`: launch a local server
 * `jshint`: lint js code
