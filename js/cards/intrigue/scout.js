@@ -8,9 +8,7 @@ var Scout = Card.extend(Action, {
   initialize: function() {
     Card.initialize.call(this, {
       name: 'Scout',
-      text: '+1 Action\n\nReveal the top 4 cards of your deck. Put the revealed Victory cards into your hand. Put the other cards on top of your deck in any order.',
       cost: 4,
-      img: 'data/card/scout.jpg'
     });
     Action.initialize.call(this, [
       ActionEvent.new('actions 1'),

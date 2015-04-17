@@ -21,14 +21,14 @@ else:
 domain = 'https://www.playdominion.com/Dominion/'
 main_dir = 'data/'
 dir_assoc = {
-    'CardBuilder/img/back': 'card/layout/',
-    'CardBuilder/img/frame': 'card/layout/',
-    'CardBuilder/img/icon': 'set/',
-    'CardBuilder/img/illustration': 'card/',
+    'CardBuilder/img/back': 'img/card/layout/',
+    'CardBuilder/img/frame': 'img/card/layout/',
+    'CardBuilder/img/icon': 'img/set/',
+    'CardBuilder/img/illustration': 'img/card/',
     'img': '',
     'fonts': 'fonts/',
     'fonts-meetingroom': 'fonts/',
-    'CardBuilder/img/default/images': 'card/layout/'
+    'CardBuilder/img/default/images': 'img/card/layout/'
 }
 downs = {
 # fonts
@@ -298,7 +298,7 @@ downs = {
     'CardBuilder/img/illustration/witch.jpg': 'witch.jpg',
     'CardBuilder/img/illustration/workersVillage.jpg': 'workersVillage.jpg',
     'CardBuilder/img/illustration/youngWitch.jpg': 'youngWitch.jpg',
-    'img/large_trash.png': 'card/layout/trash.png',
+    'img/large_trash.png': 'img/card/layout/trash.png',
 
 #
 

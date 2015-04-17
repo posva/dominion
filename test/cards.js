@@ -17,34 +17,27 @@ describe('Card Testing', function() {
   describe('#instanciation', function() {
     it('should create cards with costs, names, texts and images', function() {
       Card.should.have.property('new');
-      var c1 = Card.new('name', 'text', 1, 'img.jpg');
+      var c1 = Card.new('name', 1);
       var c2 = Card.new();
       var c3 = Card.new({
         cost: 3,
         name: 'test',
-        text: 'sample text',
-        img: 'img.png'
       });
-      c1.should.have.property('img', 'img.jpg');
       c1.should.have.property('name', 'name');
-      c1.should.have.property('text', 'text');
       c1.should.have.property('cost');
       c1.cost.should.be.a.Function;
       c1.cost().should.be.eql(1);
       c1.should.have.property('type').and.be.an.instanceOf(Array).and.have.length(0);
 
-      c2.should.have.property('img', '');
       c2.should.have.property('cost');
       c2.cost.should.be.a.Function;
       c2.cost().should.be.eql(0);
       c2.should.have.property('type').and.be.an.instanceOf(Array).and.have.length(0);
 
-      c3.should.have.property('img', 'img.png');
       c3.should.have.property('cost');
       c3.cost.should.be.a.Function;
       c3.cost().should.be.eql(3);
       c3.should.have.property('name', 'test');
-      c3.should.have.property('text', 'sample text');
       c3.should.have.property('type').and.be.an.instanceOf(Array).and.have.length(0);
     });
     it('should have a variable cost', function() {
@@ -52,15 +45,13 @@ describe('Card Testing', function() {
       var f = function(/*game*/) {
         return i++;
       };
-      var c = Card.new('name', 'text', f, 'img.jpg');
+      var c = Card.new('name', f);
       c.cost().should.be.eql(0);
       c.cost().should.be.eql(1);
       c.cost().should.be.eql(2);
       c = Card.new({
         cost: f,
         name: 'test',
-        text: 'sample text',
-        img: 'img.png'
       });
       i = 0;
       c.cost().should.be.eql(0);

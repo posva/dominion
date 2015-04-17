@@ -1,20 +1,16 @@
 'use strict';
 var Base = require('selfish').Base;
 var Card = Base.extend({
-  initialize: function(name, text, cost, img) {
+  initialize: function(name, cost) {
     var conf;
     if (name && typeof name === 'object') {
       conf = name;
       conf.name = conf.name || 'Empty Name';
-      conf.text = conf.text || 'Empty Text';
       conf.cost = conf.cost || 0;
-      conf.img = conf.img || '';
     } else {
       conf = {};
       conf.name = name || 'Empty Name';
-      conf.text = text || 'Empty Text';
       conf.cost = cost || 0;
-      conf.img = img || '';
     }
     if (typeof conf.cost === 'function') {
       this.cost = conf.cost;
