@@ -15,21 +15,12 @@ Therefore I may never end this project. You should not take this as an example.
 
 # Building
 
-You need `grunt` to launch the different tasks (install with `npm install -g grunt-cli`).
-Then you just have to do:
+ WIP
 
-```
-npm install
-grunt
-```
+# gulp Tasks
 
-# Grunt Tasks
-
-* `deploy`: build with `browserify`
-* `test`: launch the tests
-* `serve`: launch a local server
-* `jshint`: lint js code
-* `coverage`: launch the coverage test
+* `test`: tests + coverage
+* `eslint:src`: lint js code
 
 # Coding Style
 

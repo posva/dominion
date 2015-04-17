@@ -1,6 +1,6 @@
 'use strict';
-var Card = require('../card');
-var Victory = require('../victory');
+var Card = require('../../card');
+var Victory = require('../../victory');
 var _ = require('lodash');
 
 var Duke = Card.extend(Victory, {
