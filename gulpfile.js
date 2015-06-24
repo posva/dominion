@@ -6,6 +6,11 @@ var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var coveralls = require('gulp-coveralls');
 var plumber = require('gulp-plumber');
+var coffeeify = require('gulp-coffeeify');
+var through = require('through');
+var jade = require('gulp-jade');
+var nodemon = require('gulp-nodemon');
+var isDist = process.argv.indexOf('watch') === -1;
 
 gulp.task('eslint:src', function() {
   return gulp.src(['js/**/*.js', 'gulpfile.js'])
@@ -75,6 +80,45 @@ gulp.task('coveralls', ['test'], function() {
   }
   gulp.src(path.join(__dirname, 'coverage/lcov.info'))
     .pipe(coveralls());
+});
+
+gulp.task('html', function() {
+  gulp.src('client/**/*.jade')
+    .pipe(isDist ? through() : plumber())
+    .pipe(jade({
+      pretty: true
+    }))
+    .pipe(gulp.dest('./public'));
+});
+
+gulp.task('js', function() {
+  gulp.src('client/main.coffee')
+    .pipe(isDist ? through() : plumber())
+    .pipe(coffeeify({
+      options: {
+        debug: !isDist
+      }
+    }))
+    .pipe(gulp.dest('./public'));
+});
+
+gulp.task('start', function() {
+  nodemon({
+    script: 'server/server.coffee',
+    ext: 'coffee',
+    ignore: ['client/**/*', 'public/*.js'],
+    env: {
+      'NODE_ENV': 'development'
+    }
+  });
+});
+
+gulp.task('watch', ['start', 'js', 'html'],  function() {
+  gulp.watch('client/**/*.jade', ['html']);
+  gulp.watch([
+    'client/**/*.coffee',
+    'js/**/*.js'
+  ], ['js']);
 });
 
 gulp.task('default', ['eslint:src', 'test', 'coveralls']);

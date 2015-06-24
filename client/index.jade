@@ -1,0 +1,25 @@
+doctype html
+html(lang="en")
+  head
+    title Dominion
+  body
+    #status
+      h4 Connected: {{ !!socket }}
+      div(v-if='!socket')
+        input(v-model='user')
+        button(
+          v-on='click: connect'
+          v-attr='disabled: conneting'
+        ) {{ !!socket ? 'Disconnect' : 'Connect' }}
+
+      #games(v-if='socket')
+        div(v-if='!myGame')
+          button(v-on='click:newGame') New Game
+          ul
+            li(v-repeat='games')
+              span {{ creator }} Game
+              span  - {{ players.length }} / {{ maxPlayers }}
+              span  - {{ status }}
+              button(v-on='click: join(creator)') Join
+
+    script(src='main.js')
