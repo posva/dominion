@@ -113,7 +113,7 @@ gulp.task('start', function() {
   });
 });
 
-gulp.task('watch', ['start', 'js', 'html'],  function() {
+gulp.task('watch', ['start', 'js', 'html'], function() {
   gulp.watch('client/**/*.jade', ['html']);
   gulp.watch([
     'client/**/*.coffee',
