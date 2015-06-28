@@ -1,7 +1,7 @@
-DOMINION
+DOMINION [![Circle CI](https://circleci.com/gh/posva/dominion.svg?style=svg)](https://circleci.com/gh/posva/dominion)
 ===
-[![Build Status](https://travis-ci.org/posva/dominion.svg?branch=master)](https://travis-ci.org/posva/dominion)
-[![Coverage Status](https://img.shields.io/coveralls/posva/dominion.svg)](https://coveralls.io/r/posva/dominion)
+
+[![Codecov](https://img.shields.io/codecov/c/github/posva/dominion.svg)](https://codecov.io/github/posva/dominion)
 [![Dependency Status](https://david-dm.org/posva/dominion.svg)](https://david-dm.org/posva/dominion)
 [![devDependency Status](https://david-dm.org/posva/dominion/dev-status.svg)](https://david-dm.org/posva/dominion#info=devDependencies)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/posva/dominion?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
