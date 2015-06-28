@@ -1,10 +1,8 @@
 'use strict';
 var gulp = require('gulp');
-var path = require('path');
 var eslint = require('gulp-eslint');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
-var coveralls = require('gulp-coveralls');
 var plumber = require('gulp-plumber');
 var coffeeify = require('gulp-coffeeify');
 var through = require('through');
@@ -74,14 +72,6 @@ gulp.task('test', function(done) {
     });
 });
 
-gulp.task('coveralls', ['test'], function() {
-  if (!process.env.CI) {
-    return;
-  }
-  gulp.src(path.join(__dirname, 'coverage/lcov.info'))
-    .pipe(coveralls());
-});
-
 gulp.task('html', function() {
   gulp.src('client/**/*.jade')
     .pipe(isDist ? through() : plumber())
@@ -122,4 +112,4 @@ gulp.task('watch', ['start', 'js', 'html'], function() {
   ], ['js']);
 });
 
-gulp.task('default', ['eslint:src', 'test', 'coveralls']);
+gulp.task('default', ['eslint:src', 'test']);
