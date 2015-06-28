@@ -106,6 +106,7 @@ gulp.task('start', function() {
   nodemon({
     script: 'server/server.coffee',
     ext: 'coffee',
+    nodeArgs: ['--nodejs', '--debug'],
     ignore: ['client/**/*', 'public/*.js'],
     env: {
       'NODE_ENV': 'development'

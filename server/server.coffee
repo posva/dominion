@@ -3,6 +3,32 @@ app = express()
 http = require('http').createServer app
 io = require('socket.io') http
 _ = require 'lodash'
+console = require 'better-console'
+
+mongoose = require 'mongoose'
+User = require './user'
+Game = require './game'
+
+mongoose.connect 'mongodb://localhost/dominion'
+
+db = mongoose.connection
+
+db.on 'error', ->
+  console.error 'MongoDB connection failed', arguments
+
+db.once 'open', ->
+  console.info 'Connected to MongoDB'
+  User.find().limit(3).select _id: true
+  .exec (err, users) ->
+    Game.create
+      host: users[0].id
+      guests: [
+        users[1].id
+        users[2].id
+      ]
+    , ->
+      Game.findOne().populate('host guests').exec (err, game) ->
+        console.log game
 
 app.use express.static './public'
 
@@ -27,7 +53,7 @@ io.on 'connection', (socket) ->
     userDisconnects socket
 
 http.listen 3000, ->
-  console.log 'listening on http://localhost:3000'
+  console.info 'listening on http://localhost:3000'
 
 startNewGame = (socket, user) ->
   if not _.find(games, creator: socket.client.conn.id)
