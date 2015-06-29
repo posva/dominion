@@ -58,7 +58,7 @@ describe('Modes testing', function() {
         it('should be able to get amounts of cards', function() {
           _.forOwn(v.cards, function(c) {
             c.should.have.property('amount');
-            c.amount.should.be.an.Array.and.have.lengthOf(5);
+            c.amount.should.be.instanceof(Array).and.have.lengthOf(5);
             _.forOwn(c.amount, function(amount) {
               amount.should.be.a.Number;
             });

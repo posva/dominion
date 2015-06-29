@@ -4,6 +4,9 @@ http = require('http').createServer app
 io = require('socket.io') http
 _ = require 'lodash'
 console = require 'better-console'
+jwt = require 'jsonwebtoken'
+ioJwt = require 'socketio-jwt'
+bcrypt = require 'bcrypt'
 
 mongoose = require 'mongoose'
 User = require './user'
@@ -32,10 +35,23 @@ db.once 'open', ->
 
 app.use express.static './public'
 
+jwtSecret = bcrypt.genSaltSync()
+app.post '/login', (req, res) ->
+  # TODO validate user
+  profile =
+    name: 'Posva'
+  token = jwt.sign profile, jwtSecret, expiresInMinutes: 60 * 5
+  console.log 'sending token', token
+  res.json token: token
+
+io.set 'authorization', ioJwt.authorize
+  secret: jwtSecret
+  handshake: true
+
 players = []
 games = []
 io.on 'connection', (socket) ->
-  console.log 'a user connected'
+  console.log "#{socket.handshake.decoded_token.name} connected"
   socket.emit 'update',
     games: games
     players: players
@@ -47,9 +63,10 @@ io.on 'connection', (socket) ->
     joinGame socket, user, game
 
   socket.on 'reconnect', ->
-    console.log 'user reconnected'
+    console.log "#{socket.handshake.decoded_token.name} reconnected"
   socket.on 'disconnect', ->
-    console.log 'user disconnected'
+    console.log "#{socket.handshake.decoded_token.name} disconnected"
+    # Update last connection time
     userDisconnects socket
 
 http.listen 3000, ->

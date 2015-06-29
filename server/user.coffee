@@ -9,13 +9,13 @@ UserSchema = new mongoose.Schema
     type: String
   email:
     type: String
-    unique: true
     validate: validate validator: 'isEmail'
   password:
     required: true
     type: String
   name:
     type: String
+    required: true
     unique: true
   registered:
     type: Date
@@ -41,7 +41,6 @@ UserSchema.static 'login', (userData, cb) ->
 
 UserSchema.pre 'save', (next) ->
   @lastConnection = Date.now
-  @registered ?= Date.now
 
   if @isModified 'password'
     bcrypt.genSalt SALT_WORK_FACTOR, (err, salt) =>
