@@ -48,24 +48,26 @@ ioAuth io,
   authenticate: (data, cb) -> User.login data, cb
   postAuthenticate: (socket, data) ->
     console.log 'User connected', data
+    socket.user =
+      name: data.name
     socket.emit 'update',
       games: games
       players: players
 
-    socket.on 'new game', (user) ->
-      startNewGame socket, user
+    socket.on 'new game', ->
+      startNewGame socket
 
-    socket.on 'join game', (user, game) ->
-      joinGame socket, user, game
+    socket.on 'join game', (game) ->
+      joinGame socket, game
 
 http.listen 3000, ->
   console.info 'listening on http://localhost:3000'
 
-startNewGame = (socket, user) ->
+startNewGame = (socket) ->
   if not _.find(games, creator: socket.client.conn.id)
     games.push
       players: [
-        name: user
+        name: socket.user.name
         id: socket.client.conn.id
       ]
       creator: socket.client.conn.id
@@ -90,13 +92,14 @@ userDisconnects = (socket) ->
     io.emit 'update',
       games: games
 
-joinGame = (socket, user, game) ->
+joinGame = (socket, game) ->
   if socket.client.conn.id isnt game
+    console.log 1
     gameIns = _.find games, creator: game
     if gameIns?
       if not _.find(gameIns.players, id: socket.client.conn.id)
         gameIns.players.push
-          name: user
+          name: socket.user.name
           id: socket.client.conn.id
         io.emit 'update', games: games
 
