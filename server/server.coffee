@@ -4,9 +4,8 @@ http = require('http').createServer app
 io = require('socket.io') http
 _ = require 'lodash'
 console = require 'better-console'
-jwt = require 'jsonwebtoken'
-ioJwt = require 'socketio-jwt'
 bcrypt = require 'bcrypt'
+ioAuth = require 'socketio-auth'
 
 mongoose = require 'mongoose'
 User = require './user'
@@ -35,39 +34,29 @@ db.once 'open', ->
 
 app.use express.static './public'
 
-jwtSecret = bcrypt.genSaltSync()
-app.post '/login', (req, res) ->
-  # TODO validate user
-  profile =
-    name: 'Posva'
-  token = jwt.sign profile, jwtSecret, expiresInMinutes: 60 * 5
-  console.log 'sending token', token
-  res.json token: token
-
-io.set 'authorization', ioJwt.authorize
-  secret: jwtSecret
-  handshake: true
-
 players = []
 games = []
 io.on 'connection', (socket) ->
-  console.log "#{socket.handshake.decoded_token.name} connected"
-  socket.emit 'update',
-    games: games
-    players: players
-
-  socket.on 'new game', (user) ->
-    startNewGame socket, user
-
-  socket.on 'join game', (user, game) ->
-    joinGame socket, user, game
-
   socket.on 'reconnect', ->
-    console.log "#{socket.handshake.decoded_token.name} reconnected"
+    console.log 'User reconnected'
   socket.on 'disconnect', ->
-    console.log "#{socket.handshake.decoded_token.name} disconnected"
+    console.log 'User disconnected'
     # Update last connection time
     userDisconnects socket
+
+ioAuth io,
+  authenticate: (data, cb) -> User.login data, cb
+  postAuthenticate: (socket, data) ->
+    console.log 'User connected'
+    socket.emit 'update',
+      games: games
+      players: players
+
+    socket.on 'new game', (user) ->
+      startNewGame socket, user
+
+    socket.on 'join game', (user, game) ->
+      joinGame socket, user, game
 
 http.listen 3000, ->
   console.info 'listening on http://localhost:3000'

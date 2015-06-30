@@ -31,9 +31,11 @@ UserSchema.methods.comparePassword = (candidatePassword, cb) ->
 
 UserSchema.static 'login', (userData, cb) ->
   if typeof userData is 'string' # token auth
+    console.log "Login attempt with '#{userData}'"
     @findOne token: userData, (err, user) -> cb err, user?
   else
-    @findOne email: userData.email, (err, user) ->
+    console.log "Login attempt with '#{userData.name}' – '#{userData.password}'"
+    @findOne name: userData.name, (err, user) ->
       if user?
         user?.comparePassword userData.password, cb
       else
@@ -78,6 +80,6 @@ User.create
 , (err, user) ->
   console.error err if err and err.code isnt 11000
 
-User.login 'fsgdfgfsdgdsf' , (err, data) -> console.log data
+User.login 'fsgdfgfsdgdsf',  (err, data) -> console.log "Login: #{data}"
 
 module.exports = User

@@ -7,9 +7,10 @@ html(lang="en")
       h4 Connected: {{ !!socket }}
       div(v-if='!socket')
         input(v-model='user')
+        input(v-model='password')
         button(
           v-on='click: connect'
-          v-attr='disabled: conneting'
+          v-disabled='connecting'
         ) {{ !!socket ? 'Disconnect' : 'Connect' }}
 
       #games(v-if='socket')
