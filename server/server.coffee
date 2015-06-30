@@ -47,7 +47,7 @@ io.on 'connection', (socket) ->
 ioAuth io,
   authenticate: (data, cb) -> User.login data, cb
   postAuthenticate: (socket, data) ->
-    console.log 'User connected'
+    console.log 'User connected', data
     socket.emit 'update',
       games: games
       players: players

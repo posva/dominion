@@ -9,7 +9,7 @@ status = new Vue
   data:
     socket: null
     connecting: false
-    user: 'Posva'
+    name: 'Posva'
     password: 'posva'
     players: []
     games: []
@@ -32,7 +32,7 @@ status = new Vue
           socket.on 'connect', =>
             console.log 'Connecting'
             socket.emit 'authentication',
-              name: @user
+              name: @name
               password: @password
           socket.on 'unauthorized', =>
             @connecting = false
@@ -43,9 +43,9 @@ status = new Vue
             @socket = socket
             initializeSocket.call this
     newGame: ->
-      @socket.emit 'new game', @user
+      @socket.emit 'new game', @name
     join: (id) ->
-      @socket.emit 'join game', @user, id
+      @socket.emit 'join game', @name, id
 
 initializeSocket = ->
   return if @socket.initialized

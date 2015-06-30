@@ -4,14 +4,15 @@ html(lang="en")
     title Dominion
   body
     #status
-      h4 Connected: {{ !!socket }}
       div(v-if='!socket')
-        input(v-model='user')
-        input(v-model='password')
-      button(
-        v-on='click: connect'
-        v-disabled='connecting'
-      ) {{ !!socket ? 'Disconnect' : 'Connect' }}
+        input(v-model='name')
+        input(type='password' v-model='password')
+      h4
+        span(v-if='socket') Connected as {{ name }}
+        button(
+          v-on='click: connect'
+          v-disabled='connecting'
+        ) {{ !!socket ? 'Disconnect' : 'Connect' }}
 
       #games(v-if='socket')
         div(v-if='!myGame')
