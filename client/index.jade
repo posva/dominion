@@ -8,10 +8,10 @@ html(lang="en")
       div(v-if='!socket')
         input(v-model='user')
         input(v-model='password')
-        button(
-          v-on='click: connect'
-          v-disabled='connecting'
-        ) {{ !!socket ? 'Disconnect' : 'Connect' }}
+      button(
+        v-on='click: connect'
+        v-disabled='connecting'
+      ) {{ !!socket ? 'Disconnect' : 'Connect' }}
 
       #games(v-if='socket')
         div(v-if='!myGame')

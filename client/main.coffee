@@ -48,7 +48,9 @@ status = new Vue
       @socket.emit 'join game', @user, id
 
 initializeSocket = ->
-  that = @
+  return if @socket.initialized
+  @socket.initialized = true
+  that = this
   @socket.on 'update', (data) ->
     console.log data
     keys = [
