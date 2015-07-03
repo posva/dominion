@@ -1,7 +1,23 @@
 #! /usr/bin/env python3
 
-import urllib.request, sys, os, re, time
+import urllib.request, sys, os, re, time, math
 from threading import Thread, active_count
+
+class ProgressBar:
+    def __init__(self):
+        self.progress = 0
+        self.total = 1
+        self.length = 40
+        self.chars = [ '░', '▒', '█', '▓' ]
+    def setTotal(self, total):
+        self.total = total
+
+    def display(self):
+        amount = self.length * (self.progress / self.total)
+        rest = 4 * (amount - math.floor(amount))
+        print('\rDownloading %d/%d:'%(self.progress, self.total), self.chars[3] * math.floor(amount), self.chars[math.floor(rest)], sep='', end='')
+        sys.stdout.flush()
+
 
 if sys.platform == 'win32':
     def warn(s):
@@ -317,6 +333,8 @@ def check_place():
 
 errors = 0
 downloads = 0
+progress = ProgressBar()
+progress.total = len(downs.keys())
 def download(k):
     global downs, domain, main_dir, dir_assoc, errors, downloads
     d = downs[k]
@@ -324,6 +342,8 @@ def download(k):
     fi = main_dir+dir_assoc[os.path.dirname(k)]+d
     if os.path.isfile(fi):
         info('Skiping '+fi+' (already exists)')
+        progress.progress += 1
+        #progress.display()
         return
     info('Downloading '+url+' to '+fi+'...')
     try:
@@ -332,6 +352,8 @@ def download(k):
         err('couldn\'t download')
         errors += 1
         raise
+    progress.progress += 1
+    #progress.display()
     downloads += 1
 
 check_place()
@@ -342,15 +364,16 @@ for k in dir_assoc:
     os.makedirs(d, exist_ok=True)
 
 for k in downs:
+    #progress.display()
     while active_count() > 6:
         time.sleep(0.5)
     thread = Thread(target = download, args = (k,))
     thread.start()
 
-info('Waiting for threads...')
 while active_count() > 1:
     time.sleep(0.5)
 
+print()
 info(str(downloads)+' files were downloaded')
 if errors > 0:
     warn('Errors ocurred, check the log')
