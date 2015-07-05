@@ -78,7 +78,13 @@ materialArray.push(sidesMaterial);
 var cardMaterial = new THREE.MeshFaceMaterial(materialArray);
 cardMaterial.transparent = true;
 
-cubeMaterial.transparent = true;
+var customDepthMaterial = new THREE.ShaderMaterial({
+  uniforms: THREE.ShaderLib['basic'].uniforms,
+  vertexShader: document.getElementById('vertexShaderDepth').textContent,
+  fragmentShader: document.getElementById('fragmentShaderDepth').textContent
+  //vertexShader: document.getElementById('vertexShaderDepth').textContent,
+  //fragmentShader: document.getElementById('fragmentShaderDepth').textContent,
+});
 var cards = [];
 var cube = new THREE.Mesh(cubeGeometry, cardMaterial);
 cube.position.set(0, CARD_HEIGHT, 0);
@@ -86,6 +92,7 @@ cube.position.set(0, CARD_HEIGHT, 0);
 cube.castShadow = true;
 scene.add(cube);
 cards.push(cube);
+cube.customDepthMaterial = customDepthMaterial;
 
 cube = new THREE.Mesh(cubeGeometry, cardMaterial);
 cube.position.set(-CARD_HEIGHT * 1.1, CARD_HEIGHT, 0);
@@ -94,6 +101,7 @@ cube.castShadow = true;
 cube.rotation.y = THREE.Math.degToRad(90);
 scene.add(cube);
 cards.push(cube);
+cube.customDepthMaterial = customDepthMaterial;
 
 cube = new THREE.Mesh(cubeGeometry, cardMaterial);
 cube.position.set(CARD_HEIGHT * 1.1, CARD_HEIGHT, 0);
@@ -102,6 +110,7 @@ cube.castShadow = true;
 cube.rotation.y = THREE.Math.degToRad(180);
 scene.add(cube);
 cards.push(cube);
+cube.customDepthMaterial = customDepthMaterial;
 
 cards.forEach(function(card) {
   card.position.y = CARD_HEIGHT / 2;
@@ -109,11 +118,7 @@ cards.forEach(function(card) {
   card.rotation.y = THREE.Math.degToRad(270);
 })
 
-cube.customDepthMaterial = new THREE.ShaderMaterial({
-  uniforms: THREE.ShaderLib['basic'].uniforms,
-  vertexShader: document.getElementById('vertexShaderDepth').textContent,
-  fragmentShader: document.getElementById('fragmentShaderDepth').textContent,
-});
+cube.customDepthMaterial = customDepthMaterial;
 
 var extraCardGeometry = new THREE.PlaneGeometry(CARD_HEIGHT, CARD_WIDTH, 1, 1);
 var extraCardMaterial = new THREE.MeshPhongMaterial({
@@ -127,6 +132,7 @@ var extraCard = new THREE.Mesh(extraCardGeometry, extraCardMaterial);
 scene.add(extraCard);
 extraCard.castShadow = true;
 extraCard.position.y = CARD_HEIGHT * 3;
+extraCard.customDepthMaterial = customDepthMaterial;
 
 // floor: mesh to receive shadows
 var floorTexture = new THREE.ImageUtils.loadTexture('wood.jpg');
