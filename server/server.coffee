@@ -22,15 +22,16 @@ db.once 'open', ->
   console.info 'Connected to MongoDB'
   User.find().limit(3).select _id: true
   .exec (err, users) ->
-    Game.create
-      host: users[0].id
-      guests: [
-        users[1].id
-        users[2].id
-      ]
-    , ->
-      Game.findOne().populate('host guests').exec (err, game) ->
-        console.log game
+    unless users.length isnt 3
+      Game.create
+        host: users[0].id
+        guests: [
+          users[1].id
+          users[2].id
+        ]
+      , ->
+        Game.findOne().populate('host guests').exec (err, game) ->
+          console.log game
 
 app.use express.static './public'
 
@@ -55,15 +56,18 @@ ioAuth io,
       players: players
 
     socket.on 'new game', ->
-      startNewGame socket
+      newGame socket
 
     socket.on 'join game', (game) ->
       joinGame socket, game
 
+    socket.on 'start game', (game) ->
+      startGame socket, game
+
 http.listen 3000, ->
   console.info 'listening on http://localhost:3000'
 
-startNewGame = (socket) ->
+newGame = (socket) ->
   if not _.find(games, creator: socket.client.conn.id)
     games.push
       players: [
@@ -71,6 +75,7 @@ startNewGame = (socket) ->
         id: socket.client.conn.id
       ]
       creator: socket.client.conn.id
+      creatorName: socket.user.name
       status: 'waiting'
       maxPlayers: 4
 
@@ -94,12 +99,22 @@ userDisconnects = (socket) ->
 
 joinGame = (socket, game) ->
   if socket.client.conn.id isnt game
-    console.log 1
-    gameIns = _.find games, creator: game
-    if gameIns?
+    gameIns = _.find games,
+      creator: game
+      status: 'waiting'
+    if gameIns? and gameIns.players.length < gameIns.maxPlayers
       if not _.find(gameIns.players, id: socket.client.conn.id)
         gameIns.players.push
           name: socket.user.name
           id: socket.client.conn.id
         io.emit 'update', games: games
+
+startGame = (socket, game) ->
+  if socket.client.conn.id is game
+    gameIns = _.find games,
+      creator: game
+      status: 'waiting'
+    if gameIns? and gameIns.players.length > 1
+      gameIns.status = 'playing'
+      io.emit 'update', games: games
 

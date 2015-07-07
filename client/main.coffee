@@ -46,6 +46,8 @@ status = new Vue
       @socket.emit 'new game'
     join: (id) ->
       @socket.emit 'join game', id
+    start: (id) ->
+      @socket.emit 'start game', id
 
 initializeSocket = ->
   return if @socket.initialized

@@ -19,9 +19,10 @@ html(lang="en")
           button(v-on='click:newGame') New Game
           ul
             li(v-repeat='games')
-              span {{ creator }} Game
+              span {{ creatorName }} Game
               span  - {{ players.length }} / {{ maxPlayers }}
               span  - {{ status }}
-              button(v-on='click: join(creator)') Join
+              button(v-if='creatorName != name && status === "waiting"' v-on='click: join(creator)') Join
+              button(v-if='players.length > 1 && status === "waiting" && creatorName === name' v-on='click: start(creator)') Start
 
     script(src='main.js')
