@@ -110,7 +110,7 @@ gulp.task('js:server', function() {
     .pipe(coffee({
       bare: true
     }).on('error', console.log))
-    .pipe(gulp.dest('./build/'))
+    .pipe(gulp.dest('./build/'));
 });
 
 gulp.task('build', ['js', 'html', 'js:server']);
