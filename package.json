@@ -38,6 +38,7 @@
   "devDependencies": {
     "codecov.io": "^0.1.4",
     "gulp": "^3.9.0",
+    "gulp-coffee": "^2.3.1",
     "gulp-coffeeify": "^0.1.8",
     "gulp-eslint": "^0.15.0",
     "gulp-istanbul": "^0.10.0",

@@ -2,6 +2,7 @@
 var gulp = require('gulp');
 var eslint = require('gulp-eslint');
 var mocha = require('gulp-mocha');
+var coffee = require('gulp-coffee');
 var istanbul = require('gulp-istanbul');
 var plumber = require('gulp-plumber');
 var coffeeify = require('gulp-coffeeify');
@@ -103,6 +104,16 @@ gulp.task('start', function() {
     }
   });
 });
+
+gulp.task('js:server', function() {
+  gulp.src('./server/**/*.coffee')
+    .pipe(coffee({
+      bare: true
+    }).on('error', console.log))
+    .pipe(gulp.dest('./build/'))
+});
+
+gulp.task('build', ['js', 'html', 'js:server']);
 
 gulp.task('watch', ['start', 'js', 'html'], function() {
   gulp.watch('client/**/*.jade', ['html']);
