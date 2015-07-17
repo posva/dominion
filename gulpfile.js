@@ -3,15 +3,16 @@ var gulp = require('gulp');
 var eslint = require('gulp-eslint');
 var mocha = require('gulp-mocha');
 var coffee = require('gulp-coffee');
-var istanbul = require('gulp-istanbul');
+var istanbul = require('gulp-coffee-istanbul');
 var plumber = require('gulp-plumber');
 var coffeeify = require('gulp-coffeeify');
 var through = require('through');
 var jade = require('gulp-jade');
 var nodemon = require('gulp-nodemon');
+var coffeelint = require('gulp-coffeelint');
 var isDist = process.argv.indexOf('watch') === -1;
 
-gulp.task('eslint:src', function() {
+gulp.task('lint:js', function() {
   return gulp.src(['js/**/*.js', 'gulpfile.js'])
     .pipe(eslint({
       useEslintrc: false,
@@ -31,7 +32,7 @@ gulp.task('eslint:src', function() {
     .pipe(eslint.failOnError());
 });
 
-gulp.task('eslint:test', function() {
+gulp.task('lint:test', function() {
   return gulp.src(['test/**/*.js'])
     .pipe(eslint({
       useEslintrc: false,
@@ -60,12 +61,21 @@ gulp.task('eslint:test', function() {
     .pipe(eslint.failOnError());
 });
 
+gulp.task('lint:coffee', function() {
+  gulp.src('@(server|client)/**/*.coffee')
+    .pipe(coffeelint())
+    .pipe(coffeelint.reporter())
+    .pipe(coffeelint.reporter('fail'));
+});
+
+gulp.task('lint', ['lint:js', 'lint:coffee']);
+
 gulp.task('test', function(done) {
-  gulp.src(['js/**/*.js'])
+  gulp.src(['js/**/*.js', 'server/**/*.coffee', 'client/**/*.coffee'])
     .pipe(istanbul()) // Covering files
     .pipe(istanbul.hookRequire()) // Force `require` to return covered files
     .on('finish', function() {
-      gulp.src(['test/**/*.js'])
+      gulp.src(['test/**/*.@(js|coffee)'])
         .pipe(plumber())
         .pipe(mocha())
         .pipe(istanbul.writeReports()) // Creating the reports after tests runned
@@ -123,4 +133,4 @@ gulp.task('watch', ['start', 'js', 'html'], function() {
   ], ['js']);
 });
 
-gulp.task('default', ['eslint:src', 'test']);
+gulp.task('default', ['lint', 'test']);
