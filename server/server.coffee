@@ -1,3 +1,4 @@
+'use strict'
 express = require 'express'
 app = express()
 http = require('http').createServer app
@@ -6,6 +7,7 @@ _ = require 'lodash'
 console = require 'better-console'
 bcrypt = require 'bcrypt'
 ioAuth = require 'socketio-auth'
+Match = require './match'
 
 mongoose = require 'mongoose'
 User = require './user'

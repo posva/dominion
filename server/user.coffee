@@ -1,3 +1,4 @@
+'use strict'
 mongoose = require 'mongoose'
 validate = require 'mongoose-validator'
 console = require 'better-console'

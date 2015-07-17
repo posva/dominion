@@ -1,3 +1,4 @@
+'use strict'
 mongoose = require 'mongoose'
 console = require 'better-console'
 
