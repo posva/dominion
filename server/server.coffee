@@ -13,7 +13,9 @@ mongoose = require 'mongoose'
 User = require './user'
 Game = require './game'
 
-mongoose.connect 'mongodb://localhost/dominion'
+mongoURL = process.env.MONGOLAB_URI or 'mongodb://localhost/dominion'
+mongoose.connect mongoURL
+port = process.env.PORT or 3000
 
 db = mongoose.connection
 
@@ -66,8 +68,8 @@ ioAuth io,
     socket.on 'start game', (game) ->
       startGame socket, game
 
-http.listen 3000, ->
-  console.info 'listening on http://localhost:3000'
+http.listen port, ->
+  console.info "listening on http://localhost:#{port}"
 
 newGame = (socket) ->
   if not _.find(games, creator: socket.client.conn.id)
