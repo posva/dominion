@@ -1,3 +1,9 @@
 notify:
   webhooks:
     - url: https://webhooks.gitter.im/e/06051c8bbb4423e8ddea
+deployment:
+  staging:
+    branch: master
+    commands:
+      - python3 scripts/download-resources.py
+      - gulp deploy
