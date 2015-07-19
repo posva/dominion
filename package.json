@@ -14,7 +14,6 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/gulp",
-    "prestart": "./node_modules/.bin/gulp build",
     "start": "node build/server.js"
   },
   "config": {

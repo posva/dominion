@@ -143,7 +143,7 @@ gulp.task('deploy', ['build'], function() {
     .pipe(ghPages({
       //push: false,
       force: true,
-      branch: 'deploy',
+      branch: 'master',
       cacheDir: 'heroku-deploy',
       remoteUrl: 'git@heroku.com:dominiongame.git'
     }));
