@@ -11,7 +11,9 @@ var jade = require('gulp-jade');
 var nodemon = require('gulp-nodemon');
 var coffeelint = require('gulp-coffeelint');
 var ghPages = require('gulp-gh-pages');
+var del = require('del');
 var isDist = process.argv.indexOf('watch') === -1;
+var deployDir = process.argv.indexOf('deploy') === -1 ? '' : 'deploy/'
 
 gulp.task('lint:js', function() {
   return gulp.src(['js/**/*.js', 'gulpfile.js'])
@@ -90,7 +92,7 @@ gulp.task('html', function() {
     .pipe(jade({
       pretty: true
     }))
-    .pipe(gulp.dest('./public'));
+    .pipe(gulp.dest('./' + deployDir + 'public'));
 });
 
 gulp.task('js', function() {
@@ -101,7 +103,7 @@ gulp.task('js', function() {
         debug: !isDist
       }
     }))
-    .pipe(gulp.dest('./public'));
+    .pipe(gulp.dest('./' + deployDir + 'public'));
 });
 
 gulp.task('start', function() {
@@ -121,9 +123,10 @@ gulp.task('js:server', function() {
     .pipe(coffee({
       bare: true
     }).on('error', console.log))
-    .pipe(gulp.dest('./build/'));
+    .pipe(gulp.dest('./' + deployDir + 'build/'));
 });
 
+// TODO copy data
 gulp.task('build', ['js', 'html', 'js:server']);
 
 gulp.task('watch', ['start', 'js', 'html'], function() {
@@ -134,14 +137,15 @@ gulp.task('watch', ['start', 'js', 'html'], function() {
   ], ['js']);
 });
 
-gulp.task('deploy', function() {
-  return gulp.src('./dist/**/*')
+gulp.task('deploy', ['build'], function() {
+  del.sync(['heroku-deploy']);
+  return gulp.src(['deploy/**/*', 'package.json'])
     .pipe(ghPages({
-      push: false,
+      //push: false,
       force: true,
       branch: 'deploy',
       cacheDir: 'heroku-deploy',
-      //remoteUrl: ''
+      remoteUrl: 'git@heroku.com:dominiongame.git'
     }));
 });
 
