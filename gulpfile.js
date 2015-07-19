@@ -71,7 +71,7 @@ gulp.task('lint:coffee', function() {
 gulp.task('lint', ['lint:js', 'lint:coffee']);
 
 gulp.task('test', function(done) {
-  gulp.src(['js/**/*.js', 'server/**/*.coffee', 'client/**/*.coffee'])
+  gulp.src(['js/**/*.js', '@(server|client)/**/*.coffee'])
     .pipe(istanbul()) // Covering files
     .pipe(istanbul.hookRequire()) // Force `require` to return covered files
     .on('finish', function() {

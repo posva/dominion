@@ -19,8 +19,9 @@ Therefore I may never end this project. You should not take this as an example.
 
 # gulp Tasks
 
+* `build`: buil the project
 * `test`: tests + coverage
-* `eslint:src`: lint js code
+* `lint`: lint code
 
 # Coding Style
 
