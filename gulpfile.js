@@ -13,7 +13,7 @@ var coffeelint = require('gulp-coffeelint');
 var ghPages = require('gulp-gh-pages');
 var del = require('del');
 var isDist = process.argv.indexOf('watch') === -1;
-var deployDir = process.argv.indexOf('deploy') === -1 ? '' : 'deploy/'
+var deployDir = process.argv.indexOf('deploy') === -1 ? '' : 'deploy/';
 
 gulp.task('lint:js', function() {
   return gulp.src(['js/**/*.js', 'gulpfile.js'])
