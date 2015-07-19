@@ -12,4 +12,6 @@ deployment:
     branch: master
     commands:
       - python3 scripts/download-resources.py
+      - git config --global user.email "posva13@gmail.com"
+      - git config --global user.name "Circle CI"
       - gulp deploy
