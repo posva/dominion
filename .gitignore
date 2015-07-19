@@ -6,3 +6,4 @@ data/fonts/TrajanPro-Bold.ttf
 data/fonts/MinionPro-BoldCn.woff
 public
 build
+heroku-deploy

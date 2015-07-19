@@ -10,6 +10,7 @@ var through = require('through');
 var jade = require('gulp-jade');
 var nodemon = require('gulp-nodemon');
 var coffeelint = require('gulp-coffeelint');
+var ghPages = require('gulp-gh-pages');
 var isDist = process.argv.indexOf('watch') === -1;
 
 gulp.task('lint:js', function() {
@@ -131,6 +132,17 @@ gulp.task('watch', ['start', 'js', 'html'], function() {
     'client/**/*.coffee',
     'js/**/*.js'
   ], ['js']);
+});
+
+gulp.task('deploy', function() {
+  return gulp.src('./dist/**/*')
+    .pipe(ghPages({
+      push: false,
+      force: true,
+      branch: 'deploy',
+      cacheDir: 'heroku-deploy',
+      //remoteUrl: ''
+    }));
 });
 
 gulp.task('default', ['lint', 'test']);
