@@ -1,17 +1,3 @@
 notify:
   webhooks:
     - url: https://webhooks.gitter.im/e/06051c8bbb4423e8ddea
-dependencies:
-  cache_directories:
-    - node_modules/
-    - data/img/card/
-    - data/img/set/
-    - data/fonts/
-deployment:
-  staging:
-    branch: master
-    commands:
-      - python3 scripts/download-resources.py
-      - git config --global user.email "posva13@gmail.com"
-      - git config --global user.name "Circle CI"
-      - gulp deploy
