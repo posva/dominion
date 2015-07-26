@@ -65,7 +65,7 @@ gulp.task('lint:test', function() {
 });
 
 gulp.task('lint:coffee', function() {
-  gulp.src('@(server|client)/**/*.coffee')
+  return gulp.src('@(server|client)/**/*.coffee')
     .pipe(coffeelint())
     .pipe(coffeelint.reporter())
     .pipe(coffeelint.reporter('fail'));
@@ -74,7 +74,7 @@ gulp.task('lint:coffee', function() {
 gulp.task('lint', ['lint:js', 'lint:coffee']);
 
 gulp.task('test', function(done) {
-  gulp.src(['js/**/*.js', '@(server|client)/**/*.coffee'])
+  return gulp.src(['js/**/*.js', '@(server|client)/**/*.coffee'])
     .pipe(istanbul()) // Covering files
     .pipe(istanbul.hookRequire()) // Force `require` to return covered files
     .on('finish', function() {
@@ -87,7 +87,7 @@ gulp.task('test', function(done) {
 });
 
 gulp.task('html', function() {
-  gulp.src('client/**/*.jade')
+  return gulp.src('client/**/*.jade')
     .pipe(isDist ? through() : plumber())
     .pipe(jade({
       pretty: true
@@ -96,7 +96,7 @@ gulp.task('html', function() {
 });
 
 gulp.task('js', function() {
-  gulp.src('client/main.coffee')
+  return gulp.src('client/main.coffee')
     .pipe(isDist ? through() : plumber())
     .pipe(coffeeify({
       options: {
@@ -119,7 +119,7 @@ gulp.task('start', function() {
 });
 
 gulp.task('js:server', function() {
-  gulp.src('./server/**/*.coffee')
+  return gulp.src('./server/**/*.coffee')
     .pipe(coffee({
       bare: true
     }).on('error', console.log))
