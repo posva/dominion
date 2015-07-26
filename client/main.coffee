@@ -12,7 +12,7 @@ status = new Vue
     name: 'Posva'
     password: 'posva'
     players: []
-    games: []
+    matches: []
     myGame: null
   methods:
     connect: (event) ->
@@ -57,7 +57,7 @@ initializeSocket = ->
   @socket.on 'update', (data) ->
     console.log data
     keys = [
-      'games'
+      'matches'
       'players'
     ]
     _.forEach keys, (key) ->

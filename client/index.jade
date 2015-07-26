@@ -20,11 +20,11 @@ html(lang="en")
         div(v-if='!myGame')
           button(v-on='click:newGame') New Game
           ul
-            li(v-repeat='games')
-              span {{ creatorName }} Game
+            li(v-repeat='matches')
+              span {{ creator }} Game
               span  - {{ players.length }} / {{ maxPlayers }}
               span  - {{ status }}
-              button(v-if='creatorName != name && status === "waiting"' v-on='click: join(creator)') Join
-              button(v-if='players.length > 1 && status === "waiting" && creatorName === name' v-on='click: start(creator)') Start
+              button(v-if='creator != name && status === "waiting"' v-on='click: join(creator)') Join
+              button(v-if='players.length > 1 && status === "waiting" && creator === name' v-on='click: start(creator)') Start
 
     script(src='main.js')

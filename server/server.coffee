@@ -40,14 +40,13 @@ db.once 'open', ->
 app.use express.static './public'
 
 players = []
-games = []
 io.on 'connection', (socket) ->
   socket.on 'reconnect', ->
     console.log 'User reconnected'
   socket.on 'disconnect', ->
     console.log 'User disconnected'
     # Update last connection time
-    userDisconnects socket
+    #userDisconnects socket
 
 ioAuth io,
   authenticate: (data, cb) -> User.login data, cb
@@ -56,36 +55,28 @@ ioAuth io,
     socket.user =
       name: data.name
     socket.emit 'update',
-      games: games
+      matches: Match.getMatches()
       players: players
 
     socket.on 'new game', ->
       newGame socket
 
-    socket.on 'join game', (game) ->
-      joinGame socket, game
+    socket.on 'join game', (user) ->
+      joinGame socket, user
 
-    socket.on 'start game', (game) ->
-      startGame socket, game
+    socket.on 'start game', (user) ->
+      startGame socket, user
 
 http.listen port, ->
   console.info "Listening on http://localhost:#{port}"
 
 newGame = (socket) ->
-  if not _.find(games, creator: socket.client.conn.id)
-    games.push
-      players: [
-        name: socket.user.name
-        id: socket.client.conn.id
-      ]
-      creator: socket.client.conn.id
-      creatorName: socket.user.name
-      status: 'waiting'
-      maxPlayers: 4
-
+  if Match.canCreateGame socket
+    new Match socket, maxPlayers: 4
     io.emit 'update',
-      games: games
+      matches: Match.getMatches()
 
+# TODO must be changed
 userDisconnects = (socket) ->
   rest = _.remove games,
     creator: socket.client.conn.id
@@ -99,26 +90,22 @@ userDisconnects = (socket) ->
 
   if rest.length or removed
     io.emit 'update',
-      games: games
+      matches: Match.getMatches()
 
-joinGame = (socket, game) ->
-  if socket.client.conn.id isnt game
-    gameIns = _.find games,
-      creator: game
-      status: 'waiting'
-    if gameIns? and gameIns.players.length < gameIns.maxPlayers
-      if not _.find(gameIns.players, id: socket.client.conn.id)
-        gameIns.players.push
-          name: socket.user.name
-          id: socket.client.conn.id
-        io.emit 'update', games: games
+joinGame = (socket, user) ->
+  if user of Match.matches
+    match = Match.matches[user]
+    err = match.join socket
+    if err
+      console.error err
+    else
+      io.emit 'update', matches: Match.getMatches()
 
-startGame = (socket, game) ->
-  if socket.client.conn.id is game
-    gameIns = _.find games,
-      creator: game
-      status: 'waiting'
-    if gameIns? and gameIns.players.length > 1
-      gameIns.status = 'playing'
-      io.emit 'update', games: games
-
+startGame = (socket, user) ->
+  if user of Match.matches
+    match = Match.matches[user]
+    err = match.start socket
+    if err
+      console.error err
+    else
+      io.emit 'update', matches: Match.getMatches()
