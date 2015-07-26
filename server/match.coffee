@@ -21,6 +21,7 @@ class Match
   # @param [Options] options Game options
   # @option options [Number] maxPlayers Number of maximum players
   constructor: (socket, options) ->
+    options ?= {}
     {@maxPlayers} = options
     @maxPlayers ?= 4
     @creator = socket.user.name
@@ -37,7 +38,8 @@ class Match
   # @return [Boolean] Returns whether the given socket can join or not
   canJoin: (socket) ->
     @creator isnt socket.user.name and @players.length < @maxPlayers and
-      @status is 'waiting' and _.findIndex(@players, 'name', socket.user.name) < 0
+      @status is 'waiting' and
+      _.findIndex(@players, 'name', socket.user.name) < 0
 
   # Make a socket join the match if it cans
   # @param [Socket] socket Socket joining

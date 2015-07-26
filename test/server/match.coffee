@@ -1,6 +1,7 @@
 'use strict'
 should = require 'should'
 Match = require '../../server/match'
+_ = require 'lodash'
 
 describe '#Match', ->
   genSocket = (user) ->
@@ -95,3 +96,15 @@ describe '#Match', ->
     should.not.exist err
     (-> err = match.start socket).should.not.throw()
     match.status.should.be.eql 'playing'
+
+  it 'should only get plain objects', ->
+    (-> new Match socket, maxPlayers: 1).should.not.throw()
+    matches = Match.getMatches()
+    matches.forEach (match) ->
+      _.isPlainObject match
+      .should.be.true()
+
+  it 'should have default values', ->
+    match = null
+    (-> match = new Match socket).should.not.throw()
+    match.maxPlayers.should.be.eql 4
