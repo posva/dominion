@@ -12,6 +12,9 @@ var nodemon = require('gulp-nodemon');
 var coffeelint = require('gulp-coffeelint');
 var ghPages = require('gulp-gh-pages');
 var del = require('del');
+var imagemin = require('gulp-imagemin');
+var debug = require('gulp-debug');
+var changed = require('gulp-changed');
 var isDist = process.argv.indexOf('watch') === -1;
 var deployDir = process.argv.indexOf('deploy') === -1 ? '' : 'deploy/';
 
@@ -120,17 +123,42 @@ gulp.task('start', function() {
 
 gulp.task('js:server', function() {
   return gulp.src('./server/**/*.coffee')
+    .pipe(isDist ? through() : plumber())
     .pipe(coffee({
       bare: true
     }).on('error', console.log))
     .pipe(gulp.dest('./' + deployDir + 'build/'));
 });
 
-// TODO copy data
-gulp.task('build', ['js', 'html', 'js:server']);
+gulp.task('img-optimization', function() {
+  var dest = './data/img/';
+  return gulp.src('./data/img/**/*')
+    .pipe(isDist ? through() : plumber())
+    .pipe(changed(dest))
+    .pipe(imagemin({
+      progressive: true
+    }))
+    .pipe(debug({title: 'Optimizing images:'}))
+    .pipe(gulp.dest(dest));
+});
 
-gulp.task('watch', ['start', 'js', 'html'], function() {
+gulp.task('data', function() {
+  var dest = './' + deployDir + 'public/data/';
+  return gulp.src('./data/**/*')
+    .pipe(isDist ? through() : plumber())
+    .pipe(changed(dest))
+    .pipe(imagemin({
+      progressive: true
+    }))
+    .pipe(debug({title: 'Copying data:'}))
+    .pipe(gulp.dest(dest));
+});
+
+gulp.task('build', ['js', 'html', 'js:server', 'data']);
+
+gulp.task('watch', ['start', 'js', 'html', 'data'], function() {
   gulp.watch('client/**/*.jade', ['html']);
+  gulp.watch('data/**/*', ['data']);
   gulp.watch([
     'client/**/*.coffee',
     'js/**/*.js'
