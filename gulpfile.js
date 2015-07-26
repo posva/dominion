@@ -113,8 +113,9 @@ gulp.task('start', function() {
   nodemon({
     script: 'server/server.coffee',
     ext: 'coffee',
+    //verbose: true,
     nodeArgs: ['--nodejs', '--debug'],
-    watch: ['server/**/*.coffee', 'public/data/**/*.json'],
+    watch: ['./server/**/*.coffee', './public/data/**/*.json'],
     env: {
       'NODE_ENV': 'development'
     }
