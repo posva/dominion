@@ -5,15 +5,16 @@ html(lang="en")
   body
     h1 Dominion
     #status
-      div(v-if='!socket')
-        input(v-model='name')
-        input(type='password' v-model='password')
-      h4
-        span(v-if='socket') Connected as {{ name }}
-        button(
-          v-on='click: connect'
-          v-disabled='connecting'
-        ) {{ !!socket ? 'Disconnect' : 'Connect' }}
+      form(v-on='submit: connect')
+        div(v-if='!socket')
+          input(v-model='name')
+          input(type='password' v-model='password')
+        h4
+          span(v-if='socket') Connected as {{ name }}
+          button(
+            type='submit'
+            v-disabled='connecting'
+          ) {{ !!socket ? 'Disconnect' : 'Connect' }}
 
       #games(v-if='socket')
         div(v-if='!myGame')

@@ -15,11 +15,12 @@ status = new Vue
     games: []
     myGame: null
   methods:
-    connect: ->
+    connect: (event) ->
       @connecting = true
       if @socket?
         @socket.disconnect()
       else
+        event.preventDefault()
         if @lastSocket?
           socket = @lastSocket.connect()
         else
