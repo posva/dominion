@@ -23,7 +23,7 @@ _.forEach(expansionsArray, function(expansion) {
 
 describe('Expansions testing', function() {
   _.forOwn(expansions, function(v, k) {
-    describe('#' + k + '.js', function() {
+    describe('#' + k, function() {
       v = expansions[k];
       it('should have a cards object', function() {
         v.should.have.property('cards');

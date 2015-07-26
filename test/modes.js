@@ -20,7 +20,7 @@ _.forEach(modesArray, function(mode) {
 
 describe('Modes testing', function() {
   _.forOwn(modes, function(v, k) {
-    describe(k + '.js', function() {
+    describe(k, function() {
       v = modes[k];
       describe('#Common', function() {
         var game;
