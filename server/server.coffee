@@ -69,7 +69,7 @@ ioAuth io,
       startGame socket, game
 
 http.listen port, ->
-  console.info "listening on http://localhost:#{port}"
+  console.info "Listening on http://localhost:#{port}"
 
 newGame = (socket) ->
   if not _.find(games, creator: socket.client.conn.id)
