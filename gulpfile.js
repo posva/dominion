@@ -114,7 +114,7 @@ gulp.task('start', function() {
     script: 'server/server.coffee',
     ext: 'coffee',
     nodeArgs: ['--nodejs', '--debug'],
-    ignore: ['client/**/*', 'public/*.js'],
+    watch: ['server/**/*.coffee', 'public/data/**/*.json'],
     env: {
       'NODE_ENV': 'development'
     }
