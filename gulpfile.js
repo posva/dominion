@@ -131,15 +131,15 @@ gulp.task('js:server', function() {
 });
 
 gulp.task('img-optimization', function() {
-  var dest = './data/img/';
   return gulp.src('./data/img/**/*')
     .pipe(isDist ? through() : plumber())
-    .pipe(changed(dest))
     .pipe(imagemin({
       progressive: true
     }))
-    .pipe(debug({title: 'Optimizing images:'}))
-    .pipe(gulp.dest(dest));
+    .pipe(debug({
+      title: 'Optimizing images:'
+    }))
+    .pipe(gulp.dest('./data/img/'));
 });
 
 gulp.task('data', function() {
@@ -150,7 +150,9 @@ gulp.task('data', function() {
     .pipe(imagemin({
       progressive: true
     }))
-    .pipe(debug({title: 'Copying data:'}))
+    .pipe(debug({
+      title: 'Copying data:'
+    }))
     .pipe(gulp.dest(dest));
 });
 
