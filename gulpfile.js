@@ -28,7 +28,7 @@ gulp.task('lint:js', function() {
       },
       rules: {
         quotes: [1, 'single'],
-        strict: 1,
+        strict: [2, 'global'],
         eqeqeq: 2,
         'comma-dangle': 0,
         'no-extend-native': 0
