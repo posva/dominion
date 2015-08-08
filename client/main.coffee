@@ -24,7 +24,12 @@ status = new Vue
         if @lastSocket?
           socket = @lastSocket.connect()
         else
-          socket = io.connect()
+          try
+            socket = io.connect()
+          catch err
+            console.log 'Error connecting to socket:', err
+            console.log 'Retrying'
+            socket.connect()
           socket.on 'disconnect', =>
             @connecting = false
             console.log 'im out'
