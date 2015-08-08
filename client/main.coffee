@@ -43,7 +43,7 @@ status = new Vue
           socket.on 'unauthorized', =>
             @connecting = false
             console.log 'Auth Failed'
-          socket.on 'authenticated', =>
+          socket.on 'Authenticated', =>
             console.log 'Sucess!'
             @connecting = false
             @socket = socket
