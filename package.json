@@ -16,13 +16,6 @@
     "test": "./node_modules/.bin/gulp",
     "start": "node build/server.js"
   },
-  "config": {
-    "blanket": {
-      "pattern": [
-        "src"
-      ]
-    }
-  },
   "dependencies": {
     "bcrypt": "^0.8.4",
     "better-console": "^0.2.4",
