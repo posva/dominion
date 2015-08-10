@@ -13,14 +13,11 @@ This is a learning project. By that I mean I'm willing to learn some technologie
 
 Therefore I may never end this project. You should not take this as an example.
 
-# Building
-
- WIP
-
 # gulp Tasks
 
-* `build`: buil the project
+* `build`: build the project
 * `test`: tests + coverage
+* `watch`: launch a server and watch for changements
 * `lint`: lint code
 
 # Coding Style
