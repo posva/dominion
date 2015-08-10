@@ -24,12 +24,7 @@ status = new Vue
         if @lastSocket?
           socket = @lastSocket.connect()
         else
-          try
-            socket = io.connect()
-          catch err
-            console.log 'Error connecting to socket:', err
-            console.log 'Retrying'
-            socket.connect()
+          socket = io.connect()
           socket.on 'disconnect', =>
             @connecting = false
             console.log 'im out'
@@ -46,7 +41,11 @@ status = new Vue
           socket.on 'authenticated', =>
             console.log 'Authenticated!'
             @connecting = false
-            @socket = socket
+            try
+              @socket = socket
+            catch err
+              console.log 'Error connecting to socket:', err
+              debugger
             initializeSocket.call this
     newGame: ->
       @socket.emit 'new game'
